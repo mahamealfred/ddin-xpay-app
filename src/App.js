@@ -3,12 +3,13 @@ import HomePage from "./components/home/HomePage";
 import LoginPage from "./components/user/LoginPage";
 import PindoServicePage from "./components/bulksms/PindoServicePage";
 import NpoServicePage from "./components/npo/NpoServicePage";
-//import YellowCardServicePage from './components/YellowCardServicePage';
+//import YellowCardServicePage from './components/Yel0lowCardServicePage';
 import ReceiptManager from "./components/receipt/ReceiptManager";
 import AirtimeReceiptManager from "./components/receipt/AirtimeReceiptManager";
 import ElectricityReceiptManager from "./components/receipt/ElectricityReceiptManager";
 import RraReceiptManager from "./components/receipt/RraReceiptManager";
 import NotifyMe from "./components/notifications/NotifyMe";
+import MqttClient from "./components/notifications/MqttClient";
 import FdiReceiptManager from "./components/receipt/FdiReceiptManager";
 import NpoReceiptManager from "./components/receipt/NpoReceiptManager";
 import StartimesReceiptManager from "./components/receipt/StartimesReceiptManager";
@@ -25,7 +26,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          {/* Open Access - Public Access RequiredHomePage NotifyMe*/}
+          {/* Open Access - Public Access Required HomePage NotifyMe MqttClient*/}
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/sign-in" element={<LoginPage />}></Route>
           <Route path="/bulksms-service" element={<PindoServicePage />}></Route>

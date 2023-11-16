@@ -344,7 +344,7 @@ export default function ElectricityServicePage() {
       //Test Env:
       setTransferId("85");
       //Prod Env:
-      //setTransferId('70');
+      //setTransferId('82');
 
       return "85";
     } else {
@@ -352,7 +352,7 @@ export default function ElectricityServicePage() {
       setTransferId("86");
 
       //Prod Env
-      //setTransferId('71');
+      //setTransferId('83');
 
       return "86";
     }
@@ -404,14 +404,15 @@ export default function ElectricityServicePage() {
         context.userKey
       );
 
-      console.log("Response:" + response);
+      //console.log("Response:" + response);
       if (response.responseCode === "200") {
         playAudio();
+        //response.data.spVendInfo.voucher +",Receipt No:" +
+        //response.data.spVendInfo.receiptNo +", for Total Tax With Service fee -Rwf" +
+        //response.data.spVendInfo.unitsWorth,
         toast.update(id, {
           render: response.responseDescription,
-          //response.data.spVendInfo.voucher +",Receipt No:" +
-          //response.data.spVendInfo.receiptNo +", for Total Tax With Service fee -Rwf" +
-          //response.data.spVendInfo.unitsWorth,
+
           type: "success",
           isLoading: false,
           closeButton: null,
@@ -878,17 +879,17 @@ export default function ElectricityServicePage() {
                                 {transaction.id}
                                 <span class="ms-1" style={{ color: "red" }}>
                                   <b>
-                                    Amount Rwf:
+                                    Amount Rwf:-
                                     {(
                                       parseFloat(
-                                        findServiceFee(transaction.amount)
-                                      ) + parseFloat(transaction.amount)
+                                        findServiceFee(-1 * transaction.amount)
+                                      ) + parseFloat(-1 * transaction.amount)
                                     ).toFixed()}
                                     |
                                   </b>
                                 </span>
                                 <Link
-                                  to="/ddin-electricity-receipt"
+                                  to="/ddin-rra-receipt"
                                   state={{
                                     transactionData: transaction,
                                     agentUsername: context.agentUsername,
@@ -945,10 +946,11 @@ export default function ElectricityServicePage() {
                                 {transaction.id}
                                 <span class="ms-1" style={{ color: "red" }}>
                                   <b>
-                                    Amount Rwf:
+                                    Amount Rwf:-
                                     {(
-                                      parseFloat(transaction.amount) * 0.02 +
-                                      parseFloat(transaction.amount)
+                                      parseFloat(
+                                        findServiceFee(-1 * transaction.amount)
+                                      ) + parseFloat(-1 * transaction.amount)
                                     ).toFixed()}
                                     |
                                   </b>

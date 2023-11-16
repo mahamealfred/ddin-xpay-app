@@ -67,6 +67,10 @@ function sleep(delay = 0) {
 export default function NpoServicePage() {
   const [openAddress, setOpenAddress] = useState(false);
   const [openClientTypes, setOpenClientTypes] = useState(false);
+  const [selectedClientType, setSelectedClientType] = useState({
+    status: false,
+    name: "Organization",
+  });
 
   const [options, setOptions] = React.useState([]);
   //const loading = open && options.length === 0;
@@ -141,6 +145,7 @@ export default function NpoServicePage() {
   const [receiptSector, setReceiptSector] = useState("");
   const [receiptTxDate, setReceiptTxDate] = useState("");
 
+  const [clientCategory, setClientCategory] = useState("Organization");
   const [postalCodeId, setPostalCodeId] = useState("");
   const [isPersonal, setIsPersonal] = useState(null);
 
@@ -149,6 +154,7 @@ export default function NpoServicePage() {
     { status: true, name: "Personal" },
   ];
 
+  const [amount, setAmount] = useState(15000);
   useEffect(() => {
     if (npoAddressData === null) {
       queryNpoAddresses();
@@ -164,7 +170,18 @@ export default function NpoServicePage() {
   const handleClientTypeChange = (e) => {
     setIsPersonal(e.target.value);
   };
+  const findPostalCodeName = (postalCodeId) => {
+    const foundPostalCode = npoAddressData.find(
+      (item) => item.postal_code === postalCodeId
+    );
 
+    if (foundPostalCode) {
+      return foundPostalCode.name;
+    }
+
+    // Return a default value or handle the case when postal code is not found
+    return "";
+  };
   const selectionChangeHandlerIdentityType = (event) => {
     setIdentityTypeSelected(event.target.value);
   };
@@ -194,9 +211,12 @@ export default function NpoServicePage() {
             if (isNumber(identityNumber)) {
               setIdentityType("NATIONAL ID");
               if (postalCodeId === "") {
-                toast.error("Please Select Postal Office Location");
+                toast.error(
+                  "Please Select Postal Office Location" + postalCodeId
+                );
               } else {
                 if (isPersonal != null) {
+                  console.log("Client Type:" + isPersonal);
                   viewConfirmDialog();
                 } else {
                   toast.error("Please Select Client Type");
@@ -266,11 +286,11 @@ export default function NpoServicePage() {
     const id = toast.loading("Processing NPO Client Registration...");
 
     try {
-      //Test Agent: Transfer Id=42 , Member Id= 21
+      //Test Agent: Transfer Id=95 , Member Id= 24
       //Prod Agent: Transfer Id=40, Member Id=2
 
       const newNpoClientRequestBody = {
-        amount: "2000",
+        amount: amount,
         description:
           "NPO Client Registration Through DDIN Agent ID:" +
           context.agentUsername +
@@ -285,16 +305,18 @@ export default function NpoServicePage() {
           ",Identity Number:" +
           identityNumber +
           ",Postal Code:" +
-          postalCodeId +
+          findPostalCodeName(postalCodeId) +
           ",Middle name:" +
           middleName +
           ",Client Type:" +
-          isPersonal +
+          clientCategory +
           ",Client Email:" +
-          clientEmail,
+          clientEmail +
+          ",Client NPO Address:" +
+          value,
         currencySymbol: "Rwf",
-        transferTypeId: "42",
-        toMemberId: "21",
+        transferTypeId: "95",
+        toMemberId: "24",
         firstName: firstname,
         lastName: lastname,
         mobile: value.substring(1, 13),
@@ -302,6 +324,7 @@ export default function NpoServicePage() {
         passportNumber: passportNumber,
         referralCode: "DDIN250",
         npoClientId: "",
+        accountId: context.agentFloatAccountId,
         agentId: context.agentUsername,
         mpostSystemMetadata: "",
         province: context.province,
@@ -357,7 +380,9 @@ export default function NpoServicePage() {
         toast.update(id, {
           render:
             "NPO client registration processing completed successfully with transaction No:" +
-            response.transactionId,
+            response.transactionId +
+            "-SMS Status:" +
+            response.responseStatus,
           type: "success",
           isLoading: false,
           closeButton: null,
@@ -373,14 +398,15 @@ export default function NpoServicePage() {
         setValue("");
       } else {
         //Testing The Payment Initiation:
-        toast.dismiss();
-        setShowConfirmPaymentDialog(true);
-        /*toast.update(id, {
-          render: response.responseDescription,
+        // toast.dismiss();
+        // setShowConfirmPaymentDialog(true);
+        toast.update(id, {
+          render:
+            response.responseDescription + "-SMS:" + response.responseStatus,
           type: "info",
           isLoading: false,
           closeButton: null,
-        });*/
+        });
 
         setValidFileLevel(false);
       }
@@ -663,7 +689,8 @@ export default function NpoServicePage() {
                 <p class="text-white mb-0">
                   Please note registration is complete after payment of the
                   subscription fee of<span class="px-1 fw-bold"></span>{" "}
-                  <b>Rwf 8,000.</b>
+                  <b>Rwf 8,000 </b>for personal A/C or <b>Rwf 15,000</b> for
+                  Organization.
                 </p>
               </div>
             </div>
@@ -865,23 +892,31 @@ export default function NpoServicePage() {
                           onClose={() => {
                             setOpenAddress(false);
                           }}
-                          isOptionEqualToValue={(option, value) =>
-                            setPostalCodeId(option.postal_code)
-                          }
                           getOptionLabel={(option) => option.name}
                           options={npoAddressData}
-                          //loading={loading}
+                          value={
+                            postalCodeId
+                              ? npoAddressData.find(
+                                  (option) =>
+                                    option.postal_code === postalCodeId
+                                ) || null
+                              : null
+                          }
+                          onChange={(event, newValue) => {
+                            //console.log("Postal Code:" + newValue?.postal_code);
+                            setPostalCodeId(newValue?.postal_code || null);
+                          }}
                           renderInput={(params) => (
                             <TextField
                               style={{ color: "red", fontSize: 25 }}
                               variant="standard"
                               {...params}
-                              label="Choose Postal Office Code"
+                              label="Choose Postal Office"
                               InputProps={{
                                 ...params.InputProps,
                                 endAdornment: (
                                   <React.Fragment>
-                                    {/*loading ? <CircularProgress color="inherit" size={20} /> : null*/}
+                                    {/* Add loading indicator if needed */}
                                     {params.InputProps.endAdornment}
                                   </React.Fragment>
                                 ),
@@ -902,12 +937,27 @@ export default function NpoServicePage() {
                           onClose={() => {
                             setOpenClientTypes(false);
                           }}
-                          isOptionEqualToValue={(option, value) =>
-                            setIsPersonal(option.status)
-                          }
                           getOptionLabel={(option) => option.name}
                           options={clientTypesCode}
-                          //loading={loading}
+                          value={
+                            clientTypesCode.find(
+                              (option) =>
+                                option.status === selectedClientType?.status
+                            ) || null
+                          }
+                          onChange={(event, newValue) => {
+                            setSelectedClientType(newValue);
+
+                            setIsPersonal(newValue?.status || false);
+                            // Set amount based on the status
+                            if (newValue && newValue.status) {
+                              setAmount(8000); // Set amount to 8000 when status is true
+                              setClientCategory("Personal");
+                            } else {
+                              setAmount(15000); // Set amount to 15000 when status is false
+                              setClientCategory("Organization");
+                            }
+                          }}
                           renderInput={(params) => (
                             <TextField
                               style={{ color: "red", fontSize: 25 }}
@@ -942,8 +992,9 @@ export default function NpoServicePage() {
                         phoneNumber={value}
                         clientEmail={clientEmail}
                         postalCode={postalCodeId}
-                        clientType={isPersonal}
+                        clientType={clientCategory}
                         middleName={middleName}
+                        amount={amount}
                         closeClick={() =>
                           setShowConfirmDialog(!showConfirmDialog)
                         }
@@ -957,6 +1008,7 @@ export default function NpoServicePage() {
                         identityType={identityType}
                         identityNumber={identityNumber}
                         phoneNumber={value}
+                        amount={amount}
                         closeClick={() =>
                           setShowConfirmDialog(!showConfirmResponseDialog)
                         }
@@ -1045,7 +1097,7 @@ export default function NpoServicePage() {
                                   Amount Rwf:
                                   {parseFloat(
                                     agentAccountTransactions[index].amount
-                                  )}
+                                  ) + 2000}
                                   |
                                 </b>
                               </span>

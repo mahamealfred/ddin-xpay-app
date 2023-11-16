@@ -26,7 +26,7 @@ import "./receiptStyler.css";
 import LoginPage from "../user/LoginPage";
 import FooterPage from "../footer/FooterPage";
 import HeaderPage from "../header/HeaderPage";
-import ShowElectricityTokenDataStatus from "./ShowElectricityTokenDataStatus";
+
 export default function ElectricityReceiptManager() {
   const context = useContext(Context);
   const [agentAccountTransactions, setAgentAccountTransactions] = useState([]);
@@ -450,12 +450,30 @@ export default function ElectricityReceiptManager() {
 
                               <tr>
                                 <td>
-                                  <span>Service Fee:Rwf </span>
+                                  <span style={{ color: "black" }}>
+                                    <b>Tax Amount:</b>
+                                  </span>
                                 </td>
+
                                 <td>
-                                  <span>
+                                  {"Rwf "}
+                                  <span style={{ color: "black" }}>
+                                    {-1 * state?.transactionData?.amount}
+                                  </span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <span style={{ color: "black" }}>
+                                    <b>Service Fee:</b>
+                                  </span>
+                                </td>
+
+                                <td>
+                                  {"Rwf "}
+                                  <span style={{ color: "black" }}>
                                     {findServiceFee(
-                                      state?.transactionData?.amount
+                                      -1 * state?.transactionData?.amount
                                     )}
                                   </span>
                                 </td>
@@ -482,12 +500,16 @@ export default function ElectricityReceiptManager() {
                             }}
                           >
                             <b>
-                              {" "}
-                              Total (Rwf):
+                              {" Total Paid"}
+                              (Rwf):-
                               <span>
                                 {(
-                                  parseFloat(state?.transactionData?.amount) +
-                                  findServiceFee(state?.transactionData?.amount)
+                                  parseFloat(
+                                    -1 * state?.transactionData?.amount
+                                  ) +
+                                  findServiceFee(
+                                    -1 * state?.transactionData?.amount
+                                  )
                                 ).toFixed()}
                               </span>
                             </b>
@@ -525,11 +547,7 @@ export default function ElectricityReceiptManager() {
         </div>
       </div>
       <ToastContainer className="toast-position" />
-      <ShowElectricityTokenDataStatus
-        txTokenData={fdiTxData}
-        openstatus={showTxData}
-        closeClick={() => setShowTxData(!showTxData)}
-      />
+
       <div class="internet-connection-status" id="internetStatus"></div>
 
       <FooterPage />

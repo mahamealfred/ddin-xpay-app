@@ -203,6 +203,7 @@ const loginAgent = async (requestPayload) => {
   //base_remote_login_test
   //base_remote_login_prod
   //base_localhost_login_test
+
   await axios
     .get(base_remote_login_test, {
       headers: {
@@ -924,6 +925,7 @@ const executeEfasheRraVendingTx = async (requestPayLoad, userKey) => {
     responseStatus: "",
     data: "",
   };
+
   //base_localhost_efashe_executeRraTx
   //base_remote_efashe_executeRraTx_test
   //base_remote_efashe_executeRraTx_prod
@@ -936,6 +938,10 @@ const executeEfasheRraVendingTx = async (requestPayLoad, userKey) => {
     })
 
     .then((response) => {
+      //console.log("Executer E-Fashe Code:" + response.data.responseCode);
+      //console.log("Executer E-Fashe Description:" + response.data.responseDescription);
+      //console.log("Executer E-Fashe Status:" + response.data.communicationStatus);
+
       if (response.data.responseCode === "200") {
         serverResponse.responseDescription = response.data.responseDescription;
         serverResponse.responseStatus = response.data.communicationStatus;
@@ -1187,7 +1193,7 @@ const registerNpoClient = async (requestPayLoad, userKey) => {
   //base_localhost_register_npoclient_test
   //base_remote_register_npoclient_prod
   await axios
-    .post(base_localhost_register_npoclient_test, requestPayLoad, {
+    .post(base_remote_register_npoclient_test, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
