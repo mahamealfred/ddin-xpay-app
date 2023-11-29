@@ -19,6 +19,7 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { toast, ToastContainer } from "react-toastify";
+import PreviewPaymentReceiptDialog from "./ConfirmBulkServicePaymentResponse";
 import PreviewPindoServicePayment from "./ConfirmPindoServicePayment";
 import ConfirmBulkSsmFileServicePayment from "./ConfirmBulkSsmFileServicePayment";
 import NotificationSound from "../../images/audio/notificationsound.wav";
@@ -39,6 +40,7 @@ import {
   viewAgentFloatAccountTransactionsYc,
   registerYellowCardUserSecondStep,
   registerYellowCardUserFirstStep,
+  viewAgentFloatAccountTransactionsById,
 } from "../../apis/UserController";
 import LoginPage from "../user/LoginPage";
 import FooterPage from "../footer/FooterPage";
@@ -79,6 +81,15 @@ export default function PindoServicePage() {
   const [businessTin, setBusinessTin] = useState("");
   const [transferId, setTransferId] = useState("");
   const [memberId, setMemberId] = useState("");
+  const [
+    agentAccountTransactionsByIdData,
+    setAgentAccountTransactionsByIdData,
+  ] = useState([]);
+  const [showReceiptDialog, setShowReceiptDialog] = useState(false);
+  const [receiptId, setReceiptId] = useState("");
+  const [receiptNote, setReceiptNote] = useState("");
+  const [serviceFeeAmt, setServiceFeeAmt] = useState("");
+  const [totalPayment, setTotalPayment] = useState("");
 
   const recalculate = (e) => {
     setTextAreaCount(e.target.value.length);
@@ -329,7 +340,7 @@ export default function PindoServicePage() {
 
         if (response.responseCode === "200") {
           playAudio();
-          toast.update(id, {
+          /* toast.update(id, {
             render:
               "Bulk SMS processing completed successfully with transaction No:" +
               response.transactionId +
@@ -337,10 +348,17 @@ export default function PindoServicePage() {
             type: "success",
             isLoading: false,
             closeButton: null,
-          });
+          });*/
           setValidFileLevel(false);
 
           //Clearing some data for new request
+
+          toast.dismiss();
+          setReceiptId(response.responseStatus);
+          setReceiptNote(response.responseDescription);
+          setServiceFeeAmt("");
+          setTotalPayment(totalSmsCost);
+          setShowReceiptDialog(true);
         } else {
           toast.update(id, {
             render: response.responseDescription,
@@ -420,7 +438,7 @@ export default function PindoServicePage() {
 
         if (response.responseCode === "200") {
           playAudio();
-          toast.update(id, {
+          /* toast.update(id, {
             render:
               "Bulk SMS processing completed successfully with transaction No:" +
               response.transactionId +
@@ -429,9 +447,14 @@ export default function PindoServicePage() {
             type: "success",
             isLoading: false,
             closeButton: null,
-          });
+          });*/
           setValidFileLevel(false);
-
+          toast.dismiss();
+          setReceiptId(response.responseStatus);
+          setReceiptNote(response.responseDescription);
+          setServiceFeeAmt("");
+          setTotalPayment(totalSmsCost);
+          setShowReceiptDialog(true);
           //Clearing some data for new request
         } else {
           console.log(
@@ -469,6 +492,49 @@ export default function PindoServicePage() {
     }
   };
 
+  const queryAgentAccountTransactionsById = async (transId) => {
+    setShowReceiptDialog(false);
+    const id = toast.loading("Previewing Bulk Sms Receipt...");
+    try {
+      const response = await viewAgentFloatAccountTransactionsById(
+        context.userKey,
+        context.agentFloatAccountId,
+        transId
+      );
+
+      if (response.responseCode === "200") {
+        setAgentAccountTransactionsByIdData(response.data);
+
+        const firstTransaction = response.data[0];
+
+        if (firstTransaction) {
+          navigate("/ddin-receipt", {
+            state: {
+              transactionData: firstTransaction,
+              agentUsername: context.agentUsername,
+              recipientNumber: recipientNumber,
+              messageCounter: messageCounter,
+              totalReceiptAmount: totalSmsCost,
+              clientName: senderId,
+              clientPhone: clientPhone,
+              clientEmail: clientEmail,
+              clientTin: clientTin,
+            },
+          });
+        } else {
+          //Fail To Check TX Status
+          setShowReceiptDialog(true);
+          console.log("Fail To Check TX Status- ");
+        }
+      } else {
+        setShowReceiptDialog(true);
+        toast.info(response.responseDescription);
+      }
+    } catch (err) {
+      setShowReceiptDialog(true);
+      console.log("Agent Account TX By Id Status Error:" + err);
+    }
+  };
   //========Pindo Transfers Identification============================
   //Test PINDO Agent: Transfer Id=32 , Member Id= 4
   //Prod PINDO Agent: Transfer Id=31, Member Id=3
@@ -1103,7 +1169,19 @@ export default function PindoServicePage() {
                         }
                         confirmClick={() => sendPaymentRequest()}
                       />
-
+                      <PreviewPaymentReceiptDialog
+                        receiptId={receiptId}
+                        receiptDescription={receiptNote}
+                        serviceFeeAmt={serviceFeeAmt}
+                        totalPayment={totalPayment}
+                        openstatus={showReceiptDialog}
+                        closeClick={() =>
+                          setShowReceiptDialog(!showReceiptDialog)
+                        }
+                        confirmClick={(transId) =>
+                          queryAgentAccountTransactionsById(transId)
+                        }
+                      />
                       <audio ref={audioPlayer} src={NotificationSound} />
                     </form>
                   </div>

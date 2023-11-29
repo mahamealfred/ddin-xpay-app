@@ -30,7 +30,7 @@ import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import FormHelperText from "@mui/joy/FormHelperText";
 import PreviewElectricityServicePayment from "./ConfirmElectricityServicePayment";
-
+import PreviewPaymentReceiptDialog from "./ConfirmElectricityServicePaymentResponse";
 import NotificationSound from "../../images/audio/notificationsound.wav";
 import { read, utils, writeFile } from "xlsx";
 import TextareaAutosize from "react-textarea-autosize";
@@ -48,6 +48,7 @@ import {
   validateEfasheElectricityVendingTx,
   executeEfasheElectricityVendingTx,
   viewAgentFloatAccountTransactions,
+  viewAgentFloatAccountTransactionsById,
   viewNpoAddresses,
 } from "../../apis/UserController";
 import dateFormat, { masks } from "dateformat";
@@ -160,7 +161,15 @@ export default function ElectricityServicePage() {
 
   const [transferId, setTransferId] = useState("");
   const [memberId, setMemberId] = useState("");
-
+  const [
+    agentAccountTransactionsByIdData,
+    setAgentAccountTransactionsByIdData,
+  ] = useState([]);
+  const [showReceiptDialog, setShowReceiptDialog] = useState(false);
+  const [receiptId, setReceiptId] = useState("");
+  const [receiptNote, setReceiptNote] = useState("");
+  const [serviceFeeAmt, setServiceFeeAmt] = useState("");
+  const [totalPayment, setTotalPayment] = useState("");
   const audioPlayer = useRef(null);
 
   function playAudio() {
@@ -289,6 +298,43 @@ export default function ElectricityServicePage() {
       setValidFileLevel(false);
     }
   };
+
+  const queryAgentAccountTransactionsById = async (transId) => {
+    setShowReceiptDialog(false);
+    const id = toast.loading("Previewing Electricity Receipt...");
+    try {
+      const response = await viewAgentFloatAccountTransactionsById(
+        context.userKey,
+        context.agentFloatAccountId,
+        transId
+      );
+
+      if (response.responseCode === "200") {
+        setAgentAccountTransactionsByIdData(response.data);
+
+        const firstTransaction = response.data[0];
+
+        if (firstTransaction) {
+          navigate("/ddin-electricity-receipt", {
+            state: {
+              transactionData: firstTransaction,
+              agentUsername: context.agentUsername,
+            },
+          });
+        } else {
+          //Fail To Check TX Status
+          setShowReceiptDialog(true);
+          console.log("Fail To Check TX Status- ");
+        }
+      } else {
+        setShowReceiptDialog(true);
+        toast.info(response.responseDescription);
+      }
+    } catch (err) {
+      setShowReceiptDialog(true);
+      console.log("Agent Account TX By Id Status Error:" + err);
+    }
+  };
   //======== Core Member Ids===
   const returnMemberId = () => {
     if (context.agentCategory === null || context.agentCategory === "Agent") {
@@ -367,7 +413,7 @@ export default function ElectricityServicePage() {
 
       if (response.responseCode === "200") {
         playAudio();
-        toast.update(id, {
+        /* toast.update(id, {
           render:
             response.responseDescription +
             ",Voucher/Token:" +
@@ -379,9 +425,24 @@ export default function ElectricityServicePage() {
           type: "success",
           isLoading: false,
           closeButton: null,
-        });
+        });*/
         setTokenAmount("");
         setMeterNumber("");
+
+        toast.dismiss();
+        setReceiptId(response.responseStatus);
+        setReceiptNote(
+          response.responseDescription +
+            ",Voucher/Token:" +
+            response.data.spVendInfo.voucher +
+            ",Units:" +
+            response.data.spVendInfo.units +
+            ", for Rwf" +
+            response.data.spVendInfo.unitsWorth
+        );
+        setServiceFeeAmt("");
+        setTotalPayment(tokenAmount);
+        setShowReceiptDialog(true);
       } else {
         toast.update(id, {
           render: response.responseDescription,
@@ -785,7 +846,19 @@ export default function ElectricityServicePage() {
                         }
                         confirmClick={() => sendPaymentRequest()}
                       />
-
+                      <PreviewPaymentReceiptDialog
+                        receiptId={receiptId}
+                        receiptDescription={receiptNote}
+                        serviceFeeAmt={serviceFeeAmt}
+                        totalPayment={totalPayment}
+                        openstatus={showReceiptDialog}
+                        closeClick={() =>
+                          setShowReceiptDialog(!showReceiptDialog)
+                        }
+                        confirmClick={(transId) =>
+                          queryAgentAccountTransactionsById(transId)
+                        }
+                      />
                       <audio ref={audioPlayer} src={NotificationSound} />
                     </form>
                   </div>

@@ -29,6 +29,7 @@ import Textarea from "@mui/joy/Textarea";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import FormHelperText from "@mui/joy/FormHelperText";
+import PreviewPaymentReceiptDialog from "./ConfirmServicePaymentResponse";
 import PreviewNpoServicePayment from "./ConfirmNpoServicePayment";
 import PreviewNpoServicePaymentResponse from "./ConfirmNpoServicePaymentResponse";
 import PreviewNpoServicePaymentInitiation from "./ConfirmNpoServicePaymentInitiation";
@@ -47,6 +48,7 @@ import {
   registerNpoClient,
   viewNpoRegistrations,
   viewNpoAddresses,
+  viewAgentFloatAccountTransactionsById,
 } from "../../apis/UserController";
 import dateFormat, { masks } from "dateformat";
 import LoginPage from "../user/LoginPage";
@@ -107,6 +109,11 @@ export default function NpoServicePage() {
   const [agentAccountTransactions, setAgentAccountTransactions] = useState([]);
   const [agentAccountMetaTransactions, setAgentAccountMetaTransactions] =
     useState([]);
+  const [
+    agentAccountTransactionsByIdData,
+    setAgentAccountTransactionsByIdData,
+  ] = useState([]);
+  const [showReceiptDialog, setShowReceiptDialog] = useState(false);
   const [balance, setbalance] = useState("Rwf 0.00");
   const [formattedBalance, setFormattedBalance] = useState("Rwf 0.00");
   const [agentNameId, setAgentNameId] = useState("Agent Float A/C");
@@ -150,6 +157,11 @@ export default function NpoServicePage() {
   const [postalCode, setPostalCode] = useState("");
   const [postalCodeName, setPostalCodeName] = useState("");
   const [isPersonal, setIsPersonal] = useState(null);
+
+  const [receiptId, setReceiptId] = useState("");
+  const [receiptNote, setReceiptNote] = useState("");
+  const [serviceFeeAmt, setServiceFeeAmt] = useState("");
+  const [totalPayment, setTotalPayment] = useState("");
 
   const clientTypesCode = [
     { status: false, name: "Organization" },
@@ -283,7 +295,43 @@ export default function NpoServicePage() {
       //console.log("View Address Status Error:"+err);
     }
   };
+  const queryAgentAccountTransactionsById = async (transId) => {
+    setShowReceiptDialog(false);
+    const id = toast.loading("Previewing NPO Receipt...");
 
+    try {
+      const response = await viewAgentFloatAccountTransactionsById(
+        context.userKey,
+        context.agentFloatAccountId,
+        transId
+      );
+
+      if (response.responseCode === "200") {
+        setAgentAccountTransactionsByIdData(response.data);
+
+        const firstTransaction = response.data[0];
+
+        if (firstTransaction) {
+          navigate("/ddin-npo-receipt", {
+            state: {
+              transactionData: firstTransaction,
+              agentUsername: context.agentUsername,
+            },
+          });
+        } else {
+          //Fail To Check TX Status
+          setShowReceiptDialog(true);
+          console.log("Fail To Check TX Status- ");
+        }
+      } else {
+        setShowReceiptDialog(true);
+        toast.info(response.responseDescription);
+      }
+    } catch (err) {
+      setShowReceiptDialog(true);
+      console.log("Agent Account TX By Id Status Error:" + err);
+    }
+  };
   const createNewNpoClientProfile = async () => {
     const id = toast.loading("Processing NPO Client Registration...");
 
@@ -380,7 +428,7 @@ export default function NpoServicePage() {
         setReceiptTxDate(new Date());
         //toast.dismiss();
 
-        toast.update(id, {
+        /*toast.update(id, {
           render:
             "NPO client registration processing completed successfully with transaction No:" +
             response.transactionId +
@@ -389,7 +437,7 @@ export default function NpoServicePage() {
           type: "success",
           isLoading: false,
           closeButton: null,
-        });
+        });*/
         setValidFileLevel(false);
         setFirstname("");
         setLastname("");
@@ -399,6 +447,18 @@ export default function NpoServicePage() {
         setPostalCodeId("");
         setIsPersonal(null);
         setValue("");
+
+        toast.dismiss();
+        setReceiptId(response.responseStatus);
+        setReceiptNote(
+          "NPO client registration processing completed successfully with transaction No:" +
+            response.transactionId +
+            "-SMS Status:" +
+            response.responseDescription
+        );
+        setServiceFeeAmt("");
+        setTotalPayment(amount);
+        setShowReceiptDialog(true);
       } else {
         //Testing The Payment Initiation:
         // toast.dismiss();
@@ -1033,7 +1093,19 @@ export default function NpoServicePage() {
                         }
                         previewReceiptClick={() => console.log("")}
                       />
-
+                      <PreviewPaymentReceiptDialog
+                        receiptId={receiptId}
+                        receiptDescription={receiptNote}
+                        serviceFeeAmt={serviceFeeAmt}
+                        totalPayment={totalPayment}
+                        openstatus={showReceiptDialog}
+                        closeClick={() =>
+                          setShowReceiptDialog(!showReceiptDialog)
+                        }
+                        confirmClick={(transId) =>
+                          queryAgentAccountTransactionsById(transId)
+                        }
+                      />
                       <audio ref={audioPlayer} src={NotificationSound} />
                     </form>
                   </div>

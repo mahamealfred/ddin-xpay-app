@@ -34,7 +34,7 @@ export default function ConfirmNpoServicePayment(props) {
           id="alert-dialog-title"
           style={{ color: "#ff9900", fontSize: 14 }}
         >
-          <b>{"RRA Payment Notification:"}</b>
+          <b>{"Electricity Payment Notification:"}</b>
         </DialogTitle>
         <DialogContent>
           <DialogContentText
@@ -65,7 +65,7 @@ export default function ConfirmNpoServicePayment(props) {
         </DialogContent>
         <DialogActions>
           <Button
-            style={{ color: "red", fontSize: 14 }}
+            style={{ color: "red", fontSize: 12 }}
             onClick={props.closeClick}
           >
             Cancel

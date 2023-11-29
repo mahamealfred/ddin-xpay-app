@@ -34,7 +34,7 @@ export default function ConfirmNpoServicePayment(props) {
           id="alert-dialog-title"
           style={{ color: "#ff9900", fontSize: 14 }}
         >
-          <b>{"RRA Payment Notification:"}</b>
+          <b>{"Bulk SMS Processing Notification:"}</b>
         </DialogTitle>
         <DialogContent>
           <DialogContentText
@@ -55,7 +55,6 @@ export default function ConfirmNpoServicePayment(props) {
                 <span>
                   -Total Payment:<b>{props.totalPayment}</b>
                 </span>
-                <br />
               </p>
             </Stack>
           </DialogContentText>

@@ -15,6 +15,8 @@ const base_localhost_login_test =
 
 const base_localhost_account_transaction_test =
   "http://localhost:8345/pindo/api/v1/agent/account/transactions?";
+const base_localhost_account_transaction_byid_test =
+  "http://localhost:8345/pindo/api/v1/agent/account/transactions/";
 
 const base_localhost_account_npo_registrations =
   "http://localhost:8345/pindo/api/npo/registrations";
@@ -72,6 +74,9 @@ const base_remote_login_test =
 const base_remote_account_transaction_test =
   "https://test.ddin.rw/ddincoreapis/pindo/api/v1/agent/account/transactions?";
 
+const base_remote_account_transaction_byid_test =
+  "https://test.ddin.rw/ddincoreapis/pindo/api/v1/agent/account/transactions/";
+
 const base_remote_account_npo_registrations_test =
   "https://test.ddin.rw/ddincoreapis/pindo/api/npo/registrations";
 const base_remote_npo_addresses_test =
@@ -123,6 +128,9 @@ const base_remote_login_prod =
 
 const base_remote_account_transaction_prod =
   "https://core.ddin.rw/ddincoreapisprod/pindo/api/v1/agent/account/transactions?";
+
+const base_remote_account_transaction_byid_prod =
+  "https://core.ddin.rw/ddincoreapisprod/pindo/api/v1/agent/account/transactions/";
 const base_remote_npo_addresses_prod =
   "https://core.ddin.rw/ddincoreapisprod/pindo/api/npo/postal-codes/addresses";
 const base_remote_account_npo_registrations_prod =
@@ -503,6 +511,65 @@ const viewNpoRegistrations = async (userKey, accountId) => {
   return serverResponse;
 };
 
+const viewAgentFloatAccountTransactionsById = async (
+  userKey,
+  accountId,
+  transId
+) => {
+  //base_remote_account_transaction_byid_test
+  //base_remote_account_transaction_byid_prod
+  //base_localhost_account_transaction_byid_test
+  const URL_WITH_PARAMS =
+    base_remote_account_transaction_byid_test +
+    "" +
+    transId +
+    "?" +
+    "accountId=" +
+    accountId;
+  //
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    communicationStatus: "",
+    data: [],
+  };
+
+  await axios
+    .get(URL_WITH_PARAMS, {
+      headers: {
+        Authorization: `Basic ${userKey}`,
+      },
+      withCredentials: true,
+    })
+
+    .then((response) => {
+      if (response.data.responseCode === "200") {
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.data = response.data.data;
+      } else {
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+      }
+    })
+    .catch((err) => {
+      serverResponse.responseDescription =
+        "AGENT TRANSACTION ACCESS PROCESSING ERROR -" + err;
+      serverResponse.communicationStatus =
+        "AGENT TRANSACTION ACCESS PROCESSING FAILURE -" + err;
+      serverResponse.responseCode = "601";
+
+      if (!err.response) {
+      } else if (err.response.status === 400) {
+      } else if (err.response.status === 401) {
+      } else {
+      }
+    });
+
+  return serverResponse;
+};
 const viewAgentFloatAccountTransactions = async (userKey, accountId) => {
   //base_remote_account_transaction_test
   //base_remote_account_transaction_prod
@@ -1252,4 +1319,5 @@ export {
   viewAgentFloatAccountTransactions,
   viewNpoRegistrations,
   executeEfasheRraVendingTx,
+  viewAgentFloatAccountTransactionsById,
 };

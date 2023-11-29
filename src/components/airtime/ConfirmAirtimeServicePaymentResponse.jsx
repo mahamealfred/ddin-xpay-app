@@ -14,6 +14,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Navigate, Link, useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+
 import Stack from "@mui/material/Stack";
 import { toast } from "react-toastify";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -32,9 +33,9 @@ export default function ConfirmNpoServicePayment(props) {
       >
         <DialogTitle
           id="alert-dialog-title"
-          style={{ color: "#ff9900", fontSize: 14 }}
+          style={{ color: "green", fontSize: 14 }}
         >
-          <b>{"RRA Payment Notification:"}</b>
+          <b>{"Airtime Payment Notification:"}</b>
         </DialogTitle>
         <DialogContent>
           <DialogContentText
@@ -53,9 +54,8 @@ export default function ConfirmNpoServicePayment(props) {
                 <br />
 
                 <span>
-                  -Total Payment:<b>{props.totalPayment}</b>
+                  -Total Payment:Rwf <b>{props.totalPayment}</b>
                 </span>
-                <br />
               </p>
             </Stack>
           </DialogContentText>

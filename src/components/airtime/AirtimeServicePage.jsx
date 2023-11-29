@@ -29,6 +29,7 @@ import Textarea from "@mui/joy/Textarea";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import FormHelperText from "@mui/joy/FormHelperText";
+import PreviewPaymentReceiptDialog from "./ConfirmAirtimeServicePaymentResponse";
 import PreviewAirtimeServicePayment from "./ConfirmAirtimeServicePayment";
 import NotificationSound from "../../images/audio/notificationsound.wav";
 import { read, utils, writeFile } from "xlsx";
@@ -48,6 +49,7 @@ import {
   executeEfasheVendingTx,
   validateEfasheVendingTx,
   viewAgentFloatAccountTransactions,
+  viewAgentFloatAccountTransactionsById,
   viewNpoAddresses,
 } from "../../apis/UserController";
 import dateFormat, { masks } from "dateformat";
@@ -109,7 +111,11 @@ export default function AirtimeServicePage() {
   const [identityTypeSelected, setIdentityTypeSelected] = useState("1");
   const [value, setValue] = useState("");
   const [npoAddressData, setNpoAddressData] = useState(null);
-
+  const [
+    agentAccountTransactionsByIdData,
+    setAgentAccountTransactionsByIdData,
+  ] = useState([]);
+  const [showReceiptDialog, setShowReceiptDialog] = useState(false);
   const [verticalId, setVerticalId] = useState("airtime");
   const [efasheServiceAmount, setEfasheServiceAmount] = useState("");
 
@@ -156,6 +162,11 @@ export default function AirtimeServicePage() {
 
   const [transferId, setTransferId] = useState("");
   const [memberId, setMemberId] = useState("");
+
+  const [receiptId, setReceiptId] = useState("");
+  const [receiptNote, setReceiptNote] = useState("");
+  const [serviceFeeAmt, setServiceFeeAmt] = useState("");
+  const [totalPayment, setTotalPayment] = useState("");
 
   const clientTypesCode = [
     { status: false, name: "Organization" },
@@ -359,16 +370,25 @@ export default function AirtimeServicePage() {
 
       if (response.responseCode === "200") {
         playAudio();
+        /*
         toast.update(id, {
           render: response.responseDescription,
           type: "success",
           isLoading: false,
           closeButton: null,
-        });
+        });*/
         //unpackage data
 
         setValue("");
         setEfasheServiceAmount("");
+
+        setReceiptId(response.responseStatus);
+        setReceiptNote(response.responseDescription);
+        setServiceFeeAmt("");
+        setTotalPayment(efasheServiceAmount);
+
+        toast.dismiss();
+        setShowReceiptDialog(true);
       } else {
         toast.update(id, {
           render: response.responseDescription,
@@ -388,6 +408,51 @@ export default function AirtimeServicePage() {
         closeButton: null,
       });
       setValidFileLevel(false);
+    }
+  };
+
+  const queryAgentAccountTransactionsById = async (transId) => {
+    if (transId !== "") {
+      setShowReceiptDialog(false);
+      const id = toast.loading("Previewing Airtime Receipt...");
+      try {
+        const response = await viewAgentFloatAccountTransactionsById(
+          context.userKey,
+          context.agentFloatAccountId,
+          transId
+        );
+
+        if (response.responseCode === "200") {
+          setAgentAccountTransactionsByIdData(response.data);
+          console.log(
+            "Airtime TX ID:" + transId + "-" + context.agentFloatAccountId
+          );
+          const firstTransaction = response.data[0];
+          console.log("Transaction ID:" + firstTransaction.id);
+          toast.dismiss();
+
+          setShowReceiptDialog(false);
+
+          if (firstTransaction) {
+            navigate("/ddin-airtime-receipt", {
+              state: {
+                transactionData: firstTransaction,
+                agentUsername: context.agentUsername,
+              },
+            });
+          } else {
+            //Fail To Check TX Status
+            setShowReceiptDialog(true);
+            console.log("Fail To Check TX Status- ");
+          }
+        } else {
+          console.log(response.responseDescription);
+          //toast.info(response.responseDescription);
+        }
+      } catch (err) {
+        //toast.info(response.responseDescription);
+        console.log("Agent Account TX By Id Status Error:" + err);
+      }
     }
   };
 
@@ -759,6 +824,19 @@ export default function AirtimeServicePage() {
                         confirmClick={() => sendPaymentRequest()}
                       />
 
+                      <PreviewPaymentReceiptDialog
+                        receiptId={receiptId}
+                        receiptDescription={receiptNote}
+                        serviceFeeAmt={serviceFeeAmt}
+                        totalPayment={totalPayment}
+                        openstatus={showReceiptDialog}
+                        closeClick={() =>
+                          setShowReceiptDialog(!showReceiptDialog)
+                        }
+                        confirmClick={(transId) =>
+                          queryAgentAccountTransactionsById(transId)
+                        }
+                      />
                       <audio ref={audioPlayer} src={NotificationSound} />
                     </form>
                   </div>

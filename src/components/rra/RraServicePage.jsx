@@ -30,7 +30,7 @@ import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import FormHelperText from "@mui/joy/FormHelperText";
 import PreviewRraServicePayment from "./ConfirmRraServicePayment";
-
+import PreviewPaymentReceiptDialog from "./ConfirmRraServicePaymentResponse";
 import NotificationSound from "../../images/audio/notificationsound.wav";
 import { read, utils, writeFile } from "xlsx";
 import TextareaAutosize from "react-textarea-autosize";
@@ -48,6 +48,7 @@ import {
   validateEfasheRraVendingTx,
   executeEfasheRraVendingTx,
   viewAgentFloatAccountTransactions,
+  viewAgentFloatAccountTransactionsById,
   viewNpoAddresses,
 } from "../../apis/UserController";
 import dateFormat, { masks } from "dateformat";
@@ -77,6 +78,7 @@ export default function ElectricityServicePage() {
   const context = useContext(Context);
   const navigate = useNavigate();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showReceiptDialog, setShowReceiptDialog] = useState(false);
   const [showConfirmResponseDialog, setShowConfirmResponseDialog] =
     useState(false);
   const [showConfirmBulkFileDialog, setShowConfirmBulkFileDialog] =
@@ -101,6 +103,10 @@ export default function ElectricityServicePage() {
   const [validFileLevelMessage, setValidFileLevelMessage] = useState("");
   const [users, setUsers] = useState([]);
   const [fdiTxData, setFdiTxData] = useState([]);
+  const [
+    agentAccountTransactionsByIdData,
+    setAgentAccountTransactionsByIdData,
+  ] = useState([]);
   const [agentAccountTransactions, setAgentAccountTransactions] = useState([]);
   const [balance, setbalance] = useState("Rwf 0.00");
   const [formattedBalance, setFormattedBalance] = useState("Rwf 0.00");
@@ -169,6 +175,11 @@ export default function ElectricityServicePage() {
   const [transferId, setTransferId] = useState("");
   const [memberId, setMemberId] = useState("");
 
+  const [receiptId, setReceiptId] = useState("");
+  const [receiptNote, setReceiptNote] = useState("");
+  const [serviceFeeAmt, setServiceFeeAmt] = useState("");
+  const [totalPayment, setTotalPayment] = useState("");
+
   const audioPlayer = useRef(null);
 
   function playAudio() {
@@ -192,7 +203,9 @@ export default function ElectricityServicePage() {
   const viewConfirmDialog = () => {
     setShowConfirmDialog(true);
   };
-
+  const viewReceiptDialog = () => {
+    setShowReceiptDialog(true);
+  };
   function findServiceFee(amount) {
     if (amount >= 1 && amount <= 1000) {
       return 160;
@@ -212,6 +225,24 @@ export default function ElectricityServicePage() {
       return 0;
     }
   }
+
+  const handleReceiptPreviewClick = (transId) => {
+    // Extract the necessary data
+
+    const firstTransaction = agentAccountTransactionsByIdData[0];
+
+    if (firstTransaction) {
+      navigate("/ddin-rra-receipt", {
+        state: {
+          transactionData: firstTransaction,
+          agentUsername: context.agentUsername,
+        },
+      });
+    } else {
+      //Fail To Check TX Status
+    }
+  };
+
   const queryAgentAccountTransactions = async () => {
     try {
       const response = await viewAgentFloatAccountTransactions(
@@ -226,6 +257,43 @@ export default function ElectricityServicePage() {
       }
     } catch (err) {
       // console.log("Agent Account Status Error:"+err);
+    }
+  };
+
+  const queryAgentAccountTransactionsById = async (transId) => {
+    setShowReceiptDialog(false);
+    const id = toast.loading("Previewing RRA Payment Receipt...");
+    try {
+      const response = await viewAgentFloatAccountTransactionsById(
+        context.userKey,
+        context.agentFloatAccountId,
+        transId
+      );
+
+      if (response.responseCode === "200") {
+        setAgentAccountTransactionsByIdData(response.data);
+
+        const firstTransaction = response.data[0];
+
+        if (firstTransaction) {
+          navigate("/ddin-rra-receipt", {
+            state: {
+              transactionData: firstTransaction,
+              agentUsername: context.agentUsername,
+            },
+          });
+        } else {
+          //Fail To Check TX Status
+          setShowReceiptDialog(true);
+          console.log("Fail To Check TX Status- ");
+        }
+      } else {
+        setShowReceiptDialog(true);
+        toast.info(response.responseDescription);
+      }
+    } catch (err) {
+      setShowReceiptDialog(true);
+      console.log("Agent Account TX By Id Status Error:" + err);
     }
   };
 
@@ -410,15 +478,27 @@ export default function ElectricityServicePage() {
         //response.data.spVendInfo.voucher +",Receipt No:" +
         //response.data.spVendInfo.receiptNo +", for Total Tax With Service fee -Rwf" +
         //response.data.spVendInfo.unitsWorth,
-        toast.update(id, {
+        /* toast.update(id, {
           render: response.responseDescription,
 
           type: "success",
           isLoading: false,
           closeButton: null,
-        });
+        });*/
         setTokenAmount("");
         setMeterNumber("");
+        //preview receipt
+
+        //Load TX Data:
+
+        toast.dismiss();
+        setReceiptId(response.responseStatus);
+        setReceiptNote(response.responseDescription);
+        setServiceFeeAmt("");
+        setTotalPayment(vendMax);
+        setShowReceiptDialog(true);
+
+        //queryAgentAccountTransactionsById(response.responseStatus);
       } else {
         toast.update(id, {
           render: response.responseDescription,
@@ -807,6 +887,19 @@ export default function ElectricityServicePage() {
                           setShowConfirmDialog(!showConfirmDialog)
                         }
                         confirmClick={() => sendPaymentRequest()}
+                      />
+                      <PreviewPaymentReceiptDialog
+                        receiptId={receiptId}
+                        receiptDescription={receiptNote}
+                        serviceFeeAmt={serviceFeeAmt}
+                        totalPayment={totalPayment}
+                        openstatus={showReceiptDialog}
+                        closeClick={() =>
+                          setShowReceiptDialog(!showReceiptDialog)
+                        }
+                        confirmClick={(transId) =>
+                          queryAgentAccountTransactionsById(transId)
+                        }
                       />
 
                       <audio ref={audioPlayer} src={NotificationSound} />
