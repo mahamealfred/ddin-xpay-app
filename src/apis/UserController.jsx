@@ -41,7 +41,13 @@ const base_localhost_register_npoclient_test =
 
 const base_localhost_npo_addresses_test =
   "https://test.ddin.rw/ddincoreapis/pindo/api/npo/postal-codes/addresses";
+const base_localhost_provinces_test =
+  "https://test.ddin.rw/usermanager/api/v1/users/provinces";
+const base_localhost_districts_test =
+  "https://test.ddin.rw/usermanager/api/v1/users/province/";
 
+const base_localhost_sectors_test =
+  "https://test.ddin.rw/usermanager/api/v1/users/district/";
 const base_localhost_efashe_validtx_test =
   "http://localhost:8345/pindo/api/v1/efashe/pay-airtime";
 
@@ -99,7 +105,14 @@ const base_remote_fdi_pay_test_v4 =
 
 const base_remote_register_npoclient_test =
   "https://test.ddin.rw/ddincoreapis/pindo/api/v2/npo/clients";
-
+const base_remote_register_ddinagent_test =
+  "https://test.ddin.rw/usermanager/api/v1/users/register";
+const base_remote_register_ddinagent_prod =
+  "https://test.ddin.rw/usermgtprod/api/v1/users/register";
+const base_remote_create_otp_test =
+  "https://test.ddin.rw/usermanager/api/v1/users/otps";
+const base_remote_verify_otp_test =
+  "https://test.ddin.rw/usermanager/api/v1/users/verify?";
 const base_remote_efashe_validtx_test =
   "https://test.ddin.rw/ddincoreapis/pindo/api/v1/efashe/pay-airtime";
 
@@ -129,7 +142,7 @@ const base_remote_login_prod =
   "https://core.ddin.rw/ddincoreapisprod/users/api/v1/agent/auth";
 
 const base_remote_change_password_prod =
-  "https://test.ddin.rw/usermanager/api/v1/users/password?";
+  "https://test.ddin.rw/usermgtprod/api/v1/users/password?";
 
 const base_remote_account_transaction_prod =
   "https://core.ddin.rw/ddincoreapisprod/pindo/api/v1/agent/account/transactions?";
@@ -331,6 +344,160 @@ const viewNpoAddresses = async (userKey) => {
   return serverResponse;
 };
 
+//View Districts:
+const viewDistricts = async (userKey, provinceId) => {
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    communicationStatus: "",
+    responseDate: "",
+    data: "",
+  };
+  //base_localhost_districts_test
+  //base_remote_npo_addresses_test
+  //base_remote_npo_addresses_prod
+  const searchDistrictURL =
+    base_localhost_districts_test + "" + provinceId + "/district";
+  await axios
+    .get(searchDistrictURL, {
+      headers: {
+        Authorization: `Basic ${userKey}`,
+      },
+      withCredentials: true,
+    })
+    .then((response) => {
+      if (response.data.responseCode === "200") {
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.responseDate = response.data.responseDate;
+        serverResponse.data = response.data.data;
+      } else {
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.responseDate = response.data.responseDate;
+      }
+    })
+    .catch((err) => {
+      serverResponse.responseDescription =
+        "AGENT TRANSACTION ACCESS PROCESSING ERROR -" + err;
+      serverResponse.communicationStatus =
+        "AGENT TRANSACTION ACCESS PROCESSING ERROR -" + err;
+      serverResponse.responseCode = "601";
+
+      if (!err.response) {
+      } else if (err.response.status === 400) {
+      } else if (err.response.status === 401) {
+      } else {
+      }
+      //errRef.current.focus();
+    });
+
+  return serverResponse;
+};
+//View Sectors:
+const viewSectors = async (userKey, districtId) => {
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    communicationStatus: "",
+    responseDate: "",
+    data: "",
+  };
+  //base_localhost_sectors_test
+  //base_remote_npo_addresses_test
+  //base_remote_npo_addresses_prod
+  const searchSectorsURL =
+    base_localhost_sectors_test + "" + districtId + "/sectors";
+  await axios
+    .get(searchSectorsURL, {
+      headers: {
+        Authorization: `Basic ${userKey}`,
+      },
+      withCredentials: true,
+    })
+    .then((response) => {
+      if (response.data.responseCode === "200") {
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.responseDate = response.data.responseDate;
+        serverResponse.data = response.data.data;
+      } else {
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.responseDate = response.data.responseDate;
+      }
+    })
+    .catch((err) => {
+      serverResponse.responseDescription =
+        "AGENT TRANSACTION ACCESS PROCESSING ERROR -" + err;
+      serverResponse.communicationStatus =
+        "AGENT TRANSACTION ACCESS PROCESSING ERROR -" + err;
+      serverResponse.responseCode = "601";
+
+      if (!err.response) {
+      } else if (err.response.status === 400) {
+      } else if (err.response.status === 401) {
+      } else {
+      }
+      //errRef.current.focus();
+    });
+
+  return serverResponse;
+};
+//View Provinces:
+const viewProvinces = async (userKey) => {
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    communicationStatus: "",
+    responseDate: "",
+    data: "",
+  };
+  //base_localhost_provinces_test
+  //base_remote_npo_addresses_test
+  //base_remote_npo_addresses_prod
+  await axios
+    .get(base_localhost_provinces_test, {
+      headers: {
+        Authorization: `Basic ${userKey}`,
+      },
+      withCredentials: true,
+    })
+    .then((response) => {
+      if (response.data.responseCode === "200") {
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.responseDate = response.data.responseDate;
+        serverResponse.data = response.data.data;
+      } else {
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.responseDate = response.data.responseDate;
+      }
+    })
+    .catch((err) => {
+      serverResponse.responseDescription =
+        "AGENT TRANSACTION ACCESS PROCESSING ERROR -" + err;
+      serverResponse.communicationStatus =
+        "AGENT TRANSACTION ACCESS PROCESSING ERROR -" + err;
+      serverResponse.responseCode = "601";
+
+      if (!err.response) {
+      } else if (err.response.status === 400) {
+      } else if (err.response.status === 401) {
+      } else {
+      }
+      //errRef.current.focus();
+    });
+
+  return serverResponse;
+};
 //======look up TX Status======
 const viewAgentFloatAccountStatus = async (userKey, accountId) => {
   //base_remote_account_status_test
@@ -684,9 +851,10 @@ const changePassword = async (username, oldPassword, newPassword, userKey) => {
     transactionId: "",
     pindoSmsId: "",
   };
-  // base_remote_pindo_pay_test
-  //base_remote_pindo_pay_prod
-  //base_localhost_pindo_pay_test
+  //base_remote_change_password_prod
+  //base_remote_change_password_test
+  //base_localhost_change_password
+
   const URL_WITH_PARAMS =
     base_remote_change_password_test +
     "username=" +
@@ -1314,6 +1482,179 @@ const payFdiv2 = async (requestPayLoad, userKey) => {
 
   return serverResponse;
 };
+
+const registerNewAgent = async (requestPayLoad, userKey) => {
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    responseStatus: "",
+    transactionId: "",
+    pindoSmsId: "",
+  };
+
+  //base_remote_register_ddinagent_test
+  //
+  //base_remote_register_ddinagent_prod
+  await axios
+    .post(base_remote_register_ddinagent_test, requestPayLoad, {
+      headers: {
+        Authorization: `Basic ${userKey}`,
+      },
+      withCredentials: false,
+    })
+
+    .then((response) => {
+      if (response.data.responseCode === "200") {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.transactionId = response.data.data.transactionId;
+        //serverResponse.pindoSmsId=response.data.data.pindoSmsId;
+      } else {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+      }
+    })
+    .catch((err) => {
+      serverResponse.responseDescription =
+        "Dear customer we are unable to process your request now. Try again later." +
+        err;
+      serverResponse.responseStatus =
+        "Dear customer we are unable to process your request now. Try again later." +
+        err;
+      serverResponse.responseCode = "501";
+
+      if (!err.response) {
+      } else if (err.response.status === 400) {
+      } else if (err.response.status === 401) {
+      } else {
+      }
+    });
+
+  return serverResponse;
+};
+const createOpt = async (requestPayLoad, userKey) => {
+  /**
+   * Payload:
+   * {
+  "recipientEmail": "niyongeregirbert@gmail.com",
+  "optStatus": "Pending",
+  "trackingNumber": "ABC1212",
+  "otpPurpose": "Tester N"
+}
+   */
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    responseStatus: "",
+    transactionId: "",
+    pindoSmsId: "",
+  };
+
+  //base_remote_create_otp_test
+  //base_localhost_register_npoclient_test
+  //base_remote_register_npoclient_prod
+  await axios
+    .post(base_remote_create_otp_test, requestPayLoad, {
+      headers: {
+        Authorization: `Basic ${userKey}`,
+      },
+      withCredentials: false,
+    })
+
+    .then((response) => {
+      if (response.data.responseCode === "200") {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        //serverResponse.transactionId = response.data.data.transactionId;
+        //serverResponse.pindoSmsId=response.data.data.pindoSmsId;
+      } else {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+      }
+    })
+    .catch((err) => {
+      serverResponse.responseDescription =
+        "Dear customer we are unable to process your request now. Try again later." +
+        err;
+      serverResponse.responseStatus =
+        "Dear customer we are unable to process your request now. Try again later." +
+        err;
+      serverResponse.responseCode = "501";
+
+      if (!err.response) {
+      } else if (err.response.status === 400) {
+      } else if (err.response.status === 401) {
+      } else {
+      }
+    });
+
+  return serverResponse;
+};
+const verifyOpt = async (recipientEmail, userKey, otpValue) => {
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    responseStatus: "",
+    transactionId: "",
+    pindoSmsId: "",
+  };
+
+  //base_remote_verify_otp_test
+  //base_localhost_register_npoclient_test
+  //base_remote_register_npoclient_prod
+  const verifyUrl =
+    base_remote_verify_otp_test +
+    "recipientEmail=" +
+    recipientEmail +
+    "&otpValue=" +
+    otpValue;
+  await axios
+    .post(
+      verifyUrl,
+      {},
+      {
+        headers: {
+          Authorization: `Basic ${userKey}`,
+        },
+        withCredentials: false,
+      }
+    )
+
+    .then((response) => {
+      if (response.data.responseCode === "200") {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        //serverResponse.transactionId = response.data.data.transactionId;
+        //serverResponse.pindoSmsId=response.data.data.pindoSmsId;
+      } else {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+      }
+    })
+    .catch((err) => {
+      serverResponse.responseDescription =
+        "Dear customer we are unable to process your request now. Try again later." +
+        err;
+      serverResponse.responseStatus =
+        "Dear customer we are unable to process your request now. Try again later." +
+        err;
+      serverResponse.responseCode = "501";
+
+      if (!err.response) {
+      } else if (err.response.status === 400) {
+      } else if (err.response.status === 401) {
+      } else {
+      }
+    });
+
+  return serverResponse;
+};
 const registerNpoClient = async (requestPayLoad, userKey) => {
   const serverResponse = {
     responseCode: "",
@@ -1388,4 +1729,9 @@ export {
   executeEfasheRraVendingTx,
   viewAgentFloatAccountTransactionsById,
   changePassword,
+  viewProvinces,
+  viewDistricts,
+  viewSectors,
+  registerNewAgent,
+  createOpt,
 };

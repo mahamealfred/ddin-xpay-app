@@ -8,7 +8,7 @@ import ReceiptManager from "./components/receipt/ReceiptManager";
 import AirtimeReceiptManager from "./components/receipt/AirtimeReceiptManager";
 import ElectricityReceiptManager from "./components/receipt/ElectricityReceiptManager";
 import RraReceiptManager from "./components/receipt/RraReceiptManager";
-
+import RegisterServicePage from "./components/user/RegisterServicePage";
 import FdiReceiptManager from "./components/receipt/FdiReceiptManager";
 import NpoReceiptManager from "./components/receipt/NpoReceiptManager";
 import StartimesReceiptManager from "./components/receipt/StartimesReceiptManager";
@@ -49,6 +49,7 @@ function App() {
           ></Route>
           <Route path="/buy-airtime" element={<AirtimeServicePage />}></Route>
 
+          <Route path="/register" element={<RegisterServicePage />}></Route>
           <Route
             path="/ddin-bulksms-receipt"
             element={<FdiReceiptManager />}

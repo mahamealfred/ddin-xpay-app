@@ -296,6 +296,7 @@ export default function LoginPage() {
         context.updateAgentUsername(response.username);
         context.updateUserKey(base64data);
         context.updateAgentFloatAccountId(response.floatAccountId);
+
         context.updateAgentInstantCommissionAccountId(
           response.instantCommissionAccountId
         );
@@ -430,10 +431,7 @@ export default function LoginPage() {
               <div class="login-meta-data">
                 <p class="mb-0">
                   Do you have an account?
-                  <a
-                    class="mx-1"
-                    href="https://core.ddin.rw/core/do/doPublicCreateMember?groupId=5"
-                  >
+                  <a class="mx-1" href="/register">
                     Register Now
                   </a>
                 </p>
