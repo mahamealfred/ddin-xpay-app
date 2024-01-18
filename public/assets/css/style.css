@@ -4151,10 +4151,10 @@ li.ddin-dropdown-menu .dropdown-trigger-btn.active i {
 
 .discount-coupon-card {
   border-radius: 6px;
-  background: #fcdc6c;
-  background: -o-linear-gradient(right, #fcdc6c, #fcdc6c);
-  background: -webkit-gradient(linear, right top, left top, from(#fcdc6c), to(#fcdc6c));
-  background: linear-gradient(to left, #fcdc6c, #fcdc6c);
+  background: #f8882b;
+  background: -o-linear-gradient(right, #f8882b, #f8882b);
+  background: -webkit-gradient(linear, right top, left top, from(#f8882b), to(#f8882b));
+  background: linear-gradient(to left, #f8882b, #f8882b);
 }
 .discount-coupon-card-blue {
   border-radius: 6px;
