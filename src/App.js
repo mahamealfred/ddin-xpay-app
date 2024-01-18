@@ -20,7 +20,6 @@ import StartimesServicePage from "./components/startimes/StartimesServicePage";
 import ElectricityServicePage from "./components/electricity/ElectricityServicePage";
 
 import ChangePasswordPage from "./components/settings/ChangePasswordPage";
-
 import RraServicePage from "./components/rra/RraServicePage";
 
 function App() {

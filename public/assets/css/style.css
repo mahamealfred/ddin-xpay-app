@@ -1317,9 +1317,9 @@ textarea:invalid {
   width: 100%;
   min-height: 100vh;
   background: #0d5cd1;
-  background: -o-linear-gradient(right, #00b0f0, #00b0f0);
-  background: -webkit-gradient(linear, right top, left top, from(#00b0f0), to(#00b0f0));
-  background: linear-gradient(to left, #00b0f0, #00b0f0);
+  background: -o-linear-gradient(right, #202a4e, #202a4e);
+  background: -webkit-gradient(linear, right top, left top, from(#202a4e), to(#202a4e));
+  background: linear-gradient(to left, #202a4e, #202a4e);
   z-index: 10;
   overflow-y: auto;
   padding-top: 2rem;

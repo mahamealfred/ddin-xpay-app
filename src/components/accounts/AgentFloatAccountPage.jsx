@@ -70,10 +70,6 @@ const viewFloatAccountInfo=()=>{
 
   const queryAccountStatus = async () => {
 
-   
-   
-
-  
 
       try {
   

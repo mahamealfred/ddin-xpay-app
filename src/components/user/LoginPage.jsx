@@ -1,8 +1,4 @@
-/**
- * *@gniyonge
- * App Login Page
 
- */
 
 import React, { useContext, useState, useMemo, useRef, useEffect } from "react";
 import {
@@ -22,6 +18,7 @@ import $ from "jquery";
 import { Buffer } from "buffer";
 import HeaderPage from "../header/PublicHeaderPage";
 import FooterPage from "../footer/FooterPage";
+
 
 export default function LoginPage() {
   const context = useContext(Context);
@@ -350,9 +347,9 @@ export default function LoginPage() {
       <HeaderPage />
 
       <div class="login-wrapper d-flex align-items-center justify-content-center text-center">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="discount-coupon-card p-4 p-lg-5 dir-rtl">
+        <div class="container" >
+          <div class="row justify-content-center" >
+            <div class="discount-card p-4 p-lg-5 dir-rtl " style={{ backgroundColor: "#f8882b" }} >
               <div class="d-flex align-items-center">
                 <div class="discountIcon">
                   <img
@@ -418,7 +415,8 @@ export default function LoginPage() {
                     />
                   </div>
                   <button
-                    class="btn btn-warning btn-lg w-100"
+                  style={{ backgroundColor: "#f8882b" }}
+                    class="btn  btn-lg w-100"
                     onClick={onSigninClick}
                   >
                     Log In
