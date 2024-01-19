@@ -66,9 +66,9 @@ export default function HeaderPage() {
         <div class="container h-100 d-flex align-items-center justify-content-between d-flex rtl-flex-d-row-r">
           <div class="logo-wrapper">
             <a href="#">
-              <img src="assets/img/icons/fav-icon-ddn.PNG" alt="DDIN" />
+              {/* <img src="assets/img/icons/fav-icon-ddn.PNG" alt="DDIN" /> */}
               <b style={{ color: "#f8882b", fontSize: 30 }}>X</b>
-              <b style={{ color: "#202a4e", fontSize: 30 }}>Pay</b>
+              <b style={{ color: "#202a4e", fontSize: 30 }}>-Pay</b>
             </a>
           </div>
         </div>

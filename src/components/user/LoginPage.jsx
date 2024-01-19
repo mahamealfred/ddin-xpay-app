@@ -349,7 +349,7 @@ export default function LoginPage() {
       <div class="login-wrapper d-flex align-items-center justify-content-center text-center">
         <div class="container" >
           <div class="row justify-content-center" >
-            <div class="discount-coupon-card p-4 p-lg-5 dir-rtl " style={{ backgroundColor: "#f8882b" }} >
+            <div class="discount-coupon-card-blue p-4 p-lg-5 dir-rtl " style={{ backgroundColor: "#f8882b" }} >
               <div class="d-flex align-items-center">
                 <div class="discountIcon">
                   <img

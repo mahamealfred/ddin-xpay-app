@@ -68,7 +68,7 @@ export default function HeaderPage() {
             <a href="#">
               {/* <img src="assets/img/icons/fav-icon-ddn.PNG" alt="DDIN" /> */}
               <b style={{ color: "#f8882b", fontSize: 30 }}>X</b>
-              <b style={{ color: "#202a4e", fontSize: 30 }}>Pay</b>
+              <b style={{ color: "#202a4e", fontSize: 30 }}>-Pay</b>
             </a>
           </div>
           <div class="navbar-logo-container d-flex align-items-center">

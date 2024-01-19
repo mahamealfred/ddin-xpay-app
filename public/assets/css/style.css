@@ -40,7 +40,7 @@ html {
   font-family: "Hind Siliguri", sans-serif;
   color: #747794;
   overflow-x: hidden;
-  background-color: #E9EEFF;
+  background-color: #202a4e;
   scrollbar-width: thin;
   padding-right: 0 !important;
   letter-spacing: -0.5px;
@@ -334,7 +334,7 @@ textarea:invalid {
 }
 .section-heading h6 {
   margin-bottom: 0 !important;
-  color: #020310;
+  color: #ffff;
   line-height: 1;
 }
 .section-heading p {
@@ -881,6 +881,7 @@ textarea:invalid {
 .page-content-wrapper {
   margin-top: 50px;
   margin-bottom: 50px;
+  background-color: #202a4e;
 }
 
 .pwa-install-alert {
@@ -1601,10 +1602,10 @@ textarea:invalid {
 .ddin-offcanvas-wrap {
   width: 240px !important;
   border-right: 0 !important;
-  background: #00b0f0;
-  background: -o-linear-gradient(right, #00b0f0, #0d5cd1);
-  background: -webkit-gradient(linear, right top, left top, from(#00b0f0), to(#00b0f0));
-  background: linear-gradient(to left, #00b0f0, #0d5cd1);
+  background: #202a4e;
+  background: -o-linear-gradient(right, #202a4e, #0d5cd1);
+  background: -webkit-gradient(linear, right top, left top, from(#202a4e), to(#202a4e));
+  background: linear-gradient(to left, #202a4e, #0d5cd1);
 }
 .ddin-offcanvas-wrap .btn-close {
   position: absolute;
@@ -4158,10 +4159,10 @@ li.ddin-dropdown-menu .dropdown-trigger-btn.active i {
 }
 .discount-coupon-card-blue {
   border-radius: 6px;
-  background: #00b0f0;
-  background: -o-linear-gradient(right, #00b0f0, #100DD1);
-  background: -webkit-gradient(linear, right top, left top, from(#100DD1), to(#00b0f0));
-  background: linear-gradient(to left, #100DD1, #00b0f0);
+  background: #202a4e;
+  background: -o-linear-gradient(right, #202a4e, #f8882b);
+  background: -webkit-gradient(linear, right top, left top, from(#f8882b), to(#202a4e));
+  background: linear-gradient(to left, #f8882b, #202a4e);
 }
 .discount-coupon-card .discountIcon {
   -webkit-box-flex: 0;

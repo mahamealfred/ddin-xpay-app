@@ -257,11 +257,11 @@ export default function HomePage() {
         <div class="container">
           <br />
           <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
-            <h6>
+            {/* <h6>
               <a class="btn p-0" href="sign-in">
                 <i class="ms-1 fa-solid fa-arrow-left-long"></i> Sign out
               </a>
-            </h6>
+            </h6> */}
             {/*<a class="btn p-0" href="#">More<i class="ms-1 fa-solid fa-arrow-right-long"></i></a>*/}
           </div>
           <div class="discount-coupon-card-blue p-4 p-lg-5 dir-rtl">
