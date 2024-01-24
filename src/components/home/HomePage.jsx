@@ -265,6 +265,21 @@ export default function HomePage() {
             {/*<a class="btn p-0" href="#">More<i class="ms-1 fa-solid fa-arrow-right-long"></i></a>*/}
           </div>
           <div class="discount-coupon-card-blue p-4 p-lg-5 dir-rtl">
+          <ul class="sidenav-nav ">
+                  <li class="ddin-dropdown-menu">
+              <a href="#">
+                <i class="fa-solid fa-list"></i>Agent Accounts
+              </a>
+              <ul>
+                <li>
+                  <Link to="/agent-float-account">Float A/C</Link>
+                </li>
+                <li>
+                  <Link to="/agent-commission-account">Commission A/C</Link>
+                </li>
+              </ul>
+            </li>
+                    </ul>
             <div class="d-flex align-items-center">
               <div class="discountIcon">
                 <img
@@ -276,10 +291,13 @@ export default function HomePage() {
               <div class="text-content">
                 <h4 class="text-white mb-1">Agent Services Portal</h4>
                 <p class="text-white mb-0">
-                  <span class="px-1 fw-bold"></span>
+                  <span class="px-1 fw-bold">
+                 
+                  </span>
                 </p>
               </div>
             </div>
+            
           </div>
         </div>
 
@@ -289,6 +307,12 @@ export default function HomePage() {
               {context.agentCategory === null ||
               context.agentCategory === "Agent" ? (
                 <>
+                  <div class="text-content">
+                <h4 class="text-white mb-1">Available Services</h4>
+                <p class="text-white mb-0">
+                  <span class="px-1 fw-bold"></span>
+                </p>
+                </div>
                   <div class="col-3">
                     <div class="card catagory-card">
                       <div class="card-body px-2">
@@ -312,27 +336,7 @@ export default function HomePage() {
                  </div>
               </div>
           </div>*/}
-                  <div class="col-3">
-                    <div class="card catagory-card">
-                      <div class="card-body px-2">
-                        <Link to="#">
-                          <img src="assets/img/core-img/irembo.jpg" alt="" />
-                          <span>Irembo</span>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-3">
-                    <div class="card catagory-card">
-                      <div class="card-body px-2">
-                        <Link to="#">
-                          <img src="assets/img/core-img/bk.png" alt="" />
-                          <span>Bank Of Kigali</span>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
+                 
 
                   <div class="col-3">
                     <div class="card catagory-card">
@@ -353,41 +357,6 @@ export default function HomePage() {
                             alt=""
                           />
                           <span>RRA</span>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-3">
-                    <div class="card catagory-card">
-                      <div class="card-body px-2">
-                        <Link to="#">
-                          <img src="assets/img/bg-img/icon_logo.png" alt="" />
-                          <span>Mobicash</span>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-3">
-                    <div class="card catagory-card">
-                      <div class="card-body px-2">
-                        <Link to="#">
-                          <img src="assets/img/bg-img/equity.png" alt="" />
-                          <span>Equity Bank</span>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-3">
-                    <div class="card catagory-card">
-                      <div class="card-body px-2">
-                        <Link to="#">
-                          <img
-                            src="assets/img/bg-img/bulkpayments.png"
-                            alt=""
-                          />
-                          <span>Bulk Payment</span>
                         </Link>
                       </div>
                     </div>
@@ -427,7 +396,71 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
+                  <div class="text-content">
+                <h4 class="text-white mb-1">Upcoming  Services</h4>
+                <p class="text-white mb-0">
+                  <span class="px-1 fw-bold"></span>
+                </p>
+                </div>
+                <div class="col-3">
+                    <div class="card catagory-card">
+                      <div class="card-body px-2">
+                        <Link to="#">
+                          <img src="assets/img/core-img/irembo.jpg" alt="" />
+                          <span>Irembo</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-3">
+                    <div class="card catagory-card">
+                      <div class="card-body px-2">
+                        <Link to="#">
+                          <img src="assets/img/core-img/bk.png" alt="" />
+                          <span>Bank Of Kigali</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+          
+                  <div class="col-3">
+                    <div class="card catagory-card">
+                      <div class="card-body px-2">
+                        <Link to="#">
+                          <img src="assets/img/bg-img/equity.png" alt="" />
+                          <span>Equity Bank</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                
+                  <div class="col-3">
+                    <div class="card catagory-card">
+                      <div class="card-body px-2">
+                        <Link to="#">
+                          <img
+                            src="assets/img/bg-img/bulkpayments.png"
+                            alt=""
+                          />
+                          <span>Bulk Payment</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="card catagory-card">
+                      <div class="card-body px-2">
+                        <Link to="#">
+                          <img src="assets/img/bg-img/icon_logo.png" alt="" />
+                          <span>Mobicash</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+
                 </>
+
               ) : (
                 <>
                   <div class="col-3">

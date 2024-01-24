@@ -15,10 +15,7 @@ export default function HeaderPage() {
     const context = useContext(Context);
 
 return(
-
-
     <div>
-
 <div class="header-area" id="headerArea">
       <div class="container h-100 d-flex align-items-center justify-content-between d-flex rtl-flex-d-row-r">
        

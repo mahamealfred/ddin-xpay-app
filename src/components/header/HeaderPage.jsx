@@ -73,9 +73,9 @@ export default function HeaderPage() {
           </div>
           <div class="navbar-logo-container d-flex align-items-center">
             <div class="user-profile-icon ms-2">
-              <a href="#">
-                {/* <img src="assets/img/core-img/icon-ddin-d-sm.PNG" alt="" /> */}
-              </a>
+              {/* <a href="#">
+                <img src="assets/img/core-img/icon-ddin-d-sm.PNG" alt="" />
+              </a> */}
             </div>
 
             <div
