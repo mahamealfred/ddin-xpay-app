@@ -19,10 +19,47 @@ import $ from "jquery";
 import LoginPage from "../user/LoginPage";
 import FooterPage from "../footer/FooterPage";
 import HeaderPage from "../header/HeaderPage";
+import { viewAgentFloatAccountStatus } from "../../apis/UserController";
 
 export default function HomePage() {
   const navigate = useNavigate();
   const context = useContext(Context);
+  const [formattedBalance, setFormattedBalance] = useState("Rwf 0.00");
+  const [agentNameId, setAgentNameId] = useState("Agent Float A/C");
+  const [showChangePasswordDialog, setShowChangePasswordDialog] =
+    useState(false);
+  useEffect(() => {
+    queryAccountStatus();
+  });
+
+  const queryAccountStatus = async () => {
+    try {
+      //Agent floac Ac Id Prod=7
+      //Agent Float Account A/C Test=7
+
+      //Agent Commission A/C Id Test=25
+      //Agent Commission A/C Id Prod=8
+
+      //context.agentFloatAccountId
+      //context.agentInstantCommissionAccountId
+      //context.agentDelayedCommissionAccountId
+
+      const response = await viewAgentFloatAccountStatus(
+        context.userKey,
+        context.agentFloatAccountId
+      );
+
+      if (response.responseCode === "200") {
+        setFormattedBalance(response.formattedBalance);
+      } else {
+        //console.log("Agenty Account Status:"+response.responseDescription);
+        //toast.info(response.responseDescription);
+      }
+    } catch (err) {
+      //toast.info("Dear customer we are unable to process your request now. Try again later."+err);
+      //console.log("Agenty Account Status Error:"+err);
+    }
+  }
 
   useEffect(() => {
     const ddinWindow = $(window);
@@ -254,32 +291,55 @@ export default function HomePage() {
       <HeaderPage />
 
       <div class="page-content-wrapper">
-        <div class="container">
-          <br />
-          <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
-            {/* <h6>
-              <a class="btn p-0" href="sign-in">
-                <i class="ms-1 fa-solid fa-arrow-left-long"></i> Sign out
-              </a>
-            </h6> */}
-            {/*<a class="btn p-0" href="#">More<i class="ms-1 fa-solid fa-arrow-right-long"></i></a>*/}
-          </div>
-          <div class="discount-coupon-card-blue p-4 p-lg-5 dir-rtl">
-          <ul class="sidenav-nav ">
+      <ul class="sidenav-nav ">
                   <li class="ddin-dropdown-menu">
               <a href="#">
-                <i class="fa-solid fa-list"></i>Agent Accounts
+                <i class="fa-solid fa-key"></i>Agent Accounts
               </a>
               <ul>
                 <li>
-                  <Link to="/agent-float-account">Float A/C</Link>
+                <p class="available-balance ">
+                Available Balance:{" "}
+                <span class="counter">
+                  <b>{formattedBalance}</b>
+                </span><br/>
+                Commission A/C:{" "}
+                <span class="counter">
+                  <b>{formattedBalance}</b>
+                </span>
+              </p>
+                  {/* <Link to="/agent-float-account">Float A/C</Link> */}
                 </li>
                 <li>
-                  <Link to="/agent-commission-account">Commission A/C</Link>
+                {/* <p class="available-balance ">
+                Commission A/C:{" "}
+                <span class="counter">
+                  <b>{formattedBalance}</b>
+                </span>
+              </p> */}
+                {/* <span class="px-1 ">
+                Commission A/C : 500000
+                 </span> */}
+                  {/* <Link to="/agent-commission-account">Commission A/C</Link> */}
                 </li>
               </ul>
             </li>
                     </ul>
+        <div class="container">
+      
+          <br />
+{/*           
+          <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
+            <h6>
+              <a class="btn p-0" href="sign-in">
+                <i class="ms-1 fa-solid fa-arrow-left-long"></i> Sign out
+              </a>
+            </h6>
+            <a class="btn p-0" href="#">More<i class="ms-1 fa-solid fa-arrow-right-long"></i></a>
+          </div> */}
+         
+          <div class="discount-coupon-card-blue p-4 p-lg-4 dir-rtl">
+         
             <div class="d-flex align-items-center">
               <div class="discountIcon">
                 <img
@@ -448,7 +508,7 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
-                  <div class="col-3">
+                  {/* <div class="col-3">
                     <div class="card catagory-card">
                       <div class="card-body px-2">
                         <Link to="#">
@@ -457,7 +517,7 @@ export default function HomePage() {
                         </Link>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
                 </>
 
