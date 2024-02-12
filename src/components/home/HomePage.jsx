@@ -311,7 +311,24 @@ export default function HomePage() {
                   {/* <Link to="/agent-float-account">Float A/C</Link> */}
                 </li>
                 <li>
-                <li class="ddin-dropdown-menu">
+                
+                  {/* <Link to="/agent-float-account">Float A/C</Link> */}
+                </li>
+                <li>
+                {/* <p class="available-balance ">
+                Commission A/C:{" "}
+                <span class="counter">
+                  <b>{formattedBalance}</b>
+                </span>
+              </p> */}
+                {/* <span class="px-1 ">
+                Commission A/C : 500000
+                 </span> */}
+                  {/* <Link to="/agent-commission-account">Commission A/C</Link> */}
+                </li>
+              </ul>
+            </li>
+            <li class="ddin-dropdown-menu">
                 <a href="#">
                 <i class="fa-solid fa-list"></i>DDIN Bank Float Accounts
               </a>
@@ -335,24 +352,6 @@ export default function HomePage() {
                  </ul>
 
                   </li>
-                
-                
-                  {/* <Link to="/agent-float-account">Float A/C</Link> */}
-                </li>
-                <li>
-                {/* <p class="available-balance ">
-                Commission A/C:{" "}
-                <span class="counter">
-                  <b>{formattedBalance}</b>
-                </span>
-              </p> */}
-                {/* <span class="px-1 ">
-                Commission A/C : 500000
-                 </span> */}
-                  {/* <Link to="/agent-commission-account">Commission A/C</Link> */}
-                </li>
-              </ul>
-            </li>
                   </ul>
                     
         <div class="container">
