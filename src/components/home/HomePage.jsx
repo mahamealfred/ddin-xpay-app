@@ -298,7 +298,7 @@ export default function HomePage() {
               </a>
               <ul>
                 <li>
-                <p class="available-balance ">
+                <p class="available-balance text-white">
                 Available Balance:{" "}
                 <span class="counter">
                   <b>{formattedBalance}</b>
@@ -308,6 +308,35 @@ export default function HomePage() {
                   <b>{formattedBalance}</b>
                 </span>
               </p>
+                  {/* <Link to="/agent-float-account">Float A/C</Link> */}
+                </li>
+                <li>
+                <li class="ddin-dropdown-menu">
+                <a href="#">
+                <i class="fa-solid fa-list"></i>DDIN Bank Float Accounts
+              </a>
+              <ul>
+                <li>
+                <p class="available-balance text-white">
+                BPR A/C:{"  "}
+                <span class="counter">
+                  <b>4491555281</b>
+                </span><br/>
+                BK A/C:{"  "}
+                <span class="counter">
+                  <b>100157331153</b>
+                </span><br/>
+                Equity Bank A/C:{"  "}
+                <span class="counter">
+                  <b>4002201078015</b>
+                </span>
+              </p>
+                  </li>
+                 </ul>
+
+                  </li>
+                
+                
                   {/* <Link to="/agent-float-account">Float A/C</Link> */}
                 </li>
                 <li>
@@ -324,7 +353,8 @@ export default function HomePage() {
                 </li>
               </ul>
             </li>
-                    </ul>
+                  </ul>
+                    
         <div class="container">
       
           <br />
@@ -488,8 +518,19 @@ export default function HomePage() {
                     <div class="card catagory-card">
                       <div class="card-body px-2">
                         <Link to="#">
-                          <img src="assets/img/bg-img/equity.png" alt="" />
-                          <span>Equity Bank</span>
+                          <img src="assets/img/bg-img/wasaclogo.png" alt="" />
+                          <span>Wasac</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-3">
+                    <div class="card catagory-card">
+                      <div class="card-body px-2">
+                        <Link to="#">
+                          <img src="assets/img/bg-img/accessb.png" alt="" />
+                          <span>Access Bank</span>
                         </Link>
                       </div>
                     </div>
