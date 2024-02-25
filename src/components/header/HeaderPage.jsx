@@ -27,9 +27,44 @@ export default function HeaderPage() {
   const [agentNameId, setAgentNameId] = useState("Agent Float A/C");
   const [showChangePasswordDialog, setShowChangePasswordDialog] =
     useState(false);
+    const [formattedBalanceComAccount, setFormattedBalanceComAccount] =
+    useState("Rwf 0.00");
+
+    const [isOpen, setIsOpen] = useState(true); // Set initial state to opened
+
+    const toggleNav = () => {
+      setIsOpen(!isOpen);
+    };
+
+
   useEffect(() => {
     queryAccountStatus();
+    queryCommAccountStatus();
   });
+
+  const queryCommAccountStatus = async () => {
+    try {
+      //Agent floac Ac Id Prod=7
+      //Agent Float Account A/C Test=7
+
+      //Agent Commission A/C Id Test=25
+      //Agent Commission A/C Id Prod=8
+
+      const response = await viewAgentFloatAccountStatus(
+        context.userKey,
+        context.agentInstantCommissionAccountId
+      );
+
+      if (response.responseCode === "200") {
+        setFormattedBalanceComAccount(response.formattedBalance);
+      } else {
+        //toast.info(response.responseDescription);
+      }
+    } catch (err) {
+      //console.log("Agenty Account Status Error:"+err);
+    }
+  };
+
 
   const queryAccountStatus = async () => {
     try {
@@ -60,6 +95,8 @@ export default function HeaderPage() {
     }
   };
 
+
+
   return (
     <div>
       <div class="header-area" id="headerArea">
@@ -79,7 +116,7 @@ export default function HeaderPage() {
             </div>
 
             <div
-              class="ddin-navbar-toggler ms-2"
+              class="ddin-navbar-toggler ms-2 "
               data-bs-toggle="offcanvas"
               data-bs-target="#ddinOffcanvas"
               aria-controls="ddinOffcanvas"
@@ -94,7 +131,7 @@ export default function HeaderPage() {
         </div>
       </div>
       <div
-        class="offcanvas offcanvas-start ddin-offcanvas-wrap"
+        class="offcanvas offcanvas-start ddin-offcanvas-wrap "
         tabindex="-1"
         id="ddinOffcanvas"
         aria-labelledby="ddinOffcanvasLabel"
@@ -116,42 +153,77 @@ export default function HeaderPage() {
                 {context?.agentFullName}
               </h5>
               <p class="available-balance text-white">
-                Available Balance:{" "}
+                DDIN {" "}
                 <span class="counter">
-                  <b>{formattedBalance}</b>
+                  <b>Agent</b>
                 </span>
               </p>
             </div>
           </div>
 
           <ul class="sidenav-nav ps-0">
-            <li>
+            {/* <p class="available-balance text-white">DDIN Services</p> */}
+  
+          <li class="ddin-dropdown-menu">
               <a href="#">
-                <i class="fa-solid fa-user"></i>My Profile
+                <i class="fa-solid fa-key"></i>Agent Accounts
               </a>
+              <ul>
+                <li>
+                <p class="available-balance text-white-p">
+                Float A/C:{" "}
+                <span class="counter">
+                  <b>{formattedBalance}</b>
+                </span><br/>
+                Commission A/C:{" "}
+                <span class="counter">
+                  <b>{formattedBalanceComAccount}</b>
+                </span>
+              </p>
+                </li>
+                
+              </ul>
             </li>
+            <li>
+              <li class="ddin-dropdown-menu">
+                <a href="#">
+                <i class="fa-solid fa-list"></i>Bank Float Accounts
+              </a>
+              <ul>
+                <li>
+                <p class="available-balance text-white-p">
+                BPR A/C:{"  "}
+                <span class="counter">
+                  <b>4491555281</b>
+                </span><br/>
+                BK A/C:{"  "}
+                <span class="counter">
+                  <b>100157331153</b>
+                </span><br/>
+                Equity Bank A/C:{"  "}
+                <span class="counter">
+                  <b>4002201078015</b>
+                </span>
+              </p>
+                  </li>
+                 </ul>
+
+                  </li>
+            </li>
+{/* 
             <li>
               <a href="#">
                 <i class="fa-solid fa-bell lni-tada-effect"></i>Notifications
                 <span class="ms-1 badge badge-warning"></span>
               </a>
-            </li>
-            <li class="ddin-dropdown-menu">
-              <a href="#">
-                <i class="fa-solid fa-list"></i>DDIN Services
-              </a>
-              <ul>
-                <li>
-                  <a href="#">Bulk Sms</a>
-                </li>
-              </ul>
-            </li>
-            <li>
+            </li> */}
+           
+            {/* <li>
               <a href="#">
                 <i class="fa-solid fa-file-code"></i>Terms & Conditions
               </a>
-            </li>
-            <li class="ddin-dropdown-menu">
+            </li> */}
+            {/* <li class="ddin-dropdown-menu">
               <a href="#">
                 <i class="fa-solid fa-list"></i>Agent Accounts
               </a>
@@ -163,7 +235,7 @@ export default function HeaderPage() {
                   <Link to="/agent-commission-account">Commission A/C</Link>
                 </li>
               </ul>
-            </li>
+            </li> */}
             <li class="ddin-dropdown-menu">
               <a href="#">
                 <i class="fa-solid fa-sliders"></i>Settings

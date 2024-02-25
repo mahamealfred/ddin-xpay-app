@@ -186,13 +186,19 @@ export default function AirtimeServicePage() {
 
   const confirmAirtimePayment = async (e) => {
     e.preventDefault();
-
+  
     if (validator.isMobilePhone(value)) {
-      if (isNumber(efasheServiceAmount)) {
-        validateEfasheVendingTxRequest();
-      } else {
-        toast.error("Airtime Amount  Must Be A Valid Set of Amount!");
+      if(value.includes("+25073") || value.includes("+25072")){
+        toast.error("Airtel service is currently unvailable, Please use MTN.");
+      }else{
+        if (isNumber(efasheServiceAmount)) {
+          validateEfasheVendingTxRequest();
+        } 
+        else {
+          toast.error("Airtime Amount  Must Be A Valid Set of Amount!");
+        }
       }
+     
     } else {
       toast.error(
         "Please provide a valid email address: Ex. example@gmail.com"
@@ -298,15 +304,15 @@ export default function AirtimeServicePage() {
   const returnMemberId = () => {
     if (context.agentCategory === null || context.agentCategory === "Agent") {
       //Test Env:
-      setMemberId("34");
+     // setMemberId("34");
       //Prod Env:
-      //setMemberId("18");
-      return "34";
+      setMemberId("18");
+      return "18";
     } else {
       //Test Env
-      setMemberId("34");
-      //Prod Env
       //setMemberId("34");
+      //Prod Env
+      setMemberId("34");
 
       return "34";
     }
@@ -317,17 +323,17 @@ export default function AirtimeServicePage() {
       //Test Env:
       setTransferId("54");
       //Prod Env:
-      //setTransferId("66");
+      setTransferId("66");
 
       return "54";
     } else {
       //Test Env
-      setTransferId("83");
+      //setTransferId("83");
 
       //Prod Env
-      //setTransferId("67");
+      setTransferId("67");
 
-      return "83";
+      return "67";
     }
   };
 
@@ -362,6 +368,7 @@ export default function AirtimeServicePage() {
         userId: context.userId,
         agentCategory: context.agentCategory,
       };
+  
 
       const response = await executeEfasheVendingTx(
         efasheTxValidatorRequestBody,

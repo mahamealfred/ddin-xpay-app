@@ -380,7 +380,7 @@ export default function StartimesReceiptManager() {
                                   </b>
                                 </td>
                                 <td>
-                                  <span> {context.agentUsername}</span>
+                                  <span> {context.agentFullName}</span>
                                 </td>
                               </tr>
                             </tbody>

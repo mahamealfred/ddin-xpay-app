@@ -355,7 +355,7 @@ export default function DdinReceiptmanagerPage() {
                                   </b>
                                 </td>
                                 <td>
-                                  <span> {context.agentUsername}</span>
+                                  <span> {context.agentFullName}</span>
                                 </td>
                               </tr>
                             </tbody>

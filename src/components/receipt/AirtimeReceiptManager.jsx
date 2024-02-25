@@ -298,8 +298,8 @@ export default function AirtimeReceiptManager() {
           <br />
           <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
             <h6>
-              <Link class="btn p-0" to="/buy-airtime">
-                <i class="ms-1 fa-solid fa-arrow-left-long"></i> Back
+              <Link class="btn p-0 text-white" to="/buy-airtime">
+                <i class="ms-1 fa-solid fa-arrow-left-long text-white"></i> Back
               </Link>
             </h6>
             {/*<a class="btn p-0" href="#">More<i class="ms-1 fa-solid fa-arrow-right-long"></i></a>*/}
@@ -381,7 +381,7 @@ export default function AirtimeReceiptManager() {
                                   </b>
                                 </td>
                                 <td>
-                                  <span> {context.agentUsername}</span>
+                                  <span> {context.agentFullName}</span>
                                 </td>
                               </tr>
                             </tbody>

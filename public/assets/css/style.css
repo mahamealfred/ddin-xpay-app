@@ -1598,7 +1598,10 @@ textarea:invalid {
   background-color: #f8882b;
   color: #020310;
 }
-
+.text-white-p{
+  color: #ffffff;
+  font-size: small;
+}
 .ddin-offcanvas-wrap {
   width: 240px !important;
   border-right: 0 !important;
@@ -4159,10 +4162,11 @@ li.ddin-dropdown-menu .dropdown-trigger-btn.active i {
 }
 .discount-coupon-card-blue {
   border-radius: 6px;
-  background: #202a4e;
-  background: -o-linear-gradient(right, #202a4e, #f8882b);
-  background: -webkit-gradient(linear, right top, left top, from(#f8882b), to(#202a4e));
-  background: linear-gradient(to left, #f8882b, #202a4e);
+  background: #f8882b;
+  background: -o-linear-gradient(right, #f8882b, #202a4e);
+  background: -webkit-gradient(linear, right top, left top, from(#202a4e), to( #f8882b));
+  background: linear-gradient(to left, #202a4e,  #f8882b);
+
 }
 .discount-coupon-card .discountIcon {
   -webkit-box-flex: 0;

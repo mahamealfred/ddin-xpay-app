@@ -339,16 +339,16 @@ export default function ElectricityServicePage() {
   const returnMemberId = () => {
     if (context.agentCategory === null || context.agentCategory === "Agent") {
       //Test Env:
-      setMemberId("34");
+     /// setMemberId("34");
       //Prod Env:
-      //setMemberId("18");
+      setMemberId("18");
 
-      return "34";
+      return "18";
     } else {
       //Test Env
-      setMemberId("34");
-      //Prod Env
       //setMemberId("34");
+      //Prod Env
+      setMemberId("34");
 
       return "34";
     }
@@ -357,19 +357,19 @@ export default function ElectricityServicePage() {
   const returnTransferId = () => {
     if (context.agentCategory === null || context.agentCategory === "Agent") {
       //Test Env:
-      setTransferId("52");
+      //setTransferId("52");
       //Prod Env:
-      //setTransferId("70");
+      setTransferId("70");
 
-      return "52";
+      return "70";
     } else {
       //Test Env
-      setTransferId("81");
+      //setTransferId("81");
 
       //Prod Env
-      //setTransferId("71");
+      setTransferId("71");
 
-      return "81";
+      return "71";
     }
   };
 

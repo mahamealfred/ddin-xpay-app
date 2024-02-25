@@ -267,7 +267,7 @@ export default function NpoServicePage() {
       //Test A/C No:33
       //Prod A/C No:22
 
-      const response = await viewNpoRegistrations(context.userKey, "33");
+      const response = await viewNpoRegistrations(context.userKey, "22");
 
       if (response.responseCode === "200") {
         setAgentAccountTransactions(response.data);
@@ -366,7 +366,7 @@ export default function NpoServicePage() {
           value,
         currencySymbol: "Rwf",
         transferTypeId: "95",
-        toMemberId: "24",
+        toMemberId: "11",
         firstName: firstname,
         lastName: lastname,
         mobile: value.substring(1, 13),

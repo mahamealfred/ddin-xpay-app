@@ -360,7 +360,7 @@ export default function LoginPage() {
                 </div>
                 <div class="text-content">
                   <h4 class="text-white mb-0 ">
-                    <b style={{ color: "#202a4e" }}>The Best Agents Network</b>
+                    <b style={{ color: "#202a4e" }}>Network Of The Best</b>
                   </h4>
                   <p class="text-white mb-0">
                     <span class="px-1 fw-bold"></span>

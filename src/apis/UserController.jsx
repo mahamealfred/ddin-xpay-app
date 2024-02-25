@@ -231,7 +231,7 @@ const loginAgent = async (requestPayload) => {
   //base_localhost_login_test
 
   await axios
-    .get(base_remote_login_test, {
+    .get(base_remote_login_prod, {
       headers: {
         Authorization: `Basic ${base64data}`,
       },
@@ -306,7 +306,7 @@ const viewNpoAddresses = async (userKey) => {
   //base_remote_npo_addresses_test
   //base_remote_npo_addresses_prod
   await axios
-    .get(base_remote_npo_addresses_test, {
+    .get(base_remote_npo_addresses_prod, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -503,7 +503,7 @@ const viewAgentFloatAccountStatus = async (userKey, accountId) => {
   //base_remote_account_status_test
   //base_remote_account_status_prod
   const URL_WITH_PARAMS =
-    base_remote_account_status_test + "accountId=" + accountId;
+  base_remote_account_status_prod + "accountId=" + accountId;
   const serverResponse = {
     responseCode: "",
     responseDescription: "",
@@ -576,7 +576,7 @@ const viewEfasheTxStatus = async (userKey, accountId, serviceCode) => {
   //base_localhost_efashe_TxLookup
 
   const URL_WITH_PARAMS =
-    base_remote_efashe_TxLookup_test +
+  base_remote_efashe_TxLookup_prod +
     "" +
     accountId +
     "&serviceCode=" +
@@ -634,7 +634,7 @@ const viewNpoRegistrations = async (userKey, accountId) => {
   //base_localhost_account_npo_registrations
   //base_remote_account_npo_registrations_test
   //base_remote_account_npo_registrations_prod
-  const URL_WITH_PARAMS = base_remote_account_npo_registrations_test;
+  const URL_WITH_PARAMS = base_remote_account_npo_registrations_prod;
 
   const serverResponse = {
     responseCode: "",
@@ -691,7 +691,7 @@ const viewAgentFloatAccountTransactionsById = async (
   //base_remote_account_transaction_byid_prod
   //base_localhost_account_transaction_byid_test
   const URL_WITH_PARAMS =
-    base_remote_account_transaction_byid_test +
+  base_remote_account_transaction_byid_prod +
     "" +
     transId +
     "?" +
@@ -746,7 +746,7 @@ const viewAgentFloatAccountTransactions = async (userKey, accountId) => {
   //base_remote_account_transaction_prod
   //base_localhost_account_transaction_test
   const URL_WITH_PARAMS =
-    base_remote_account_transaction_test + "accountId=" + accountId;
+  base_remote_account_transaction_prod + "accountId=" + accountId;
   //
   const serverResponse = {
     responseCode: "",
@@ -804,7 +804,7 @@ const payPindo = async (requestPayLoad, userKey) => {
   //base_remote_pindo_pay_prod
   //base_localhost_pindo_pay_test
   await axios
-    .post(base_remote_pindo_pay_test, requestPayLoad, {
+    .post(base_remote_pindo_pay_prod, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -856,7 +856,7 @@ const changePassword = async (username, oldPassword, newPassword, userKey) => {
   //base_localhost_change_password
 
   const URL_WITH_PARAMS =
-    base_remote_change_password_test +
+  base_remote_change_password_prod +
     "username=" +
     username +
     "&oldPassword=" +
@@ -923,7 +923,7 @@ const payFdi = async (requestPayLoad, userKey) => {
   //base_remote_fdi_pay_prod_v3
 
   await axios
-    .post(base_remote_fdi_pay_test_v3, requestPayLoad, {
+    .post(base_remote_fdi_pay_prod_v3, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -976,7 +976,7 @@ const validateEfasheVendingTx = async (requestPayLoad, userKey) => {
   //base_remote_efashe_validtx_prod
 
   await axios
-    .post(base_remote_efashe_validtx_test, requestPayLoad, {
+    .post(base_remote_efashe_validtx_prod, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -1027,7 +1027,7 @@ const validateEfasheRraVendingTx = async (requestPayLoad, userKey) => {
   //base_remote_efashe_validRraTx_test
   //base_remote_efashe_validRraTx_prod
   await axios
-    .post(base_remote_efashe_validRraTx_test, requestPayLoad, {
+    .post(base_remote_efashe_validRraTx_prod, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -1077,7 +1077,7 @@ const validateEfasheElectricityVendingTx = async (requestPayLoad, userKey) => {
   //base_remote_efashe_validElectricityTx_test
   //base_remote_efashe_validElectricityTx_prod
   await axios
-    .post(base_remote_efashe_validElectricityTx_test, requestPayLoad, {
+    .post(base_remote_efashe_validElectricityTx_prod, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -1128,7 +1128,7 @@ const validateEfasheStartimesVendingTx = async (requestPayLoad, userKey) => {
   //base_remote_efashe_validStartimesTx_test
   //base_remote_efashe_validStartimesTx_prod
   await axios
-    .post(base_remote_efashe_validStartimesTx_test, requestPayLoad, {
+    .post(base_remote_efashe_validStartimesTx_prod, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -1179,7 +1179,7 @@ const executeEfasheVendingTx = async (requestPayLoad, userKey) => {
   //base_remote_efashe_executeTx_test
   //base_remote_efashe_executeTx_prod
   await axios
-    .post(base_remote_efashe_executeTx_test, requestPayLoad, {
+    .post(base_remote_efashe_executeTx_prod, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -1187,13 +1187,16 @@ const executeEfasheVendingTx = async (requestPayLoad, userKey) => {
     })
 
     .then((response) => {
+     
       if (response.data.responseCode === "200") {
+        console.log("response success:",response.data)
         serverResponse.responseDescription = response.data.responseDescription;
         serverResponse.responseStatus = response.data.communicationStatus;
         serverResponse.responseCode = response.data.responseCode;
         serverResponse.data = response.data.data;
         //serverResponse.pindoSmsId=response.data.data.pindoSmsId;
       } else {
+        console.log("response fail:",response.data)
         serverResponse.responseDescription = response.data.responseDescription;
         serverResponse.responseStatus = response.data.communicationStatus;
         serverResponse.responseCode = response.data.responseCode;
@@ -1232,7 +1235,7 @@ const executeEfasheRraVendingTx = async (requestPayLoad, userKey) => {
   //base_remote_efashe_executeRraTx_test
   //base_remote_efashe_executeRraTx_prod
   await axios
-    .post(base_remote_efashe_executeRraTx_test, requestPayLoad, {
+    .post(base_remote_efashe_executeRraTx_prod, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -1288,7 +1291,7 @@ const executeEfasheElectricityVendingTx = async (requestPayLoad, userKey) => {
   //base_remote_efashe_executeElectricityTx_test
   //base_remote_efashe_executeElectricityTx_prod
   await axios
-    .post(base_remote_efashe_executeElectricityTx_test, requestPayLoad, {
+    .post(base_remote_efashe_executeElectricityTx_prod, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -1340,7 +1343,7 @@ const executeEfasheStartimesVendingTx = async (requestPayLoad, userKey) => {
   //base_remote_efashe_executeStartimesTx_test
   //base_remote_efashe_executeStartimesTx_prod
   await axios
-    .post(base_remote_efashe_executeStartimesTx_test, requestPayLoad, {
+    .post(base_remote_efashe_executeStartimesTx_prod, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -1392,7 +1395,7 @@ const payPindov2 = async (requestPayLoad, userKey) => {
   //base_localhost_pindo_pay_test_v2
   //base_remote_pindo_pay_prod_v2
   await axios
-    .post(base_remote_pindo_pay_test_v2, requestPayLoad, {
+    .post(base_remote_pindo_pay_prod_v2, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -1444,7 +1447,7 @@ const payFdiv2 = async (requestPayLoad, userKey) => {
   //base_remote_fdi_pay_test_v4
   //base_remote_fdi_pay_prod_v4
   await axios
-    .post(base_remote_fdi_pay_test_v4, requestPayLoad, {
+    .post(base_remote_fdi_pay_prod_v4, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -1496,7 +1499,7 @@ const registerNewAgent = async (requestPayLoad, userKey) => {
   //
   //base_remote_register_ddinagent_prod
   await axios
-    .post(base_remote_register_ddinagent_test, requestPayLoad, {
+    .post(base_remote_register_ddinagent_prod, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -1556,7 +1559,7 @@ const createOpt = async (requestPayLoad, userKey) => {
   //base_localhost_register_npoclient_test
   //base_remote_register_npoclient_prod
   await axios
-    .post(base_remote_create_otp_test, requestPayLoad, {
+    .post(base_remote_register_npoclient_prod, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -1607,7 +1610,7 @@ const verifyOpt = async (recipientEmail, userKey, otpValue) => {
   //base_localhost_register_npoclient_test
   //base_remote_register_npoclient_prod
   const verifyUrl =
-    base_remote_verify_otp_test +
+  base_remote_register_npoclient_prod +
     "recipientEmail=" +
     recipientEmail +
     "&otpValue=" +
@@ -1668,7 +1671,7 @@ const registerNpoClient = async (requestPayLoad, userKey) => {
   //base_localhost_register_npoclient_test
   //base_remote_register_npoclient_prod
   await axios
-    .post(base_remote_register_npoclient_test, requestPayLoad, {
+    .post(base_remote_register_npoclient_prod, requestPayLoad, {
       headers: {
         Authorization: `Basic ${userKey}`,
       },

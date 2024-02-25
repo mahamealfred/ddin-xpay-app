@@ -355,7 +355,7 @@ export default function FdiReceiptManager() {
                                   </b>
                                 </td>
                                 <td>
-                                  <span> {context.agentUsername}</span>
+                                  <span> {context.agentFullName}</span>
                                 </td>
                               </tr>
                             </tbody>
