@@ -320,7 +320,7 @@ export default function ElectricityReceiptManager() {
           <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
             <h6>
               <Link class="btn p-0" to="/rra-service">
-                <i class="ms-1 fa-solid fa-arrow-left-long"></i> Back
+                <i class="ms-1 fa-solid fa-arrow-left-long text-white"></i> Back
               </Link>
             </h6>
             {/*<a class="btn p-0" href="#">More<i class="ms-1 fa-solid fa-arrow-right-long"></i></a>*/}

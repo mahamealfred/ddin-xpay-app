@@ -188,16 +188,16 @@ export default function AirtimeServicePage() {
     e.preventDefault();
   
     if (validator.isMobilePhone(value)) {
-      if(value.includes("+25073") || value.includes("+25072")){
-        toast.error("Airtel service is currently unvailable, Please use MTN.");
-      }else{
+      // if(value.includes("+25073") || value.includes("+25072")){
+      //   toast.error("Airtel service is currently unvailable, Please use MTN.");
+      // }else{
         if (isNumber(efasheServiceAmount)) {
           validateEfasheVendingTxRequest();
         } 
         else {
           toast.error("Airtime Amount  Must Be A Valid Set of Amount!");
         }
-      }
+     // }
      
     } else {
       toast.error(
@@ -321,11 +321,11 @@ export default function AirtimeServicePage() {
   const returnTransferId = () => {
     if (context.agentCategory === null || context.agentCategory === "Agent") {
       //Test Env:
-      setTransferId("54");
+      //setTransferId("54");
       //Prod Env:
       setTransferId("66");
 
-      return "54";
+      return "66";
     } else {
       //Test Env
       //setTransferId("83");
@@ -865,7 +865,7 @@ export default function AirtimeServicePage() {
             <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
               <h6>Airtime Purchases</h6>
 
-              <Link class="btn p-0" onClick={viewFloatAccountInfo}>
+              <Link class="btn p-0 text-white" onClick={viewFloatAccountInfo}>
                 View All Transactions
                 <i class="ms-1 fa-solid fa-arrow-right-long"></i>
               </Link>

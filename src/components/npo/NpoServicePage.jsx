@@ -1124,7 +1124,7 @@ export default function NpoServicePage() {
             <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
               <h6>Registered NPO Clients</h6>
 
-              <Link class="btn p-0" onClick={viewFloatAccountInfo}>
+              <Link class="btn p-0 text-white"   onClick={viewFloatAccountInfo}>
                 View All Clients
                 <i class="ms-1 fa-solid fa-arrow-right-long"></i>
               </Link>

@@ -189,7 +189,12 @@ export default function PindoServicePage() {
             if (rows[i]?.name && rows[i]?.number) {
               if (valueNumber.length === 12) {
                 if (isNumber(valueNumber)) {
-                  arr_obj.push(rows[i]?.number);
+                  let datas={
+                    "name":`${(rows[i]?.name).toString()}`,
+                    "number":`${(rows[i]?.number).toString()}`
+                  }
+                  //arr_obj.push((rows[i]?.number).toString());
+                  arr_obj.push(datas);
 
                   if (valueNumber.length > 10 && valueNumber.length < 14) {
                     if (validatePhoneNumberLevel(rows[i].number)) {
@@ -335,39 +340,46 @@ export default function PindoServicePage() {
           userId: context.userId,
           agentCategory: context.agentCategory,
         };
+        toast.update(id, {
+          render:
+            "Dear customer we are unable to process your request now. Try again later." ,
+          type: "info",
+          isLoading: false,
+          closeButton: null,
+        });
+        // const response = await payPindo(pindoPaymentBody, context.userKey);
+       
+        // if (response.responseCode === 200) {
 
-        const response = await payPindo(pindoPaymentBody, context.userKey);
+        //   playAudio();
+        //   /* toast.update(id, {
+        //     render:
+        //       "Bulk SMS processing completed successfully with transaction No:" +
+        //       response.transactionId +
+        //       " - ",
+        //     type: "success",
+        //     isLoading: false,
+        //     closeButton: null,
+        //   });*/
+        //   setValidFileLevel(false);
 
-        if (response.responseCode === "200") {
-          playAudio();
-          /* toast.update(id, {
-            render:
-              "Bulk SMS processing completed successfully with transaction No:" +
-              response.transactionId +
-              " - ",
-            type: "success",
-            isLoading: false,
-            closeButton: null,
-          });*/
-          setValidFileLevel(false);
+        //   //Clearing some data for new request
 
-          //Clearing some data for new request
-
-          toast.dismiss();
-          setReceiptId(response.responseStatus);
-          setReceiptNote(response.responseDescription);
-          setServiceFeeAmt("");
-          setTotalPayment(totalSmsCost);
-          setShowReceiptDialog(true);
-        } else {
-          toast.update(id, {
-            render: response.responseDescription,
-            type: "info",
-            isLoading: false,
-            closeButton: null,
-          });
-          setValidFileLevel(false);
-        }
+        //   toast.dismiss();
+        //   setReceiptId(response.responseStatus);
+        //   setReceiptNote(response.responseDescription);
+        //   setServiceFeeAmt("");
+        //   setTotalPayment(totalSmsCost);
+        //   setShowReceiptDialog(true);
+        // } else {
+        //   toast.update(id, {
+        //     render: response.responseDescription,
+        //     type: "info",
+        //     isLoading: false,
+        //     closeButton: null,
+        //   });
+        //   setValidFileLevel(false);
+        // }
       } else {
         toast.update(id, {
           render:
@@ -433,10 +445,12 @@ export default function PindoServicePage() {
           userId: context.userId,
           agentCategory: context.agentCategory,
         };
-
+        //console.log("liveagent:",pindoPaymentBody)
+        //const response={responseCode:200}
         const response = await payFdi(pindoPaymentBody, context.userKey);
-
+       
         if (response.responseCode === "200") {
+        
           playAudio();
           /* toast.update(id, {
             render:
@@ -984,7 +998,30 @@ export default function PindoServicePage() {
                               <b>Enter Bulk SMS Sender Id/Name:</b>
                               <b style={{ color: "red" }}>*</b>
                             </span>
+                          
+                          {/* <select
+                           class="form-control"
+                           style={{
+                             backgroundColor: "white",
+                             color: "black",
+                             borderColor: "black",
+                             borderRadius: 10,
+                             borderWidth: 1,
+                             borderStyle: "solid",
+                             fontSize: 14,
+                           }}
+                           
+                           type="text"
+                           autoFocus={true}
+                           onChange={(e) => setSenderId(e.target.value)}
+                           value={senderId}
+                           required
+                          > 
+                            <option value="">Select Sender ID</option>
+                            <option value="Ubukwe">Ubukwe</option>
+                            <option value="Inama">Inama</option>
 
+                          </select> */}
                             <input
                               class="form-control"
                               style={{
@@ -996,6 +1033,7 @@ export default function PindoServicePage() {
                                 borderStyle: "solid",
                                 fontSize: 14,
                               }}
+                              
                               type="text"
                               autoFocus={true}
                               onChange={(e) => setSenderId(e.target.value)}
@@ -1258,7 +1296,7 @@ export default function PindoServicePage() {
             <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
               <h6>Agents Transactions</h6>
 
-              <Link class="btn p-0" onClick={viewFloatAccountInfo}>
+              <Link class="btn p-0 text-white" onClick={viewFloatAccountInfo}>
                 View All<i class="ms-1 fa-solid fa-arrow-right-long"></i>
               </Link>
             </div>

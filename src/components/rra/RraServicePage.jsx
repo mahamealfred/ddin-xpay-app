@@ -396,7 +396,7 @@ export default function ElectricityServicePage() {
       //Prod Env:
       setMemberId("18");
 
-      return "34";
+      return "18";
     } else {
       //Test Env
       setMemberId("34");
@@ -920,7 +920,7 @@ export default function ElectricityServicePage() {
             <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
               <h6>Tax Payments</h6>
 
-              <Link class="btn p-0" onClick={viewFloatAccountInfo}>
+              <Link class="btn p-0 text-white" onClick={viewFloatAccountInfo}>
                 View All Transactions
                 <i class="ms-1 fa-solid fa-arrow-right-long"></i>
               </Link>

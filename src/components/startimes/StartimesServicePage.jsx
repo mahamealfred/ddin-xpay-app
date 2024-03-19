@@ -846,7 +846,7 @@ export default function StartimesServicePage() {
             <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
               <h6>Subscriptions Purchases</h6>
 
-              <Link class="btn p-0" onClick={viewFloatAccountInfo}>
+              <Link class="btn p-0 text-white" onClick={viewFloatAccountInfo}>
                 View All Transactions
                 <i class="ms-1 fa-solid fa-arrow-right-long"></i>
               </Link>

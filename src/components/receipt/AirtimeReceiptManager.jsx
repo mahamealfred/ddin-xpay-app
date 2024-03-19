@@ -427,9 +427,9 @@ export default function AirtimeReceiptManager() {
                                 </td>
                               </tr>
 
-                              <tr style={{ color: "black" }}>
+                              <tr style={{ color: "white" }}>
                                 <td colSpan={2}>
-                                  <span class="ms-1" style={{ color: "red" }}>
+                                  <span class="ms-1" style={{ color: "white" }}>
                                     <Link
                                       onClick={(e) =>
                                         viewFdiTxInfo(

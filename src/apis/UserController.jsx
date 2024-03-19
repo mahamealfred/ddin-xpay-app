@@ -797,14 +797,15 @@ const payPindo = async (requestPayLoad, userKey) => {
     responseCode: "",
     responseDescription: "",
     responseStatus: "",
-    transactionId: "",
-    pindoSmsId: "",
+    transactionId: 0,
+    pindoSmsId: 0,
   };
   // base_remote_pindo_pay_test
   //base_remote_pindo_pay_prod
   //base_localhost_pindo_pay_test
   await axios
-    .post(base_remote_pindo_pay_prod, requestPayLoad, {
+    //.post(base_remote_pindo_pay_prod, requestPayLoad, {
+      .post('https://app.ddin.rw/api/v1/payment-service/pindo-bulksms/payment',requestPayLoad,{
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -812,9 +813,17 @@ const payPindo = async (requestPayLoad, userKey) => {
     })
 
     .then((response) => {
-      if (response.data.responseCode === "200") {
-        serverResponse.responseDescription = response.data.codeDescription;
-        serverResponse.responseStatus = response.data.communicationStatus;
+      if (response.data.responseCode === 200) {
+        // console.log("response from api:",response)
+        //gilbert
+        // serverResponse.responseDescription = response.data.codeDescription;
+        // serverResponse.responseStatus = response.data.communicationStatus;
+        // serverResponse.responseCode = response.data.responseCode;
+        // serverResponse.transactionId = response.data.data.transactionId;
+        // serverResponse.pindoSmsId = response.data.data.pindoSmsId;
+                          //Alfred
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.data.transactionId;
         serverResponse.responseCode = response.data.responseCode;
         serverResponse.transactionId = response.data.data.transactionId;
         serverResponse.pindoSmsId = response.data.data.pindoSmsId;
@@ -825,6 +834,7 @@ const payPindo = async (requestPayLoad, userKey) => {
       }
     })
     .catch((err) => {
+      console.log("error from pindo",err)
       serverResponse.responseDescription =
         "Dear customer we are unable to process your request now. Try again later." +
         err;
@@ -924,6 +934,7 @@ const payFdi = async (requestPayLoad, userKey) => {
 
   await axios
     .post(base_remote_fdi_pay_prod_v3, requestPayLoad, {
+      //.post('https://app.ddin.rw/api/v1/payment-service/pindo-bulksms/payment',requestPayLoad,{
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -931,6 +942,7 @@ const payFdi = async (requestPayLoad, userKey) => {
     })
 
     .then((response) => {
+      // console.log("response:",response)
       if (response.data.responseCode === "200") {
         serverResponse.responseDescription = response.data.responseDescription;
         serverResponse.responseStatus = response.data.communicationStatus;
@@ -944,6 +956,7 @@ const payFdi = async (requestPayLoad, userKey) => {
       }
     })
     .catch((err) => {
+      console.log("error resp:",err)
       serverResponse.responseDescription =
         "Dear customer we are unable to process your request now. Try again later." +
         err;
@@ -984,6 +997,7 @@ const validateEfasheVendingTx = async (requestPayLoad, userKey) => {
     })
 
     .then((response) => {
+      
       if (response.data.responseCode === "200") {
         serverResponse.responseDescription = response.data.responseDescription;
         serverResponse.responseStatus = response.data.communicationStatus;
@@ -1027,7 +1041,8 @@ const validateEfasheRraVendingTx = async (requestPayLoad, userKey) => {
   //base_remote_efashe_validRraTx_test
   //base_remote_efashe_validRraTx_prod
   await axios
-    .post(base_remote_efashe_validRraTx_prod, requestPayLoad, {
+     .post(base_remote_efashe_validRraTx_prod, requestPayLoad, {
+      //.post('http://localhost:8000/api/v1/payment-service/rra/validate-vend',requestPayLoad,{
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -1189,7 +1204,7 @@ const executeEfasheVendingTx = async (requestPayLoad, userKey) => {
     .then((response) => {
      
       if (response.data.responseCode === "200") {
-        console.log("response success:",response.data)
+        // console.log("response success:",response.data)
         serverResponse.responseDescription = response.data.responseDescription;
         serverResponse.responseStatus = response.data.communicationStatus;
         serverResponse.responseCode = response.data.responseCode;
@@ -1394,6 +1409,7 @@ const payPindov2 = async (requestPayLoad, userKey) => {
   //base_remote_pindo_pay_test_v2
   //base_localhost_pindo_pay_test_v2
   //base_remote_pindo_pay_prod_v2
+ 
   await axios
     .post(base_remote_pindo_pay_prod_v2, requestPayLoad, {
       headers: {
@@ -1446,6 +1462,7 @@ const payFdiv2 = async (requestPayLoad, userKey) => {
   //base_local_fdi_pay_test_v4
   //base_remote_fdi_pay_test_v4
   //base_remote_fdi_pay_prod_v4
+ 
   await axios
     .post(base_remote_fdi_pay_prod_v4, requestPayLoad, {
       headers: {
