@@ -278,7 +278,7 @@ export default function AirtimeReceiptManager() {
       //Service Code-Airtime=41
       const response = await viewEfasheTxStatus(context.userKey, txId, 41);
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setFdiTxData(response.data);
         setShowTxData(true);
       } else {

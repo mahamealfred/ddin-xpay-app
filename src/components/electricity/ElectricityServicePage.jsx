@@ -60,6 +60,7 @@ import "react-phone-number-input/style.css";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
+import { executeEfasheElectricityVending, validateEfasheElectricityVending } from "../../apis/ServiceController";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -251,13 +252,14 @@ export default function ElectricityServicePage() {
         vertialId: "electricity",
         phoneNumber: meterNumber,
       };
+       //previous
+      // const response = await validateEfasheElectricityVendingTx(
+      //   efasheTxValidatorRequestBody,
+      //   context.userKey
+      // );
+      const response=await validateEfasheElectricityVending(efasheTxValidatorRequestBody)
 
-      const response = await validateEfasheElectricityVendingTx(
-        efasheTxValidatorRequestBody,
-        context.userKey
-      );
-
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setCustomerAccountNumber(response.data?.customerAccountNumber);
         setLocalStockMgt(response.data?.localStockMgt);
         setPdtId(response.data?.pdtId);
@@ -386,8 +388,8 @@ export default function ElectricityServicePage() {
       //returnTransferId();returnMemberId();
       const efasheTxValidatorRequestBody = {
         amount: tokenAmount,
-        description: "",
-        currencySymbol: "",
+        description: "Electricity Payment processed with TX Id & Token Voucher," + trxId +",Token1: For Meter Number: "+meterNumber,
+        currencySymbol: "Rwf",
         transferTypeId: returnTransferId(),
         province: context.province,
         district: context.district,
@@ -406,12 +408,19 @@ export default function ElectricityServicePage() {
         agentCategory: context.agentCategory,
       };
 
-      const response = await executeEfasheElectricityVendingTx(
+      //Previous metho
+      // const response = await executeEfasheElectricityVendingTx(
+      //   efasheTxValidatorRequestBody,
+      //   context.userKey
+      // );
+      console.log("des",efasheTxValidatorRequestBody)
+
+      const response = await executeEfasheElectricityVending(
         efasheTxValidatorRequestBody,
         context.userKey
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         playAudio();
         /* toast.update(id, {
           render:
@@ -430,16 +439,17 @@ export default function ElectricityServicePage() {
         setMeterNumber("");
 
         toast.dismiss();
-        setReceiptId(response.responseStatus);
-        setReceiptNote(
-          response.responseDescription +
-            ",Voucher/Token:" +
-            response.data.spVendInfo.voucher +
-            ",Units:" +
-            response.data.spVendInfo.units +
-            ", for Rwf" +
-            response.data.spVendInfo.unitsWorth
-        );
+        setReceiptId(response.data.transactionId);
+        // setReceiptNote(
+        //   response.responseDescription +
+        //     ",Voucher/Token:" +
+        //     response.data.spVendInfo.voucher +
+        //     ",Units:" +
+        //     response.data.spVendInfo.units +
+        //     ", for Rwf" +
+        //     response.data.spVendInfo.unitsWorth
+        // );
+        setReceiptNote(response.responseDescription);
         setServiceFeeAmt("");
         setTotalPayment(tokenAmount);
         setShowReceiptDialog(true);

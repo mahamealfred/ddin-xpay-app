@@ -282,7 +282,9 @@ export default function DdinReceiptmanagerPage() {
           <div class="row justify-content-center">
             <div class="col-12 col-lg-12">
               <div>
-                <div className="box wide hidden-on-narrow">
+                <div className="box wide hidden-on-narrow"
+               // style={{ backgroundColor: "white" }}
+                >
                   <div className="box-col">
                     <Button
                       style={{
@@ -301,6 +303,7 @@ export default function DdinReceiptmanagerPage() {
                           style={{
                             justifyContent: "center",
                             alignContent: "center",
+                            
                           }}
                           className="btn btn-warning btn-lg w-40"
                         >

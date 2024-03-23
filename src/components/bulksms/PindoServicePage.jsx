@@ -45,6 +45,7 @@ import {
 import LoginPage from "../user/LoginPage";
 import FooterPage from "../footer/FooterPage";
 import HeaderPage from "../header/HeaderPage";
+import { payPindoBulkSMS } from "../../apis/ServiceController";
 
 export default function PindoServicePage() {
   const classes = useStyles();
@@ -340,46 +341,41 @@ export default function PindoServicePage() {
           userId: context.userId,
           agentCategory: context.agentCategory,
         };
-        toast.update(id, {
-          render:
-            "Dear customer we are unable to process your request now. Try again later." ,
-          type: "info",
-          isLoading: false,
-          closeButton: null,
-        });
-        // const response = await payPindo(pindoPaymentBody, context.userKey);
+      
        
-        // if (response.responseCode === 200) {
+        const response = await payPindoBulkSMS(pindoPaymentBody, context.userKey);
+       
+        if (response.responseCode === 200) {
+          
+          playAudio();
+          /* toast.update(id, {
+            render:
+              "Bulk SMS processing completed successfully with transaction No:" +
+              response.transactionId +
+              " - ",
+            type: "success",
+            isLoading: false,
+            closeButton: null,
+          });*/
+          setValidFileLevel(false);
 
-        //   playAudio();
-        //   /* toast.update(id, {
-        //     render:
-        //       "Bulk SMS processing completed successfully with transaction No:" +
-        //       response.transactionId +
-        //       " - ",
-        //     type: "success",
-        //     isLoading: false,
-        //     closeButton: null,
-        //   });*/
-        //   setValidFileLevel(false);
+          //Clearing some data for new request
 
-        //   //Clearing some data for new request
-
-        //   toast.dismiss();
-        //   setReceiptId(response.responseStatus);
-        //   setReceiptNote(response.responseDescription);
-        //   setServiceFeeAmt("");
-        //   setTotalPayment(totalSmsCost);
-        //   setShowReceiptDialog(true);
-        // } else {
-        //   toast.update(id, {
-        //     render: response.responseDescription,
-        //     type: "info",
-        //     isLoading: false,
-        //     closeButton: null,
-        //   });
-        //   setValidFileLevel(false);
-        // }
+          toast.dismiss();
+          setReceiptId(response.responseStatus);
+          setReceiptNote(response.responseDescription);
+          setServiceFeeAmt("");
+          setTotalPayment(totalSmsCost);
+          setShowReceiptDialog(true);
+        } else {
+          toast.update(id, {
+            render: response.responseDescription,
+            type: "info",
+            isLoading: false,
+            closeButton: null,
+          });
+          setValidFileLevel(false);
+        }
       } else {
         toast.update(id, {
           render:
@@ -883,7 +879,7 @@ export default function PindoServicePage() {
           <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
             <h6>
               <Link class="btn p-0 text-white" to="/">
-                <i class="ms-1 fa-solid fa-arrow-left-long"></i> Back
+                <i class="ms-1 fa-solid fa-arrow-left-long text-white"></i> Back
               </Link>
             </h6>
           </div>
@@ -999,7 +995,7 @@ export default function PindoServicePage() {
                               <b style={{ color: "red" }}>*</b>
                             </span>
                           
-                          {/* <select
+                          <select
                            class="form-control"
                            style={{
                              backgroundColor: "white",
@@ -1018,11 +1014,21 @@ export default function PindoServicePage() {
                            required
                           > 
                             <option value="">Select Sender ID</option>
-                            <option value="Ubukwe">Ubukwe</option>
-                            <option value="Inama">Inama</option>
+                            <option value="INVITATION">INVITATION</option>
+                            <option value="KWIBUTSA">KWIBUTSA</option>
+                            <option value="KUMENYESHA">KUMENYESHA</option>
+                            <option value="EGLISE">EGLISE</option>
+                            <option value="CHURCH">CHURCH</option>
+                            <option value="KAMUTWA">KAMUTWA</option>
+                            <option value="GUSHIMIRA">GUSHIMIRA</option>
+                            <option value="AKAGALI">AKAGALI</option>
+                            <option value="UBUTUMIRE">UBUTUMIRE</option>
+                            <option value="UBUKWE">UBUKWE</option>
+                            <option value="UMURENGE">UMURENGE</option>
+                            <option value="DDIN">DDIN</option>
 
-                          </select> */}
-                            <input
+                          </select>
+                            {/* <input
                               class="form-control"
                               style={{
                                 backgroundColor: "white",
@@ -1039,7 +1045,7 @@ export default function PindoServicePage() {
                               onChange={(e) => setSenderId(e.target.value)}
                               value={senderId}
                               required
-                            />
+                            />  */}
                           </div>
                           <div class="form-group text-start mb-4">
                             <span style={{ color: "black", fontSize: 16 }}>

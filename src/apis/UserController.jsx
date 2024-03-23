@@ -797,15 +797,24 @@ const payPindo = async (requestPayLoad, userKey) => {
     responseCode: "",
     responseDescription: "",
     responseStatus: "",
-    transactionId: 0,
-    pindoSmsId: 0,
+    transactionId: "",
+    pindoSmsId: "",
   };
+
+  //Alfred
+  // const serverResponse = {
+  //   responseCode: "",
+  //   responseDescription: "",
+  //   responseStatus: "",
+  //   transactionId: 0,
+  //   pindoSmsId: 0,
+  // };
   // base_remote_pindo_pay_test
   //base_remote_pindo_pay_prod
   //base_localhost_pindo_pay_test
   await axios
-    //.post(base_remote_pindo_pay_prod, requestPayLoad, {
-      .post('https://app.ddin.rw/api/v1/payment-service/pindo-bulksms/payment',requestPayLoad,{
+      .post(base_remote_pindo_pay_prod, requestPayLoad, {
+     // .post('https://app.ddin.rw/api/v1/payment-service/pindo-bulksms/payment',requestPayLoad,{
       headers: {
         Authorization: `Basic ${userKey}`,
       },
@@ -813,20 +822,20 @@ const payPindo = async (requestPayLoad, userKey) => {
     })
 
     .then((response) => {
-      if (response.data.responseCode === 200) {
-        // console.log("response from api:",response)
+      
+      if (response.data.responseCode === "200") {
         //gilbert
-        // serverResponse.responseDescription = response.data.codeDescription;
-        // serverResponse.responseStatus = response.data.communicationStatus;
-        // serverResponse.responseCode = response.data.responseCode;
-        // serverResponse.transactionId = response.data.data.transactionId;
-        // serverResponse.pindoSmsId = response.data.data.pindoSmsId;
-                          //Alfred
-        serverResponse.responseDescription = response.data.responseDescription;
-        serverResponse.responseStatus = response.data.data.transactionId;
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
         serverResponse.responseCode = response.data.responseCode;
         serverResponse.transactionId = response.data.data.transactionId;
         serverResponse.pindoSmsId = response.data.data.pindoSmsId;
+                          //Alfred
+        // serverResponse.responseDescription = response.data.responseDescription;
+        // serverResponse.responseStatus = response.data.data.transactionId;
+        // serverResponse.responseCode = response.data.responseCode;
+        // serverResponse.transactionId = response.data.data.transactionId;
+        // serverResponse.pindoSmsId = response.data.data.pindoSmsId;
       } else {
         serverResponse.responseDescription = response.data.codeDescription;
         serverResponse.responseStatus = response.data.communicationStatus;

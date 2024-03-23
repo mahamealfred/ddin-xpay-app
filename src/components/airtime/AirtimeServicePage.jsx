@@ -61,6 +61,7 @@ import "react-phone-number-input/style.css";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
+import { executeEfasheAirTimeVendingTx, validateEfasheAirTimeVendingTx } from "../../apis/ServiceController";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -247,13 +248,15 @@ export default function AirtimeServicePage() {
         vertialId: "airtime",
         phoneNumber: value,
       };
-
-      const response = await validateEfasheVendingTx(
-        efasheTxValidatorRequestBody,
-        context.userKey
+         //Previous apis
+      // const response = await validateEfasheVendingTx(
+      //   efasheTxValidatorRequestBody,
+      //   context.userKey
+      // );
+      const response = await validateEfasheAirTimeVendingTx(
+        efasheTxValidatorRequestBody
       );
-
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         //unpackage data
         setAvailTrxBalance(response.data?.customerAccountNumber);
         setCustomerAccountNumber(response.data?.customerAccountNumber);
@@ -349,8 +352,8 @@ export default function AirtimeServicePage() {
       //returnTransferId();returnMemberId();
       const efasheTxValidatorRequestBody = {
         amount: efasheServiceAmount,
-        description: "",
-        currencySymbol: "",
+        description:"Airtime payment processed successfully with TX Id :" + trxId + ", Phone Number: " + value,
+        currencySymbol: "Rwf",
         transferTypeId: returnTransferId(),
         province: context.province,
         district: context.district,
@@ -369,13 +372,19 @@ export default function AirtimeServicePage() {
         agentCategory: context.agentCategory,
       };
   
+       //Previous method
+      // const response = await executeEfasheVendingTx(
+      //   efasheTxValidatorRequestBody,
+      //   context.userKey
+      // );
+      
 
-      const response = await executeEfasheVendingTx(
+      const response = await executeEfasheAirTimeVendingTx(
         efasheTxValidatorRequestBody,
         context.userKey
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         playAudio();
         /*
         toast.update(id, {
@@ -389,7 +398,7 @@ export default function AirtimeServicePage() {
         setValue("");
         setEfasheServiceAmount("");
 
-        setReceiptId(response.responseStatus);
+        setReceiptId(response.data.transactionId);
         setReceiptNote(response.responseDescription);
         setServiceFeeAmt("");
         setTotalPayment(efasheServiceAmount);

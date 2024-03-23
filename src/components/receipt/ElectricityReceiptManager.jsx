@@ -279,7 +279,7 @@ export default function ElectricityReceiptManager() {
 
       const response = await viewEfasheTxStatus(context.userKey, txId, 31);
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setFdiTxData(response.data);
         setShowTxData(true);
       } else {
