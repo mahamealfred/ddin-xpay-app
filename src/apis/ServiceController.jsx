@@ -2,6 +2,11 @@ import React, { useContext } from "react";
 import axios from "axios";
 import { Buffer } from "buffer";
 //Local PROD APIs:
+
+//LOGIN URL
+const base_remote_login_prod = "http://localhost:8000/api/v1/authentication/login";
+
+
 //BULK SMS URL
 const base_remote_pindo_pay_prod = "http://localhost:8000/api/v1/payment-service/pindo-bulksms/payment";
 
@@ -13,6 +18,109 @@ const base_remote_efashe_executeAirTimeTx_prod="http://localhost:8000/api/v1/pay
 const base_remote_efashe_electricity_validation_prod="http://localhost:8000/api/v1/payment-service/electricity/validate-vend"
 const base_remote_efashe_executeElectricityTx_prod="http://localhost:8000/api/v1/payment-service/electricity/payment";
 
+//RRA
+const base_remote_efashe_rra_validation_prod="http://localhost:8000/api/v1/payment-service/rra/validate-vend";
+const base_remote_efashe_executeRRATx_prod="http://localhost:8000/api/v1/payment-service/rra/payment";
+
+//login Auth 
+const agentLoginAuth = async (requestPayload) => {
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    communicationStatus: "",
+    userId: "",
+    username: "",
+    email: "",
+    image: "",
+    country: "",
+    nationalId: "",
+    birthday: "",
+    gender: "",
+    city: "",
+    province: "",
+    district: "",
+    sector: "",
+    phone: "",
+    passKey: "",
+    agentCategory: "",
+    name: "",
+    floatAccountId: "",
+    instantCommissionAccountId: "",
+    delayedCommissionAccountId: "",
+  };
+
+  const usernamePasswordBuffer = Buffer.from(
+    requestPayload.username + ":" + requestPayload.password
+  );
+  const base64data = usernamePasswordBuffer.toString("base64");
+  await axios
+    .get(base_remote_login_prod, {
+      headers: {
+        Authorization: `Basic ${base64data}`,
+      },
+      withCredentials: true,
+    })
+
+    .then((response) => {
+      if (response.data.responseCode === 200) {
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+
+        serverResponse.userId = response.data?.data?.id;
+        serverResponse.username = response.data?.data?.username;
+        serverResponse.email = response.data?.data?.email;
+        serverResponse.image = response.data?.data?.image;
+        serverResponse.country = response.data?.data?.country;
+        serverResponse.nationalId = response.data?.data?.nationalId;
+        serverResponse.birthday = response.data?.data?.birthday;
+        serverResponse.gender = response.data?.data?.gender;
+        serverResponse.city = response.data?.data?.city;
+        serverResponse.province = response.data?.data?.province;
+        serverResponse.district = response.data?.data?.district;
+        serverResponse.sector = response.data?.data?.sector;
+        serverResponse.phone = response.data?.data?.phone;
+        serverResponse.name = response.data?.data?.name;
+        serverResponse.agentCategory = response.data?.data?.agentCategory;
+        serverResponse.floatAccountId =
+          response.data?.data?.agentFloatAccountId;
+        serverResponse.instantCommissionAccountId =
+          response.data?.data?.agentInstantCommissionAccountId;
+        serverResponse.delayedCommissionAccountId =
+          response.data?.data?.agentDelayedCommissionAccountId;
+      } else {
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+      }
+    })
+    .catch((err) => {
+     
+    if (err.response.status == 400) {
+      
+      serverResponse.responseDescription = err.response.data.responseDescription;
+      serverResponse.responseStatus = err.response.data.communicationStatus;
+      serverResponse.responseCode = err.response.data.responseCode;
+    }
+    else if(err.response.status == 401){
+      serverResponse.responseDescription = err.response.data.responseDescription;
+      serverResponse.responseStatus = err.response.data.communicationStatus;
+      serverResponse.responseCode = err.response.data.responseCode;
+    }
+    else{
+      serverResponse.responseDescription = err.response.data.error;
+      serverResponse.responseStatus = err.response.data.communicationStatus;
+      serverResponse.responseCode = err.response.data.responseCode;
+    } 
+  
+    });
+
+  return serverResponse;
+};
+
+
+
+//Pindo Bulk sms payament
 const payPindoBulkSMS = async (requestPayLoad, userKey) => {
  
     const serverResponse = {
@@ -45,19 +153,21 @@ const payPindoBulkSMS = async (requestPayLoad, userKey) => {
       })
       .catch((err) => {
        
-        serverResponse.responseDescription =
-          "Dear customer we are unable to process your request now. Try again later." +
-          err;
-        serverResponse.responseStatus =
-          "Dear customer we are unable to process your request now. Try again later." +
-          err;
-        serverResponse.responseCode = "501";
-  
-        if (!err.response) {
-        } else if (err.response.status === 400) {
-        } else if (err.response.status === 401) {
-        } else {
+        if (err.response.status == 400) {
+          serverResponse.responseDescription = err.response.data.responseDescription;
+          serverResponse.responseStatus = err.response.data.communicationStatus;
+          serverResponse.responseCode = err.response.data.responseCode;
         }
+        else if(err.response.status == 401){
+          serverResponse.responseDescription = err.response.data.responseDescription;
+          serverResponse.responseStatus = err.response.data.communicationStatus;
+          serverResponse.responseCode = err.response.data.responseCode;
+        }
+        else{
+          serverResponse.responseDescription = err.response.data.error;
+          serverResponse.responseStatus = err.response.data.communicationStatus;
+          serverResponse.responseCode = err.response.data.responseCode;
+        } 
       });
   
     return serverResponse;
@@ -163,19 +273,21 @@ const validateEfasheAirTimeVendingTx = async (requestPayLoad) => {
         }
       })
       .catch((err) => {
-        serverResponse.responseDescription =
-          "Dear customer we are unable to process your request now. Try again later." +
-          err;
-        serverResponse.responseStatus =
-          "Dear customer we are unable to process your request now. Try again later." +
-          err;
-        serverResponse.responseCode = "501";
-  
-        if (!err.response) {
-        } else if (err.response.status === 400) {
-        } else if (err.response.status === 401) {
-        } else {
+        if (err.response.status == 400) {
+          serverResponse.responseDescription = err.response.data.responseDescription;
+          serverResponse.responseStatus = err.response.data.communicationStatus;
+          serverResponse.responseCode = err.response.data.responseCode;
         }
+        else if(err.response.status == 401){
+          serverResponse.responseDescription = err.response.data.responseDescription;
+          serverResponse.responseStatus = err.response.data.communicationStatus;
+          serverResponse.responseCode = err.response.data.responseCode;
+        }
+        else{
+          serverResponse.responseDescription = err.response.data.error;
+          serverResponse.responseStatus = err.response.data.communicationStatus;
+          serverResponse.responseCode = err.response.data.responseCode;
+        } 
       });
   
     return serverResponse;
@@ -215,19 +327,21 @@ const validateEfasheElectricityVending= async (requestPayLoad) => {
         }
       })
       .catch((err) => {
-        serverResponse.responseDescription =
-          "Dear customer we are unable to process your request now. Try again later." +
-          err;
-        serverResponse.responseStatus =
-          "Dear customer we are unable to process your request now. Try again later." +
-          err;
-        serverResponse.responseCode = "501";
-  
-        if (!err.response) {
-        } else if (err.response.status === 400) {
-        } else if (err.response.status === 401) {
-        } else {
+        if (err.response.status == 400) {
+          serverResponse.responseDescription = err.response.data.responseDescription;
+          serverResponse.responseStatus = err.response.data.communicationStatus;
+          serverResponse.responseCode = err.response.data.responseCode;
         }
+        else if(err.response.status == 401){
+          serverResponse.responseDescription = err.response.data.responseDescription;
+          serverResponse.responseStatus = err.response.data.communicationStatus;
+          serverResponse.responseCode = err.response.data.responseCode;
+        }
+        else{
+          serverResponse.responseDescription = err.response.data.error;
+          serverResponse.responseStatus = err.response.data.communicationStatus;
+          serverResponse.responseCode = err.response.data.responseCode;
+        } 
       });
   
     return serverResponse;
@@ -266,7 +380,7 @@ const executeEfasheElectricityVending= async (requestPayLoad, userKey) => {
       })
   
       .then((response) => {
-        console.log("res from electricity data:",response)
+
         if (response.data.responseCode === 200) {
           serverResponse.responseDescription = response.data.responseDescription;
           serverResponse.responseStatus = response.data.communicationStatus;
@@ -280,24 +394,150 @@ const executeEfasheElectricityVending= async (requestPayLoad, userKey) => {
         }
       })
       .catch((err) => {
-        console.log("error from ele:",err)
-        serverResponse.responseDescription =
-          "Dear customer we are unable to process your request now. Try again later." +
-          err;
-        serverResponse.responseStatus =
-          "Dear customer we are unable to process your request now. Try again later." +
-          err;
-        serverResponse.responseCode = "501";
-  
-        if (!err.response) {
-        } else if (err.response.status === 400) {
-        } else if (err.response.status === 401) {
-        } else {
+        if (err.response.status == 400) {
+          serverResponse.responseDescription = err.response.data.responseDescription;
+          serverResponse.responseStatus = err.response.data.communicationStatus;
+          serverResponse.responseCode = err.response.data.responseCode;
         }
+        else if(err.response.status == 401){
+          serverResponse.responseDescription = err.response.data.responseDescription;
+          serverResponse.responseStatus = err.response.data.communicationStatus;
+          serverResponse.responseCode = err.response.data.responseCode;
+        }
+        else{
+          serverResponse.responseDescription = err.response.data.error;
+          serverResponse.responseStatus = err.response.data.communicationStatus;
+          serverResponse.responseCode = err.response.data.responseCode;
+        } 
       });
   
     return serverResponse;
   };
+
+
+  //==============efashe Electricity validation======
+
+const validateEfasheRRAVending= async (requestPayLoad) => {
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    responseStatus: "",
+    data: "",
+  };
+ const data={
+  customerAccountNumber: requestPayLoad.phoneNumber
+ }
+
+  await axios
+    .post(base_remote_efashe_rra_validation_prod, data, {
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    })
+
+    .then((response) => {
+      
+      if (response.data.responseCode === 200) {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.data = response.data.data;
+      } else {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+      }
+    })
+    .catch((err) => {
+   
+      if (err.response.status == 400) {
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else if(err.response.status == 401){
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else{
+        serverResponse.responseDescription = err.response.data.error;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      } 
+    });
+
+  return serverResponse;
+};
+
+
+//==============efashe RRA Payment======
+const executeEfasheRRAVending= async (requestPayLoad, userKey) => {
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    responseStatus: "",
+    data: "",
+  };
+  const data={
+    trxId:requestPayLoad.transactionId,
+    toMemberId: requestPayLoad.toMemberId,
+    amount: requestPayLoad.amount,
+    transferTypeId: requestPayLoad.transferTypeId,
+    phoneNumber:requestPayLoad.phoneNumber,
+    accountId:requestPayLoad.accountId,
+    agentCategory:requestPayLoad.agentCategory,
+    district:requestPayLoad.district,
+    province:requestPayLoad.province,
+    sector:requestPayLoad.sector,
+    currencySymbol: requestPayLoad.currencySymbol,
+    description: requestPayLoad.description
+}
+
+  await axios
+    .post( base_remote_efashe_executeRRATx_prod, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${userKey}`,
+      },
+      withCredentials: false,
+    })
+
+    .then((response) => {
+
+      if (response.data.responseCode === 200) {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.data = response.data.data;
+        //serverResponse.pindoSmsId=response.data.data.pindoSmsId;
+      } else {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+      }
+    })
+    .catch((err) => {
+      if (err.response.status == 400) {
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else if(err.response.status == 401){
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else{
+        serverResponse.responseDescription = err.response.data.error;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      } 
+    });
+
+  return serverResponse;
+};
+
 
 
   export {
@@ -305,5 +545,8 @@ const executeEfasheElectricityVending= async (requestPayLoad, userKey) => {
     validateEfasheAirTimeVendingTx,
     executeEfasheAirTimeVendingTx,
     validateEfasheElectricityVending,
-    executeEfasheElectricityVending
+    executeEfasheElectricityVending,
+    agentLoginAuth,
+    validateEfasheRRAVending,
+    executeEfasheRRAVending
 }

@@ -273,8 +273,8 @@ export default function DdinReceiptmanagerPage() {
           <br />
           <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
             <h6>
-              <Link class="btn p-0" to="/bulksms-service">
-                <i class="ms-1 fa-solid fa-arrow-left-long text-white"></i> Back
+              <Link class="btn p-0 text-white" to="/bulksms-service">
+                <i class="ms-1 fa-solid fa-arrow-left-long text-white"></i> Back 
               </Link>
             </h6>
             {/*<a class="btn p-0" href="#">More<i class="ms-1 fa-solid fa-arrow-right-long"></i></a>*/}
@@ -319,7 +319,7 @@ export default function DdinReceiptmanagerPage() {
                     style={{ backgroundColor: "white" }}
                   >
                     <PDFExport ref={pdfExportComponent}>
-                      <div>
+                      <div className="receipt-body">
                         <div
                           className="pdf-header"
                           style={{ paddingRight: 10 }}

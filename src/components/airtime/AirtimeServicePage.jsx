@@ -249,14 +249,15 @@ export default function AirtimeServicePage() {
         phoneNumber: value,
       };
          //Previous apis
-      // const response = await validateEfasheVendingTx(
-      //   efasheTxValidatorRequestBody,
-      //   context.userKey
-      // );
-      const response = await validateEfasheAirTimeVendingTx(
-        efasheTxValidatorRequestBody
+      const response = await validateEfasheVendingTx(
+        efasheTxValidatorRequestBody,
+        context.userKey
       );
-      if (response.responseCode === 200) {
+      //new Method
+      // const response = await validateEfasheAirTimeVendingTx(
+      //   efasheTxValidatorRequestBody
+      // );
+      if (response.responseCode === "200") {
         //unpackage data
         setAvailTrxBalance(response.data?.customerAccountNumber);
         setCustomerAccountNumber(response.data?.customerAccountNumber);
@@ -373,38 +374,44 @@ export default function AirtimeServicePage() {
       };
   
        //Previous method
-      // const response = await executeEfasheVendingTx(
-      //   efasheTxValidatorRequestBody,
-      //   context.userKey
-      // );
-      
-
-      const response = await executeEfasheAirTimeVendingTx(
+      const response = await executeEfasheVendingTx(
         efasheTxValidatorRequestBody,
         context.userKey
       );
+      
+       //new method
 
-      if (response.responseCode === 200) {
+      // const response = await executeEfasheAirTimeVendingTx(
+      //   efasheTxValidatorRequestBody,
+      //   context.userKey
+      // );
+
+      if (response.responseCode === "200") {
         playAudio();
-        /*
-        toast.update(id, {
-          render: response.responseDescription,
-          type: "success",
-          isLoading: false,
-          closeButton: null,
-        });*/
-        //unpackage data
 
-        setValue("");
+         //Girlbert
+         setValue("");
         setEfasheServiceAmount("");
 
-        setReceiptId(response.data.transactionId);
+        setReceiptId(response.responseStatus);
         setReceiptNote(response.responseDescription);
         setServiceFeeAmt("");
         setTotalPayment(efasheServiceAmount);
 
         toast.dismiss();
         setShowReceiptDialog(true);
+
+           //Alfred
+        // setValue("");
+        // setEfasheServiceAmount("");
+
+        // setReceiptId(response.data.transactionId);
+        // setReceiptNote(response.responseDescription);
+        // setServiceFeeAmt("");
+        // setTotalPayment(efasheServiceAmount);
+
+        // toast.dismiss();
+        // setShowReceiptDialog(true);
       } else {
         toast.update(id, {
           render: response.responseDescription,
@@ -912,11 +919,11 @@ export default function AirtimeServicePage() {
                                   alt=""
                                 />
                               </a>
-                              <a class="product-title d-block" href="#">
+                              <a class="product-title d-block"  style={{ color: "white" }} href="#">
                                 {transaction.description}
                               </a>
 
-                              <p class="sale-price">
+                              <p class="sale-price"  style={{ color: "white" }}>
                                 <i class="fa-solid"></i>
                                 {transaction.processDate.substring(0, 20)}
                                 <span></span>
@@ -925,7 +932,7 @@ export default function AirtimeServicePage() {
                               <div class="product-rating">
                                 <i class="fa-solid fa-star"></i>TX:
                                 {transaction.id}
-                                <span class="ms-1" style={{ color: "red" }}>
+                                <span class="ms-1" style={{ color: "white" }}>
                                   <b>
                                     Amount Rwf:
                                     {(
@@ -937,6 +944,7 @@ export default function AirtimeServicePage() {
                                 </span>
                                 <Link
                                   to="/ddin-airtime-receipt"
+                                  style={{ color: "#f8882b" }}
                                   state={{
                                     transactionData: transaction,
                                     agentUsername: context.agentUsername,
@@ -979,11 +987,11 @@ export default function AirtimeServicePage() {
                                   alt=""
                                 />
                               </a>
-                              <a class="product-title d-block" href="#">
+                              <a class="product-title d-block"  style={{ color: "white" }} href="#">
                                 {transaction.description}
                               </a>
 
-                              <p class="sale-price">
+                              <p class="sale-price"  style={{ color: "white" }}>
                                 <i class="fa-solid"></i>
                                 {transaction.processDate.substring(0, 20)}
                                 <span></span>
@@ -992,7 +1000,7 @@ export default function AirtimeServicePage() {
                               <div class="product-rating">
                                 <i class="fa-solid fa-star"></i>TX:
                                 {transaction.id}
-                                <span class="ms-1" style={{ color: "red" }}>
+                                <span class="ms-1" style={{ color: "white" }}>
                                   <b>
                                     Amount Rwf:
                                     {(
@@ -1004,6 +1012,7 @@ export default function AirtimeServicePage() {
                                 </span>
                                 <Link
                                   to="/ddin-airtime-receipt"
+                                  style={{ color: "#f8882b" }}
                                   state={{
                                     transactionData: transaction,
                                     agentUsername: context.agentUsername,

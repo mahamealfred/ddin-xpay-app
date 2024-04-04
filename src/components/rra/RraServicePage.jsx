@@ -60,6 +60,7 @@ import "react-phone-number-input/style.css";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
+import { executeEfasheRRAVending, validateEfasheRRAVending } from "../../apis/ServiceController";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -333,11 +334,15 @@ export default function ElectricityServicePage() {
         vertialId: "tax",
         phoneNumber: meterNumber,
       };
-
+      //previous method
       const response = await validateEfasheRraVendingTx(
         efasheTxValidatorRequestBody,
         context.userKey
       );
+      //new method
+      // const response = await validateEfasheRRAVending(
+      //   efasheTxValidatorRequestBody
+      // );
 
       if (response.responseCode === "200") {
         setCustomerAccountNumber(response.data?.customerAccountNumber);
@@ -354,16 +359,15 @@ export default function ElectricityServicePage() {
         setVendMax(response.data?.vendMax);
         setVendMin(response.data?.vendMin);
         setVendUnitId(response.data?.vendUnitId);
-        setAccessToken(response.data?.accessToken);
-        setRefreshToken(response.data?.refreshToken);
-
-        setTin(response.data?.tin);
-        setValidateId(response.data?.validate_id);
-        setPayRef(response.data?.pay_ref);
-        setTaxCenter(response.data?.tax_center);
-        setDecDate(response.data?.dec_date);
-        setFullPay(response.data?.is_full_pay);
-        setTaxType(response.data?.tax_type);
+        // setAccessToken(response.data?.accessToken);
+        // setRefreshToken(response.data?.refreshToken);
+        setTin(response.data?.extraInfo.tin);
+        setValidateId(response.data?.extraInfo.validate_id);
+        setPayRef(response.data?.extraInfo.pay_ref);
+        setTaxCenter(response.data?.extraInfo.tax_center);
+        setDecDate(response.data?.extraInfo.dec_date);
+        setFullPay(response.data?.extraInfo.is_full_pay);
+        setTaxType(response.data?.extraInfo.tax_type);
 
         toast.dismiss();
         viewConfirmDialog();
@@ -466,11 +470,16 @@ export default function ElectricityServicePage() {
         taxType: taxType,
         taxpayer: customerAccountNumber,
       };
-
+      //previous methode
       const response = await executeEfasheRraVendingTx(
         efasheTxValidatorRequestBody,
         context.userKey
       );
+      //new methode
+      // const response = await executeEfasheRRAVending(
+      //   efasheTxValidatorRequestBody,
+      //   context.userKey
+      // );
 
       //console.log("Response:" + response);
       if (response.responseCode === "200") {
@@ -957,11 +966,11 @@ export default function ElectricityServicePage() {
                                   alt=""
                                 />
                               </a>
-                              <a class="product-title d-block" href="#">
+                              <a class="product-title d-block"  style={{ color: "white" }} href="#">
                                 {transaction.description}
                               </a>
 
-                              <p class="sale-price">
+                              <p class="sale-price"  style={{ color: "white" }}>
                                 <i class="fa-solid"></i>
                                 {transaction.processDate.substring(0, 20)}
                                 <span></span>
@@ -970,7 +979,7 @@ export default function ElectricityServicePage() {
                               <div class="product-rating">
                                 <i class="fa-solid fa-star"></i>TX:
                                 {transaction.id}
-                                <span class="ms-1" style={{ color: "red" }}>
+                                <span class="ms-1" style={{ color: "white" }}>
                                   <b>
                                     Amount Rwf:-
                                     {(
@@ -983,6 +992,7 @@ export default function ElectricityServicePage() {
                                 </span>
                                 <Link
                                   to="/ddin-rra-receipt"
+                                  style={{ color: "#f8882b" }}
                                   state={{
                                     transactionData: transaction,
                                     agentUsername: context.agentUsername,
@@ -1024,12 +1034,12 @@ export default function ElectricityServicePage() {
                                   alt=""
                                 />
                               </a>
-                              <a class="product-title d-block" href="#">
+                              <a class="product-title d-block"  style={{ color: "white" }} href="#">
                                 {transaction.description}
                               </a>
 
                               <p class="sale-price">
-                                <i class="fa-solid"></i>
+                                <i class="fa-solid"  style={{ color: "white" }}></i>
                                 {transaction.processDate.substring(0, 20)}
                                 <span></span>
                               </p>
@@ -1037,7 +1047,7 @@ export default function ElectricityServicePage() {
                               <div class="product-rating">
                                 <i class="fa-solid fa-star"></i>TX:
                                 {transaction.id}
-                                <span class="ms-1" style={{ color: "red" }}>
+                                <span class="ms-1" style={{ color: "white" }}>
                                   <b>
                                     Amount Rwf:-
                                     {(
@@ -1050,6 +1060,7 @@ export default function ElectricityServicePage() {
                                 </span>
                                 <Link
                                   to="/ddin-rra-receipt"
+                                  style={{ color: "#f8882b" }}
                                   state={{
                                     transactionData: transaction,
                                     agentUsername: context.agentUsername,

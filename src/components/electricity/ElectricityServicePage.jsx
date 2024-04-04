@@ -253,13 +253,14 @@ export default function ElectricityServicePage() {
         phoneNumber: meterNumber,
       };
        //previous
-      // const response = await validateEfasheElectricityVendingTx(
-      //   efasheTxValidatorRequestBody,
-      //   context.userKey
-      // );
-      const response=await validateEfasheElectricityVending(efasheTxValidatorRequestBody)
+      const response = await validateEfasheElectricityVendingTx(
+        efasheTxValidatorRequestBody,
+        context.userKey
+      );
+      //new Method
+      //const response=await validateEfasheElectricityVending(efasheTxValidatorRequestBody)
 
-      if (response.responseCode === 200) {
+      if (response.responseCode === "200") {
         setCustomerAccountNumber(response.data?.customerAccountNumber);
         setLocalStockMgt(response.data?.localStockMgt);
         setPdtId(response.data?.pdtId);
@@ -388,7 +389,7 @@ export default function ElectricityServicePage() {
       //returnTransferId();returnMemberId();
       const efasheTxValidatorRequestBody = {
         amount: tokenAmount,
-        description: "Electricity Payment processed with TX Id & Token Voucher," + trxId +",Token1: For Meter Number: "+meterNumber,
+        description: "Electricity Payment processed with TX Id:" + trxId +" Meter Number: " + meterNumber + " Token1:",
         currencySymbol: "Rwf",
         transferTypeId: returnTransferId(),
         province: context.province,
@@ -409,37 +410,39 @@ export default function ElectricityServicePage() {
       };
 
       //Previous metho
-      // const response = await executeEfasheElectricityVendingTx(
-      //   efasheTxValidatorRequestBody,
-      //   context.userKey
-      // );
-      console.log("des",efasheTxValidatorRequestBody)
-
-      const response = await executeEfasheElectricityVending(
+      const response = await executeEfasheElectricityVendingTx(
         efasheTxValidatorRequestBody,
         context.userKey
       );
+      
+      //new methode
+      // const response = await executeEfasheElectricityVending(
+      //   efasheTxValidatorRequestBody,
+      //   context.userKey
+      // );
 
-      if (response.responseCode === 200) {
+      if (response.responseCode === "200") {
         playAudio();
-        /* toast.update(id, {
-          render:
-            response.responseDescription +
+        
+        setTokenAmount("");
+        setMeterNumber("");
+        toast.dismiss();
+        //Girlbert
+        setReceiptId(response.responseStatus);
+        setReceiptNote(
+          response.responseDescription +
             ",Voucher/Token:" +
             response.data.spVendInfo.voucher +
             ",Units:" +
             response.data.spVendInfo.units +
             ", for Rwf" +
-            response.data.spVendInfo.unitsWorth,
-          type: "success",
-          isLoading: false,
-          closeButton: null,
-        });*/
-        setTokenAmount("");
-        setMeterNumber("");
-
-        toast.dismiss();
-        setReceiptId(response.data.transactionId);
+            response.data.spVendInfo.unitsWorth
+        );
+        setServiceFeeAmt("");
+        setTotalPayment(tokenAmount);
+        setShowReceiptDialog(true);
+               //Alfred
+        // setReceiptId(response.data.transactionId);
         // setReceiptNote(
         //   response.responseDescription +
         //     ",Voucher/Token:" +
@@ -449,10 +452,10 @@ export default function ElectricityServicePage() {
         //     ", for Rwf" +
         //     response.data.spVendInfo.unitsWorth
         // );
-        setReceiptNote(response.responseDescription);
-        setServiceFeeAmt("");
-        setTotalPayment(tokenAmount);
-        setShowReceiptDialog(true);
+        // // setReceiptNote(response.responseDescription);
+        // setServiceFeeAmt("");
+        // setTotalPayment(tokenAmount);
+        // setShowReceiptDialog(true);
       } else {
         toast.update(id, {
           render: response.responseDescription,
@@ -925,11 +928,11 @@ export default function ElectricityServicePage() {
                                   alt=""
                                 />
                               </a>
-                              <a class="product-title d-block" href="#">
+                              <a class="product-title d-block"  style={{ color: "white" }} href="#">
                                 {transaction.description}
                               </a>
 
-                              <p class="sale-price">
+                              <p class="sale-price"  style={{ color: "white" }}>
                                 <i class="fa-solid"></i>
                                 {transaction.processDate.substring(0, 20)}
                                 <span></span>
@@ -938,7 +941,7 @@ export default function ElectricityServicePage() {
                               <div class="product-rating">
                                 <i class="fa-solid fa-star"></i>TX:
                                 {transaction.id}
-                                <span class="ms-1" style={{ color: "red" }}>
+                                <span class="ms-1" style={{ color: "white" }}>
                                   <b>
                                     Amount Rwf:
                                     {(
@@ -950,6 +953,7 @@ export default function ElectricityServicePage() {
                                 </span>
                                 <Link
                                   to="/ddin-electricity-receipt"
+                                  style={{ color: "#f8882b" }}
                                   state={{
                                     transactionData: transaction,
                                     agentUsername: context.agentUsername,
@@ -992,11 +996,11 @@ export default function ElectricityServicePage() {
                                   alt=""
                                 />
                               </a>
-                              <a class="product-title d-block" href="#">
+                              <a class="product-title d-block"  style={{ color: "white" }} href="#">
                                 {transaction.description}
                               </a>
 
-                              <p class="sale-price">
+                              <p class="sale-price"  style={{ color: "white" }}>
                                 <i class="fa-solid"></i>
                                 {transaction.processDate.substring(0, 20)}
                                 <span></span>
@@ -1005,7 +1009,7 @@ export default function ElectricityServicePage() {
                               <div class="product-rating">
                                 <i class="fa-solid fa-star"></i>TX:
                                 {transaction.id}
-                                <span class="ms-1" style={{ color: "red" }}>
+                                <span class="ms-1" style={{ color: "white" }}>
                                   <b>
                                     Amount Rwf:
                                     {(
@@ -1017,6 +1021,7 @@ export default function ElectricityServicePage() {
                                 </span>
                                 <Link
                                   to="/ddin-electricity-receipt"
+                                  style={{ color: "#f8882b" }}
                                   state={{
                                     transactionData: transaction,
                                     agentUsername: context.agentUsername,

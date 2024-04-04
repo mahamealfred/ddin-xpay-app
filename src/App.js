@@ -22,6 +22,8 @@ import ElectricityServicePage from "./components/electricity/ElectricityServiceP
 import ChangePasswordPage from "./components/settings/ChangePasswordPage";
 import RraServicePage from "./components/rra/RraServicePage";
 
+import AirtimeReceipt from "./components/receiptpage/AirtimeReceipt";
+
 function App() {
   return (
     <Router>
@@ -49,6 +51,7 @@ function App() {
           <Route path="/buy-airtime" element={<AirtimeServicePage />}></Route>
 
           <Route path="/register" element={<RegisterServicePage />}></Route>
+          
           <Route
             path="/ddin-bulksms-receipt"
             element={<FdiReceiptManager />}
@@ -82,6 +85,10 @@ function App() {
           <Route
             path="/electricity-token"
             element={<ElectricityServicePage />}
+          ></Route>
+          <Route
+            path="/airtime-receipt"
+            element={<AirtimeReceipt />}
           ></Route>
         </Routes>
       </div>

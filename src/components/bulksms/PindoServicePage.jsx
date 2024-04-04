@@ -342,21 +342,15 @@ export default function PindoServicePage() {
           agentCategory: context.agentCategory,
         };
       
+        //previous method
+        const response = await payPindo(pindoPaymentBody, context.userKey); 
+        //new method
+        //const response = await payPindoBulkSMS(pindoPaymentBody, context.userKey);
        
-        const response = await payPindoBulkSMS(pindoPaymentBody, context.userKey);
-       
-        if (response.responseCode === 200) {
+        if (response.responseCode === "200") {
           
           playAudio();
-          /* toast.update(id, {
-            render:
-              "Bulk SMS processing completed successfully with transaction No:" +
-              response.transactionId +
-              " - ",
-            type: "success",
-            isLoading: false,
-            closeButton: null,
-          });*/
+          
           setValidFileLevel(false);
 
           //Clearing some data for new request
@@ -448,16 +442,7 @@ export default function PindoServicePage() {
         if (response.responseCode === "200") {
         
           playAudio();
-          /* toast.update(id, {
-            render:
-              "Bulk SMS processing completed successfully with transaction No:" +
-              response.transactionId +
-              " - " +
-              response.responseDescription,
-            type: "success",
-            isLoading: false,
-            closeButton: null,
-          });*/
+         
           setValidFileLevel(false);
           toast.dismiss();
           setReceiptId(response.responseStatus);
@@ -876,10 +861,10 @@ export default function PindoServicePage() {
       <div class="page-content-wrapper">
         <div class="container">
           <br />
-          <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
-            <h6>
+          <div class="section-heading d-flex align-items-center justify-content-between dir-rtl" >
+            <h6 >
               <Link class="btn p-0 text-white" to="/">
-                <i class="ms-1 fa-solid fa-arrow-left-long text-white"></i> Back
+                <i class="ms-1 fa-solid fa-arrow-left-long text-white"></i> Back 
               </Link>
             </h6>
           </div>
@@ -1339,20 +1324,20 @@ export default function PindoServicePage() {
                                   alt=""
                                 />
                               </a>
-                              <a class="product-title d-block" href="#">
+                              <a class="product-title d-block" style={{ color: "white" }} href="#">
                                 {transaction.description}
                               </a>
 
-                              <p class="sale-price">
-                                <i class="fa-solid"></i>
+                              <p class="sale-price" style={{ color: "white" }}>
+                                <i class="fa-solid" ></i>
                                 {transaction.processDate.substring(0, 20)}
                                 <span></span>
                               </p>
 
-                              <div class="product-rating">
+                              <div class="product-rating" >
                                 <i class="fa-solid fa-star"></i>TX:
                                 {transaction.id}
-                                <span class="ms-1" style={{ color: "red" }}>
+                                <span class="ms-1" style={{ color: "white" }}>
                                   <b>
                                     Amount Rwf:
                                     {parseFloat(transaction.amount) * 2.5}|
@@ -1360,6 +1345,7 @@ export default function PindoServicePage() {
                                 </span>
                                 <Link
                                   to="/ddin-receipt"
+                                  style={{ color: "#f8882b" }}
                                   state={{
                                     transactionData: transaction,
                                     agentUsername: context.agentUsername,
@@ -1407,11 +1393,11 @@ export default function PindoServicePage() {
                                   alt=""
                                 />
                               </a>
-                              <a class="product-title d-block" href="#">
+                              <a class="product-title d-block" style={{ color: "white" }} href="#">
                                 {transaction.description}
                               </a>
 
-                              <p class="sale-price">
+                              <p class="sale-price" style={{ color: "white" }}>
                                 <i class="fa-solid"></i>
                                 {transaction.processDate.substring(0, 20)}
                                 <span></span>
@@ -1420,7 +1406,7 @@ export default function PindoServicePage() {
                               <div class="product-rating">
                                 <i class="fa-solid fa-star"></i>TX:
                                 {transaction.id}
-                                <span class="ms-1" style={{ color: "red" }}>
+                                <span class="ms-1" style={{ color: "white" }}>
                                   <b>
                                     Amount Rwf:
                                     {(
@@ -1432,6 +1418,7 @@ export default function PindoServicePage() {
                                 </span>
                                 <Link
                                   to="/ddin-bulksms-receipt"
+                                  style={{ color: "#f8882b" }}
                                   state={{
                                     transactionData: transaction,
                                     agentUsername: context.agentUsername,
@@ -1483,11 +1470,11 @@ export default function PindoServicePage() {
                                   alt=""
                                 />
                               </a>
-                              <a class="product-title d-block" href="#">
+                              <a class="product-title d-block" style={{ color: "white" }} href="#">
                                 {transaction.description}
                               </a>
 
-                              <p class="sale-price">
+                              <p class="sale-price" style={{ color: "white" }}>
                                 <i class="fa-solid"></i>
                                 {transaction.processDate.substring(0, 20)}
                                 <span></span>
@@ -1496,7 +1483,7 @@ export default function PindoServicePage() {
                               <div class="product-rating">
                                 <i class="fa-solid fa-star"></i>TX:
                                 {transaction.id}
-                                <span class="ms-1" style={{ color: "red" }}>
+                                <span class="ms-1" style={{ color: "white" }}>
                                   <b>
                                     Amount Rwf:
                                     {parseFloat(transaction.amount) * 2.5}|
@@ -1504,6 +1491,7 @@ export default function PindoServicePage() {
                                 </span>
                                 <Link
                                   to="/ddin-receipt"
+                                  style={{ color: "#f8882b" }}
                                   state={{
                                     transactionData: transaction,
                                     agentUsername: context.agentUsername,

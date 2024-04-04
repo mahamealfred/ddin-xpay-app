@@ -896,11 +896,11 @@ export default function StartimesServicePage() {
                                     alt=""
                                   />
                                 </a>
-                                <a class="product-title d-block" href="#">
+                                <a class="product-title d-block"  style={{ color: "white" }} href="#">
                                   {transaction.description}
                                 </a>
 
-                                <p class="sale-price">
+                                <p class="sale-price"  style={{ color: "white" }}>
                                   <i class="fa-solid"></i>
                                   {transaction.processDate.substring(0, 20)}
                                   <span></span>
@@ -909,7 +909,7 @@ export default function StartimesServicePage() {
                                 <div class="product-rating">
                                   <i class="fa-solid fa-star"></i>TX:
                                   {transaction.id}
-                                  <span class="ms-1" style={{ color: "red" }}>
+                                  <span class="ms-1" style={{ color: "white" }}>
                                     <b>
                                       Amount Rwf:
                                       {(
@@ -921,6 +921,7 @@ export default function StartimesServicePage() {
                                   </span>
                                   <Link
                                     to="/ddin-startimes-receipt"
+                                    style={{ color: "#f8882b" }}
                                     state={{
                                       transactionData: transaction,
                                       agentUsername: context.agentUsername,
@@ -963,11 +964,11 @@ export default function StartimesServicePage() {
                                     alt=""
                                   />
                                 </a>
-                                <a class="product-title d-block" href="#">
+                                <a class="product-title d-block"  style={{ color: "white" }} href="#">
                                   {transaction.description}
                                 </a>
 
-                                <p class="sale-price">
+                                <p class="sale-price"  style={{ color: "white" }}>
                                   <i class="fa-solid"></i>
                                   {transaction.processDate.substring(0, 20)}
                                   <span></span>
@@ -976,7 +977,7 @@ export default function StartimesServicePage() {
                                 <div class="product-rating">
                                   <i class="fa-solid fa-star"></i>TX:
                                   {transaction.id}
-                                  <span class="ms-1" style={{ color: "red" }}>
+                                  <span class="ms-1" style={{ color: "white" }}>
                                     <b>
                                       Amount Rwf:
                                       {(
@@ -988,6 +989,7 @@ export default function StartimesServicePage() {
                                   </span>
                                   <Link
                                     to="/ddin-startimes-receipt"
+                                    style={{ color: "#f8882b" }}
                                     state={{
                                       transactionData: transaction,
                                       agentUsername: context.agentUsername,

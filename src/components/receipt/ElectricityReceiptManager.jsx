@@ -299,7 +299,7 @@ export default function ElectricityReceiptManager() {
           <br />
           <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
             <h6>
-              <Link class="btn p-0" to="/electricity-token">
+              <Link class="btn p-0 text-white" to="/electricity-token">
                 <i class="ms-1 fa-solid fa-arrow-left-long text-white"></i> Back
               </Link>
             </h6>
@@ -342,7 +342,7 @@ export default function ElectricityReceiptManager() {
                     style={{ backgroundColor: "white" }}
                   >
                     <PDFExport ref={pdfExportComponent}>
-                      <div>
+                      <div className="receipt-body">
                         <div
                           className="pdf-header"
                           style={{ paddingRight: 10 }}

@@ -33,6 +33,24 @@
     src: url("https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans-Oblique.ttf")
       format("truetype");
   }
+
+ .receipt-body {
+  max-width: 100%;
+  padding: 20px;
+  background-color: #fff;
+}
+
+@media only screen and (max-width: 768px) {
+  .receipt-body {
+    padding: 10px;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .receipt-body {
+    padding: 5px;
+  }
+}
   
   .pdf-header {
    

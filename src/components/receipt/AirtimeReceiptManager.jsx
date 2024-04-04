@@ -342,7 +342,7 @@ export default function AirtimeReceiptManager() {
                     style={{ backgroundColor: "white" }}
                   >
                     <PDFExport ref={pdfExportComponent}>
-                      <div>
+                      <div className="receipt-body">
                         <div
                           className="pdf-header"
                           style={{ paddingRight: 10 }}

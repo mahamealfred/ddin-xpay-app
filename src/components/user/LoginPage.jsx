@@ -18,6 +18,7 @@ import $ from "jquery";
 import { Buffer } from "buffer";
 import HeaderPage from "../header/PublicHeaderPage";
 import FooterPage from "../footer/FooterPage";
+import { agentLoginAuth } from "../../apis/ServiceController";
 
 
 export default function LoginPage() {
@@ -273,8 +274,8 @@ export default function LoginPage() {
         password: password,
       };
 
-      const response = await loginAgent(accessDetails);
-
+       const response = await loginAgent(accessDetails);
+      //const response = await agentLoginAuth(accessDetails);
       setUserData(response);
 
       if (response.responseCode === "200") {

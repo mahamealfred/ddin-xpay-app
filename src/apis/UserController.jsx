@@ -581,7 +581,7 @@ const viewEfasheTxStatus = async (userKey, accountId, serviceCode) => {
     accountId +
     "&serviceCode=" +
     serviceCode;
-
+    
   const serverResponse = {
     responseCode: "",
     responseDescription: "",

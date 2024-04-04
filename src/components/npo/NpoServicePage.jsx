@@ -1155,11 +1155,11 @@ export default function NpoServicePage() {
                                 alt=""
                               />
                             </a>
-                            <a class="product-title d-block" href="#">
+                            <a class="product-title d-block"  style={{ color: "white" }} href="#">
                               {agentAccountTransactions[index].description}
                             </a>
 
-                            <p class="sale-price">
+                            <p class="sale-price"  style={{ color: "white" }}>
                               <i class="fa-solid"></i>
                               {agentAccountTransactions[
                                 index
@@ -1170,7 +1170,7 @@ export default function NpoServicePage() {
                             <div class="product-rating">
                               <i class="fa-solid fa-star"></i>TX:
                               {agentAccountTransactions[index].id}
-                              <span class="ms-1" style={{ color: "red" }}>
+                              <span class="ms-1" style={{ color: "white" }}>
                                 <b>
                                   Amount Rwf:
                                   {parseFloat(
@@ -1181,6 +1181,7 @@ export default function NpoServicePage() {
                               </span>
                               <Link
                                 to="/ddin-npo-receipt"
+                                style={{ color: "#f8882b" }}
                                 state={{
                                   transactionData:
                                     agentAccountTransactions[index],
