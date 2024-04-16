@@ -274,14 +274,13 @@ export default function LoginPage() {
         password: password,
       };
 
-       const response = await loginAgent(accessDetails);
-      //const response = await agentLoginAuth(accessDetails);
+       //const response = await loginAgent(accessDetails);
+      const response = await agentLoginAuth(accessDetails);
       setUserData(response);
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         const usernamePasswordBuffer = Buffer.from(username + ":" + password);
         const base64data = usernamePasswordBuffer.toString("base64");
-
         setUser(response);
         context.updateUser(response);
         context.updateLoginStatus(true);
@@ -294,7 +293,6 @@ export default function LoginPage() {
         context.updateAgentUsername(response.username);
         context.updateUserKey(base64data);
         context.updateAgentFloatAccountId(response.floatAccountId);
-
         context.updateAgentInstantCommissionAccountId(
           response.instantCommissionAccountId
         );

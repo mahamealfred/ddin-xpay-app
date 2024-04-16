@@ -45,7 +45,7 @@ import {
 import LoginPage from "../user/LoginPage";
 import FooterPage from "../footer/FooterPage";
 import HeaderPage from "../header/HeaderPage";
-import { payPindoBulkSMS } from "../../apis/ServiceController";
+import { payPindoBulkSMS, viewAgentAccountTransactions, viewAgentAccountTransactionsById } from "../../apis/ServiceController";
 
 export default function PindoServicePage() {
   const classes = useStyles();
@@ -284,17 +284,23 @@ export default function PindoServicePage() {
 
   const queryAgentAccountTransactions = async () => {
     try {
-      const response = await viewAgentFloatAccountTransactions(
-        context.userKey,
-        context.agentFloatAccountId
+      // const response = await viewAgentFloatAccountTransactions(
+      //   context.userKey,
+      //   context.agentFloatAccountId
+      // );
+
+      const response = await viewAgentAccountTransactions(
+        context.userKey
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setAgentAccountTransactions(response.data);
       } else {
         //toast.info(response.responseDescription);
       }
-    } catch (err) {}
+    } catch (err) {
+      //console.log("Agent Account Status Error:"+err);
+    }
   };
 
   //Executing Pindo Sms:
@@ -491,13 +497,18 @@ export default function PindoServicePage() {
     setShowReceiptDialog(false);
     const id = toast.loading("Previewing Bulk Sms Receipt...");
     try {
-      const response = await viewAgentFloatAccountTransactionsById(
+      //orevious method
+      // const response = await viewAgentFloatAccountTransactionsById(
+      //   context.userKey,
+      //   context.agentFloatAccountId,
+      //   transId
+      // );
+      const response = await viewAgentAccountTransactionsById(
         context.userKey,
-        context.agentFloatAccountId,
         transId
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setAgentAccountTransactionsByIdData(response.data);
 
         const firstTransaction = response.data[0];

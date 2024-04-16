@@ -22,6 +22,10 @@ const base_remote_efashe_executeElectricityTx_prod="http://localhost:8000/api/v1
 const base_remote_efashe_rra_validation_prod="http://localhost:8000/api/v1/payment-service/rra/validate-vend";
 const base_remote_efashe_executeRRATx_prod="http://localhost:8000/api/v1/payment-service/rra/payment";
 
+//transactions
+const base_remote_account_transaction_byid_prod="http://localhost:8000/api/v1/transactions/tansaction-byId";
+const base_remote_account_transactions_prod="http://localhost:8000/api/v1/transactions/logs";
+
 //login Auth 
 const agentLoginAuth = async (requestPayload) => {
   const serverResponse = {
@@ -538,6 +542,113 @@ const executeEfasheRRAVending= async (requestPayLoad, userKey) => {
   return serverResponse;
 };
 
+const viewAgentAccountTransactionsById = async (
+  userKey,
+  transId
+) => {
+
+  const URL_WITH_PARAMS =
+  base_remote_account_transaction_byid_prod+"/"+transId 
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    communicationStatus: "",
+    data: [],
+  };
+
+  await axios
+    .get(URL_WITH_PARAMS, {
+      headers: {
+        Authorization: `Basic ${userKey}`,
+      },
+      withCredentials: true,
+    })
+
+    .then((response) => {
+      if (response.data.responseCode === 200) {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.data = response.data.data;
+      } else {
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+      }
+    })
+    .catch((err) => {
+      if (err.response.status == 400) {
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else if(err.response.status == 401){
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else{
+        serverResponse.responseDescription = err.response.data.error;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      } 
+    });
+
+  return serverResponse;
+};
+const viewAgentAccountTransactions = async (
+  userKey
+) => {
+
+  const URL_WITH_PARAMS =base_remote_account_transactions_prod 
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    communicationStatus: "",
+    data: [],
+  };
+
+  await axios
+    .get(URL_WITH_PARAMS, {
+      headers: {
+        Authorization: `Basic ${userKey}`,
+      },
+      withCredentials: true,
+    })
+
+    .then((response) => {
+      if (response.data.responseCode === 200) {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.data = response.data.data;
+      } else {
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+      }
+    })
+    .catch((err) => {
+      if (err.response.status == 400) {
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else if(err.response.status == 401){
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else{
+        serverResponse.responseDescription = err.response.data.error;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      } 
+    });
+
+  return serverResponse;
+};
+
 
 
   export {
@@ -548,5 +659,7 @@ const executeEfasheRRAVending= async (requestPayLoad, userKey) => {
     executeEfasheElectricityVending,
     agentLoginAuth,
     validateEfasheRRAVending,
-    executeEfasheRRAVending
+    executeEfasheRRAVending,
+    viewAgentAccountTransactionsById,
+    viewAgentAccountTransactions 
 }

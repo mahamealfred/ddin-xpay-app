@@ -61,7 +61,7 @@ import "react-phone-number-input/style.css";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
-import { executeEfasheAirTimeVendingTx, validateEfasheAirTimeVendingTx } from "../../apis/ServiceController";
+import { executeEfasheAirTimeVendingTx, validateEfasheAirTimeVendingTx, viewAgentAccountTransactions, viewAgentAccountTransactionsById } from "../../apis/ServiceController";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -212,12 +212,16 @@ export default function AirtimeServicePage() {
 
   const queryAgentAccountTransactions = async () => {
     try {
-      const response = await viewAgentFloatAccountTransactions(
-        context.userKey,
-        context.agentFloatAccountId
+      // const response = await viewAgentFloatAccountTransactions(
+      //   context.userKey,
+      //   context.agentFloatAccountId
+      // );
+
+      const response = await viewAgentAccountTransactions(
+        context.userKey
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setAgentAccountTransactions(response.data);
       } else {
         //toast.info(response.responseDescription);
@@ -249,15 +253,15 @@ export default function AirtimeServicePage() {
         phoneNumber: value,
       };
          //Previous apis
-      const response = await validateEfasheVendingTx(
-        efasheTxValidatorRequestBody,
-        context.userKey
-      );
-      //new Method
-      // const response = await validateEfasheAirTimeVendingTx(
-      //   efasheTxValidatorRequestBody
+      // const response = await validateEfasheVendingTx(
+      //   efasheTxValidatorRequestBody,
+      //   context.userKey
       // );
-      if (response.responseCode === "200") {
+      //new Method
+      const response = await validateEfasheAirTimeVendingTx(
+        efasheTxValidatorRequestBody
+      );
+      if (response.responseCode === 200) {
         //unpackage data
         setAvailTrxBalance(response.data?.customerAccountNumber);
         setCustomerAccountNumber(response.data?.customerAccountNumber);
@@ -374,44 +378,32 @@ export default function AirtimeServicePage() {
       };
   
        //Previous method
-      const response = await executeEfasheVendingTx(
-        efasheTxValidatorRequestBody,
-        context.userKey
-      );
-      
-       //new method
-
-      // const response = await executeEfasheAirTimeVendingTx(
+      // const response = await executeEfasheVendingTx(
       //   efasheTxValidatorRequestBody,
       //   context.userKey
       // );
+      
+       //new method
 
-      if (response.responseCode === "200") {
+      const response = await executeEfasheAirTimeVendingTx(
+        efasheTxValidatorRequestBody,
+        context.userKey
+      );
+
+      if (response.responseCode === 200) {
         playAudio();
 
-         //Girlbert
-         setValue("");
+           //Alfred
+        setValue("");
         setEfasheServiceAmount("");
 
-        setReceiptId(response.responseStatus);
+        setReceiptId(response.data.transactionId);
         setReceiptNote(response.responseDescription);
         setServiceFeeAmt("");
         setTotalPayment(efasheServiceAmount);
 
         toast.dismiss();
         setShowReceiptDialog(true);
-
-           //Alfred
-        // setValue("");
-        // setEfasheServiceAmount("");
-
-        // setReceiptId(response.data.transactionId);
-        // setReceiptNote(response.responseDescription);
-        // setServiceFeeAmt("");
-        // setTotalPayment(efasheServiceAmount);
-
-        // toast.dismiss();
-        // setShowReceiptDialog(true);
       } else {
         toast.update(id, {
           render: response.responseDescription,
@@ -439,19 +431,22 @@ export default function AirtimeServicePage() {
       setShowReceiptDialog(false);
       const id = toast.loading("Previewing Airtime Receipt...");
       try {
-        const response = await viewAgentFloatAccountTransactionsById(
+        // const response = await viewAgentFloatAccountTransactionsById(
+        //   context.userKey,
+        //   context.agentFloatAccountId,
+        //   transId
+        // );
+        //new method
+        const response = await viewAgentAccountTransactionsById(
           context.userKey,
-          context.agentFloatAccountId,
           transId
         );
 
-        if (response.responseCode === "200") {
+        if (response.responseCode === 200) {
           setAgentAccountTransactionsByIdData(response.data);
-          console.log(
-            "Airtime TX ID:" + transId + "-" + context.agentFloatAccountId
-          );
+        
           const firstTransaction = response.data[0];
-          console.log("Transaction ID:" + firstTransaction.id);
+          
           toast.dismiss();
 
           setShowReceiptDialog(false);
@@ -950,7 +945,7 @@ export default function AirtimeServicePage() {
                                     agentUsername: context.agentUsername,
                                   }}
                                 >
-                                  Receipt
+                                  Receipt 
                                 </Link>
                               </div>
                             </div>
