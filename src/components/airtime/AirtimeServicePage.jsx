@@ -885,7 +885,7 @@ export default function AirtimeServicePage() {
               {agentAccountTransactions.map((transaction, index) => {
                 if (
                   context.agentCategory === null ||
-                  context.agentCategory === "Agent"
+                  context.agentCategory === "Agent" && transaction.description.split(' ')[0]!=="Chargeback"
                 ) {
                   if (
                     transaction.transactionType ===
@@ -957,7 +957,7 @@ export default function AirtimeServicePage() {
                 } else {
                   if (
                     transaction.transactionType ===
-                    "EFASHE Airtime Payment(Corporate)"
+                    "EFASHE Airtime Payment(Corporate)" && transaction.description.split(' ')[0]!=="Chargeback"
                   ) {
                     return (
                       <div class="col-12" id={index}>

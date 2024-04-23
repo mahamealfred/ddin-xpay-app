@@ -60,7 +60,7 @@ import "react-phone-number-input/style.css";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
-import { executeEfasheElectricityVending, validateEfasheElectricityVending } from "../../apis/ServiceController";
+import { executeEfasheElectricityVending, validateEfasheElectricityVending, viewAgentAccountTransactions, viewAgentAccountTransactionsById } from "../../apis/ServiceController";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -201,12 +201,12 @@ export default function ElectricityServicePage() {
 
   const queryAgentAccountTransactions = async () => {
     try {
-      const response = await viewAgentFloatAccountTransactions(
+      const response = await viewAgentAccountTransactions(
         context.userKey,
         context.agentFloatAccountId
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setAgentAccountTransactions(response.data);
       } else {
         //toast.info(response.responseDescription);
@@ -253,14 +253,14 @@ export default function ElectricityServicePage() {
         phoneNumber: meterNumber,
       };
        //previous
-      const response = await validateEfasheElectricityVendingTx(
-        efasheTxValidatorRequestBody,
-        context.userKey
-      );
+      // const response = await validateEfasheElectricityVendingTx(
+      //   efasheTxValidatorRequestBody,
+      //   context.userKey
+      // );
       //new Method
-      //const response=await validateEfasheElectricityVending(efasheTxValidatorRequestBody)
+    const response=await validateEfasheElectricityVending(efasheTxValidatorRequestBody)
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setCustomerAccountNumber(response.data?.customerAccountNumber);
         setLocalStockMgt(response.data?.localStockMgt);
         setPdtId(response.data?.pdtId);
@@ -306,13 +306,13 @@ export default function ElectricityServicePage() {
     setShowReceiptDialog(false);
     const id = toast.loading("Previewing Electricity Receipt...");
     try {
-      const response = await viewAgentFloatAccountTransactionsById(
+      const response = await viewAgentAccountTransactionsById(
         context.userKey,
         context.agentFloatAccountId,
         transId
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setAgentAccountTransactionsByIdData(response.data);
 
         const firstTransaction = response.data[0];
@@ -410,39 +410,25 @@ export default function ElectricityServicePage() {
       };
 
       //Previous metho
-      const response = await executeEfasheElectricityVendingTx(
-        efasheTxValidatorRequestBody,
-        context.userKey
-      );
-      
-      //new methode
-      // const response = await executeEfasheElectricityVending(
+      // const response = await executeEfasheElectricityVendingTx(
       //   efasheTxValidatorRequestBody,
       //   context.userKey
       // );
+      
+      //new methode
+      const response = await executeEfasheElectricityVending(
+        efasheTxValidatorRequestBody,
+        context.userKey
+      );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         playAudio();
         
         setTokenAmount("");
         setMeterNumber("");
         toast.dismiss();
         //Girlbert
-        setReceiptId(response.responseStatus);
-        setReceiptNote(
-          response.responseDescription +
-            ",Voucher/Token:" +
-            response.data.spVendInfo.voucher +
-            ",Units:" +
-            response.data.spVendInfo.units +
-            ", for Rwf" +
-            response.data.spVendInfo.unitsWorth
-        );
-        setServiceFeeAmt("");
-        setTotalPayment(tokenAmount);
-        setShowReceiptDialog(true);
-               //Alfred
-        // setReceiptId(response.data.transactionId);
+        // setReceiptId(response.responseStatus);
         // setReceiptNote(
         //   response.responseDescription +
         //     ",Voucher/Token:" +
@@ -452,10 +438,25 @@ export default function ElectricityServicePage() {
         //     ", for Rwf" +
         //     response.data.spVendInfo.unitsWorth
         // );
-        // // setReceiptNote(response.responseDescription);
         // setServiceFeeAmt("");
         // setTotalPayment(tokenAmount);
         // setShowReceiptDialog(true);
+               //Alfred
+              //  console.log("response eletc:",response.data)
+        setReceiptId(response.data.transactionId);
+        setReceiptNote(
+          response.responseDescription +
+            ",Voucher/Token:" +
+            response.data.spVendInfo.voucher +
+            ",Units:" +
+            response.data.spVendInfo.units +
+            ", for Rwf" +
+            response.data.spVendInfo.unitsWorth
+        );
+        // setReceiptNote(response.responseDescription);
+        setServiceFeeAmt("");
+        setTotalPayment(tokenAmount);
+        setShowReceiptDialog(true);
       } else {
         toast.update(id, {
           render: response.responseDescription,
@@ -899,7 +900,7 @@ export default function ElectricityServicePage() {
               {agentAccountTransactions.map((transaction, index) => {
                 if (
                   context.agentCategory === null ||
-                  context.agentCategory === "Agent"
+                  context.agentCategory === "Agent" && transaction.description.split(' ')[0]!=="Chargeback"
                 ) {
                   if (
                     transaction.transactionType ===

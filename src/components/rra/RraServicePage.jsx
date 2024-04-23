@@ -60,7 +60,7 @@ import "react-phone-number-input/style.css";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
-import { executeEfasheRRAVending, validateEfasheRRAVending } from "../../apis/ServiceController";
+import { executeEfasheRRAVending, validateEfasheRRAVending, viewAgentAccountTransactions, viewAgentAccountTransactionsById } from "../../apis/ServiceController";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -246,12 +246,17 @@ export default function ElectricityServicePage() {
 
   const queryAgentAccountTransactions = async () => {
     try {
-      const response = await viewAgentFloatAccountTransactions(
+      // const response = await viewAgentFloatAccountTransactions(
+      //   context.userKey,
+      //   context.agentFloatAccountId
+      // );
+
+      const response = await viewAgentAccountTransactions(
         context.userKey,
         context.agentFloatAccountId
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setAgentAccountTransactions(response.data);
       } else {
         //toast.info(response.responseDescription);
@@ -265,13 +270,13 @@ export default function ElectricityServicePage() {
     setShowReceiptDialog(false);
     const id = toast.loading("Previewing RRA Payment Receipt...");
     try {
-      const response = await viewAgentFloatAccountTransactionsById(
+      const response = await viewAgentAccountTransactionsById(
         context.userKey,
         context.agentFloatAccountId,
         transId
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setAgentAccountTransactionsByIdData(response.data);
 
         const firstTransaction = response.data[0];
@@ -316,7 +321,6 @@ export default function ElectricityServicePage() {
   //=============Validate Electricity======
   const validateElectricityTx = async () => {
     const id = toast.loading("Previewing Tax Document Data...");
-
     try {
       const efasheTxValidatorRequestBody = {
         amount: "",
@@ -335,16 +339,16 @@ export default function ElectricityServicePage() {
         phoneNumber: meterNumber,
       };
       //previous method
-      const response = await validateEfasheRraVendingTx(
-        efasheTxValidatorRequestBody,
-        context.userKey
-      );
-      //new method
-      // const response = await validateEfasheRRAVending(
-      //   efasheTxValidatorRequestBody
+      // const response = await validateEfasheRraVendingTx(
+      //   efasheTxValidatorRequestBody,
+      //   context.userKey
       // );
+      //new method
+      const response = await validateEfasheRRAVending(
+        efasheTxValidatorRequestBody
+      );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setCustomerAccountNumber(response.data?.customerAccountNumber);
         setLocalStockMgt(response.data?.localStockMgt);
         setPdtId(response.data?.pdtId);
@@ -368,7 +372,6 @@ export default function ElectricityServicePage() {
         setDecDate(response.data?.extraInfo.dec_date);
         setFullPay(response.data?.extraInfo.is_full_pay);
         setTaxType(response.data?.extraInfo.tax_type);
-
         toast.dismiss();
         viewConfirmDialog();
       } else {
@@ -434,7 +437,6 @@ export default function ElectricityServicePage() {
 
   const executeElectricityTx = async () => {
     const id = toast.loading("Processing Tax Payment...");
-
     try {
       //Test Agent- EFASHE -ID=52, MemberId=34
       //Test Corporate- EFASHE -ID=81, MemberId=34
@@ -471,43 +473,28 @@ export default function ElectricityServicePage() {
         taxpayer: customerAccountNumber,
       };
       //previous methode
-      const response = await executeEfasheRraVendingTx(
-        efasheTxValidatorRequestBody,
-        context.userKey
-      );
-      //new methode
-      // const response = await executeEfasheRRAVending(
+      // const response = await executeEfasheRraVendingTx(
       //   efasheTxValidatorRequestBody,
       //   context.userKey
       // );
+      //new methode
+      const response = await executeEfasheRRAVending(
+        efasheTxValidatorRequestBody,
+        context.userKey
+      );
 
-      //console.log("Response:" + response);
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         playAudio();
-        //response.data.spVendInfo.voucher +",Receipt No:" +
-        //response.data.spVendInfo.receiptNo +", for Total Tax With Service fee -Rwf" +
-        //response.data.spVendInfo.unitsWorth,
-        /* toast.update(id, {
-          render: response.responseDescription,
-
-          type: "success",
-          isLoading: false,
-          closeButton: null,
-        });*/
         setTokenAmount("");
         setMeterNumber("");
-        //preview receipt
-
-        //Load TX Data:
-
         toast.dismiss();
-        setReceiptId(response.responseStatus);
+
+        //Alfred
+       setReceiptId(response.data.transactionId);
         setReceiptNote(response.responseDescription);
         setServiceFeeAmt("");
-        setTotalPayment(vendMax);
+        setTotalPayment(tokenAmount);
         setShowReceiptDialog(true);
-
-        //queryAgentAccountTransactionsById(response.responseStatus);
       } else {
         toast.update(id, {
           render: response.responseDescription,
@@ -938,7 +925,7 @@ export default function ElectricityServicePage() {
               {agentAccountTransactions.map((transaction, index) => {
                 if (
                   context.agentCategory === null ||
-                  context.agentCategory === "Agent"
+                  context.agentCategory === "Agent" && transaction.description.split(' ')[0]!=="Chargeback"
                 ) {
                   if (
                     transaction.transactionType === "RRA Tax Payment(Agent)"
@@ -1009,7 +996,7 @@ export default function ElectricityServicePage() {
                   }
                 } else {
                   if (
-                    transaction.transactionType === "RRA Tax Payment(Corporate)"
+                    transaction.transactionType === "RRA Tax Payment(Corporate)" && transaction.description.split(' ')[0]!=="Chargeback"
                   ) {
                     return (
                       <div class="col-12" id={index}>

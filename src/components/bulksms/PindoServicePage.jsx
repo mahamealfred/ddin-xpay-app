@@ -349,11 +349,11 @@ export default function PindoServicePage() {
         };
       
         //previous method
-        const response = await payPindo(pindoPaymentBody, context.userKey); 
+        //const response = await payPindo(pindoPaymentBody, context.userKey); 
         //new method
-        //const response = await payPindoBulkSMS(pindoPaymentBody, context.userKey);
+        const response = await payPindoBulkSMS(pindoPaymentBody, context.userKey);
        
-        if (response.responseCode === "200") {
+        if (response.responseCode === 200) {
           
           playAudio();
           
@@ -1306,7 +1306,7 @@ export default function PindoServicePage() {
               {agentAccountTransactions.map((transaction, index) => {
                 if (
                   context.agentCategory === null ||
-                  context.agentCategory === "Agent"
+                  context.agentCategory === "Agent" && transaction.description.split(' ')[0]!=="Chargeback"
                 ) {
                   if (
                     transaction.transactionType ===
@@ -1379,7 +1379,7 @@ export default function PindoServicePage() {
                     );
                   } else if (
                     transaction.transactionType ===
-                    "FDI Bulk Sms Payment(Agent)"
+                    "FDI Bulk Sms Payment(Agent)" && transaction.description.split(' ')[0]!=="Chargeback"
                   ) {
                     return (
                       <div class="col-12" id={index}>
