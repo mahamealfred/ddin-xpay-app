@@ -4,27 +4,27 @@ import { Buffer } from "buffer";
 //Local PROD APIs:
 
 //LOGIN URL
-const base_remote_login_prod = "http://localhost:8000/api/v1/authentication/login";
+const base_remote_login_prod = "https://app.ddin.rw/api/v1/authentication/login";
 
 
 //BULK SMS URL
-const base_remote_pindo_pay_prod = "http://localhost:8000/api/v1/payment-service/pindo-bulksms/payment";
+const base_remote_pindo_pay_prod = "https://app.ddin.rw/api/v1/payment-service/pindo-bulksms/payment";
 
 //AIRTIME URL
-const base_remote_efashe_airtime_validation_prod="http://localhost:8000/api/v1/payment-service/airtime/validate-vend";
-const base_remote_efashe_executeAirTimeTx_prod="http://localhost:8000/api/v1/payment-service/airtime/payment";
+const base_remote_efashe_airtime_validation_prod="https://app.ddin.rw/api/v1/payment-service/airtime/validate-vend";
+const base_remote_efashe_executeAirTimeTx_prod="https://app.ddin.rw/api/v1/payment-service/airtime/payment";
 
 //ELECTRICITY URL
-const base_remote_efashe_electricity_validation_prod="http://localhost:8000/api/v1/payment-service/electricity/validate-vend"
-const base_remote_efashe_executeElectricityTx_prod="http://localhost:8000/api/v1/payment-service/electricity/payment";
+const base_remote_efashe_electricity_validation_prod="https://app.ddin.rw/api/v1/payment-service/electricity/validate-vend"
+const base_remote_efashe_executeElectricityTx_prod="https://app.ddin.rw/api/v1/payment-service/electricity/payment";
 
 //RRA
-const base_remote_efashe_rra_validation_prod="http://localhost:8000/api/v1/payment-service/rra/validate-vend";
-const base_remote_efashe_executeRRATx_prod="http://localhost:8000/api/v1/payment-service/rra/payment";
+const base_remote_efashe_rra_validation_prod="https://app.ddin.rw/api/v1/payment-service/rra/validate-vend";
+const base_remote_efashe_executeRRATx_prod="https://app.ddin.rw/api/v1/payment-service/rra/payment";
 
 //transactions
-const base_remote_account_transaction_byid_prod="http://localhost:8000/api/v1/transactions/tansaction-byId";
-const base_remote_account_transactions_prod="http://localhost:8000/api/v1/transactions/logs";
+const base_remote_account_transaction_byid_prod="https://app.ddin.rw/api/v1/transactions/tansaction-byId";
+const base_remote_account_transactions_prod="https://app.ddin.rw/api/v1/transactions/logs";
 
 //login Auth 
 const agentLoginAuth = async (requestPayload) => {
