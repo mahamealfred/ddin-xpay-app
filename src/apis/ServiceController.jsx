@@ -22,6 +22,10 @@ const base_remote_efashe_executeElectricityTx_prod="https://app.ddin.rw/api/v1/p
 const base_remote_efashe_rra_validation_prod="https://app.ddin.rw/api/v1/payment-service/rra/validate-vend";
 const base_remote_efashe_executeRRATx_prod="https://app.ddin.rw/api/v1/payment-service/rra/payment";
 
+//Startime
+
+const base_remote_efashe_startime_validation_prod="https://app.ddin.rw/api/v1/payment-service/startime/validate-vend";
+const base_remote_efashe_executeStartimeTx_prod="https://app.ddin.rw/api/v1/payment-service/startime/payment";
 //transactions
 const base_remote_account_transaction_byid_prod="https://app.ddin.rw/api/v1/transactions/tansaction-byId";
 const base_remote_account_transactions_prod="https://app.ddin.rw/api/v1/transactions/logs";
@@ -419,7 +423,7 @@ const executeEfasheElectricityVending= async (requestPayLoad, userKey) => {
   };
 
 
-  //==============efashe Electricity validation======
+  //==============efashe RRA validation======
 
 const validateEfasheRRAVending= async (requestPayLoad) => {
   const serverResponse = {
@@ -542,6 +546,130 @@ const executeEfasheRRAVending= async (requestPayLoad, userKey) => {
   return serverResponse;
 };
 
+//Startime
+
+const validateEfasheStartimeVending= async (requestPayLoad) => {
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    responseStatus: "",
+    data: "",
+  };
+ const data={
+  customerAccountNumber: requestPayLoad.phoneNumber
+ }
+
+  await axios
+    .post(base_remote_efashe_startime_validation_prod, data, {
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    })
+
+    .then((response) => {
+      
+      if (response.data.responseCode === 200) {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.data = response.data.data;
+      } else {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+      }
+    })
+    .catch((err) => {
+   
+      if (err.response.status == 400) {
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else if(err.response.status == 401){
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else{
+        serverResponse.responseDescription = err.response.data.error;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      } 
+    });
+
+  return serverResponse;
+};
+
+
+//==============efashe RRA Payment======
+const executeEfasheStartimeVending= async (requestPayLoad, userKey) => {
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    responseStatus: "",
+    data: "",
+  };
+  const data={
+    trxId:requestPayLoad.transactionId,
+    toMemberId: requestPayLoad.toMemberId,
+    amount: requestPayLoad.amount,
+    transferTypeId: requestPayLoad.transferTypeId,
+    phoneNumber:requestPayLoad.phoneNumber,
+    accountId:requestPayLoad.accountId,
+    agentCategory:requestPayLoad.agentCategory,
+    district:requestPayLoad.district,
+    province:requestPayLoad.province,
+    sector:requestPayLoad.sector,
+    currencySymbol: requestPayLoad.currencySymbol,
+    description: requestPayLoad.description
+}
+
+  await axios
+    .post( base_remote_efashe_executeStartimeTx_prod, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${userKey}`,
+      },
+      withCredentials: false,
+    })
+
+    .then((response) => {
+
+      if (response.data.responseCode === 200) {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.data = response.data.data;
+        //serverResponse.pindoSmsId=response.data.data.pindoSmsId;
+      } else {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+      }
+    })
+    .catch((err) => {
+      if (err.response.status == 400) {
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else if(err.response.status == 401){
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else{
+        serverResponse.responseDescription = err.response.data.error;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      } 
+    });
+
+  return serverResponse;
+};
+
+
 const viewAgentAccountTransactionsById = async (
   userKey,
   transId
@@ -661,5 +789,7 @@ const viewAgentAccountTransactions = async (
     validateEfasheRRAVending,
     executeEfasheRRAVending,
     viewAgentAccountTransactionsById,
-    viewAgentAccountTransactions 
+    viewAgentAccountTransactions,
+    validateEfasheStartimeVending,
+    executeEfasheStartimeVending
 }

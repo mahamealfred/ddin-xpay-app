@@ -59,6 +59,7 @@ import "react-phone-number-input/style.css";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
+import { executeEfasheElectricityVending, executeEfasheStartimeVending, validateEfasheElectricityVending, validateEfasheStartimeVending, viewAgentAccountTransactions, viewAgentAccountTransactionsById } from "../../apis/ServiceController";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -206,12 +207,11 @@ export default function StartimesServicePage() {
 
   const queryAgentAccountTransactions = async () => {
     try {
-      const response = await viewAgentFloatAccountTransactions(
-        context.userKey,
-        context.agentFloatAccountId
+      const response = await viewAgentAccountTransactions(
+        context.userKey
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setAgentAccountTransactions(response.data);
       } else {
         //toast.info(response.responseDescription);
@@ -245,13 +245,17 @@ export default function StartimesServicePage() {
         vertialId: "paytv",
         phoneNumber: subscriberNumber,
       };
-
-      const response = await validateEfasheStartimesVendingTx(
+//Previous
+      // const response = await validateEfasheStartimesVendingTx(
+      //   efasheTxValidatorRequestBody,
+      //   context.userKey
+      // );
+      const response = await validateEfasheStartimeVending(
         efasheTxValidatorRequestBody,
         context.userKey
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         //playAudio();
         setCustomerAccountNumber(response.data?.customerAccountNumber);
         setLocalStockMgt(response.data?.localStockMgt);
@@ -297,13 +301,12 @@ export default function StartimesServicePage() {
     setShowReceiptDialog(false);
     const id = toast.loading("Previewing Startimes Payment Receipt...");
     try {
-      const response = await viewAgentFloatAccountTransactionsById(
+      const response = await viewAgentAccountTransactionsById(
         context.userKey,
-        context.agentFloatAccountId,
         transId
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setAgentAccountTransactionsByIdData(response.data);
 
         const firstTransaction = response.data[0];
@@ -355,7 +358,7 @@ export default function StartimesServicePage() {
       //Prod Env:
       setTransferId("74");
 
-      return "53";
+      return "74";
     } else {
       //Test Env
      // setTransferId("79");
@@ -380,7 +383,7 @@ export default function StartimesServicePage() {
 
       const efasheTxValidatorRequestBody = {
         amount: subscriptionAmount,
-        description: "",
+        description: "Startime subscription processed with TX Id:" + trxId +" Subscription Number: " + subscriberNumber ,
         currencySymbol: "",
         transferTypeId: returnTransferId(),
         province: context.province,
@@ -399,13 +402,18 @@ export default function StartimesServicePage() {
         userId: context.userId,
         agentCategory: context.agentCategory,
       };
+ //previous
+      // const response = await executeEfasheStartimesVendingTx(
+      //   efasheTxValidatorRequestBody,
+      //   context.userKey
+      // );
 
-      const response = await executeEfasheStartimesVendingTx(
+      const response = await executeEfasheStartimeVending(
         efasheTxValidatorRequestBody,
         context.userKey
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         playAudio();
         /*toast.update(id, {
           render: response.responseDescription,
@@ -414,7 +422,7 @@ export default function StartimesServicePage() {
           closeButton: null,
         });*/
         toast.dismiss();
-        setReceiptId(response.responseStatus);
+        setReceiptId(response.data.transactionId);
         setReceiptNote(response.responseDescription);
         setServiceFeeAmt("");
         setTotalPayment(subscriptionAmount);

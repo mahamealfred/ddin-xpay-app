@@ -253,7 +253,7 @@ export default function ElectricityServicePage() {
 
       const response = await viewAgentAccountTransactions(
         context.userKey,
-        context.agentFloatAccountId
+        // context.agentFloatAccountId
       );
 
       if (response.responseCode === 200) {
@@ -272,7 +272,7 @@ export default function ElectricityServicePage() {
     try {
       const response = await viewAgentAccountTransactionsById(
         context.userKey,
-        context.agentFloatAccountId,
+        // context.agentFloatAccountId,
         transId
       );
 
@@ -445,7 +445,7 @@ export default function ElectricityServicePage() {
       //returnTransferId();returnMemberId();
       const efasheTxValidatorRequestBody = {
         amount: vendMax,
-        description: "",
+        description: "RRA Tax Payment processed with TX Id:" + trxId + ", TIN/ID " + tin + ", Tax Type:" + taxType + ", Tax Document ID:" + meterNumber + ", Tax Payer:" + customerAccountNumber,
         currencySymbol: "",
         transferTypeId: returnTransferId(),
         province: context.province,

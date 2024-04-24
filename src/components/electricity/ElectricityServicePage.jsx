@@ -203,7 +203,7 @@ export default function ElectricityServicePage() {
     try {
       const response = await viewAgentAccountTransactions(
         context.userKey,
-        context.agentFloatAccountId
+       context.agentFloatAccountId
       );
 
       if (response.responseCode === 200) {
