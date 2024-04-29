@@ -1040,6 +1040,7 @@ if (uuidMatch) {
                                     |
                                   </b>
                                 </span>
+                                <div style={{ display: 'flex', gap: '5px' }}>
                                 <Link
                                   to="/ddin-electricity-receipt"
                                   style={{ color: "#f8882b" }}
@@ -1051,9 +1052,11 @@ if (uuidMatch) {
                                   Receipt
                                 </Link>
                               
-                                <button onClick={()=>handleToken(transaction.description)}>
+                                <button class="btn btn-warning btn-sm w-40" onClick={()=>handleToken(transaction.description)}>
                                   Check Token
                                 </button>
+                                  </div>
+                               
                               </div>
                             </div>
                           </div>
@@ -1112,6 +1115,7 @@ if (uuidMatch) {
                                     |
                                   </b>
                                 </span>
+                                <div style={{ display: 'flex', gap: '5px' }}>
                                 <Link
                                   to="/ddin-electricity-receipt"
                                   style={{ color: "#f8882b" }}
@@ -1122,6 +1126,11 @@ if (uuidMatch) {
                                 >
                                   Preview Receipt
                                 </Link>
+                                <button class="btn btn-warning btn-sm w-40" onClick={()=>handleToken(transaction.description)}>
+                                  Check Token
+                                </button>
+                                  </div>
+                               
                               </div>
                             </div>
                           </div>
