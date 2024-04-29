@@ -29,8 +29,9 @@ const base_remote_efashe_executeStartimeTx_prod="https://app.ddin.rw/api/v1/paym
 //transactions
 const base_remote_account_transaction_byid_prod="https://app.ddin.rw/api/v1/transactions/tansaction-byId";
 const base_remote_account_transactions_prod="https://app.ddin.rw/api/v1/transactions/logs";
-
+const base_remote_account_transactions_status_prod="https://app.ddin.rw/api/v1/payment-service//check-efashe-transaction/status?trxId=";
 //login Auth 
+
 const agentLoginAuth = async (requestPayload) => {
   const serverResponse = {
     responseCode: "",
@@ -777,7 +778,58 @@ const viewAgentAccountTransactions = async (
   return serverResponse;
 };
 
+const viewTransactionStatusById = async (
+  trxId
+) => {
 
+  const URL_WITH_PARAMS =base_remote_account_transactions_status_prod+trxId
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    communicationStatus: "",
+    data: [],
+  };
+
+  await axios
+    .get(URL_WITH_PARAMS, {
+      headers: {
+        // Authorization: `Basic ${userKey}`,
+      },
+      withCredentials: true,
+    })
+
+    .then((response) => {
+      if (response.data.responseCode === 200) {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.data = response.data.data;
+      } else {
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+      }
+    })
+    .catch((err) => {
+      if (err.response.status == 400) {
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else if(err.response.status == 401){
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else{
+        serverResponse.responseDescription = err.response.data.error;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      } 
+    });
+
+  return serverResponse;
+};
 
   export {
     payPindoBulkSMS,
@@ -791,5 +843,6 @@ const viewAgentAccountTransactions = async (
     viewAgentAccountTransactionsById,
     viewAgentAccountTransactions,
     validateEfasheStartimeVending,
-    executeEfasheStartimeVending
+    executeEfasheStartimeVending,
+    viewTransactionStatusById
 }

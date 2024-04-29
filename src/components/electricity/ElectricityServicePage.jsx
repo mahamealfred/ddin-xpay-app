@@ -40,6 +40,12 @@ import Form from "react-bootstrap/Form";
 import validator from "validator";
 import { Context } from "../Wrapper";
 
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import Stack from "@mui/material/Stack";
+import DialogTitle from "@mui/material/DialogTitle";
 import { selectClasses } from "@mui/joy/Select";
 
 import {
@@ -60,7 +66,7 @@ import "react-phone-number-input/style.css";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
-import { executeEfasheElectricityVending, validateEfasheElectricityVending, viewAgentAccountTransactions, viewAgentAccountTransactionsById } from "../../apis/ServiceController";
+import { executeEfasheElectricityVending, validateEfasheElectricityVending, viewAgentAccountTransactions, viewAgentAccountTransactionsById, viewTransactionStatusById } from "../../apis/ServiceController";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -202,8 +208,8 @@ export default function ElectricityServicePage() {
   const queryAgentAccountTransactions = async () => {
     try {
       const response = await viewAgentAccountTransactions(
-        context.userKey,
-       context.agentFloatAccountId
+        context.userKey
+      // context.agentFloatAccountId
       );
 
       if (response.responseCode === 200) {
@@ -308,7 +314,7 @@ export default function ElectricityServicePage() {
     try {
       const response = await viewAgentAccountTransactionsById(
         context.userKey,
-        context.agentFloatAccountId,
+        //context.agentFloatAccountId,
         transId
       );
 
@@ -726,12 +732,94 @@ export default function ElectricityServicePage() {
 
     return !isNaN(str);
   }
+  const [openToken,setOpenToken]=useState(false)
+  const [tokenTransaction,setTokenTransaction]=useState([])
+
+
+  //token
+  const handleToken=async(inputString)=>{
+    const uuidPattern = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+// Use RegExp to find the UUID in the input string
+const uuidMatch = inputString.match(uuidPattern);
+// Check if UUID is found
+if (uuidMatch) {
+    const uuid = uuidMatch[0]; // Extract the matched UUID string
+    try{
+    const response=await viewTransactionStatusById(uuid)
+    if (response.responseCode === 200) {
+      setTokenTransaction(response.data)
+      setOpenToken(true)
+      console.log("response",response)
+      
+  
+    } 
+      
+  } catch (err) {
+    toast.update(uuid, {
+      render:
+        "Dear customer we are unable to process your request now. Try again later." +
+        err,
+      type: "info",
+      isLoading: false,
+      closeButton: null,
+    });
+    
+  }
+    
+} else {
+    console.log("UUID not found in the input string.");
+}
+
+  }
+
+  const handleCloseToken=()=>{
+    setTokenTransaction([])
+    setOpenToken(false)
+  }
 
   return context.loggedInStatus ? (
     <div>
+
       <HeaderPage />
 
       <div class="page-content-wrapper">
+      <Dialog
+      open={openToken}
+      onClose={handleCloseToken}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title" style={{color:"#ff9900",fontSize:14}}>
+      <b>{"Electricity Prepayment Details:"}</b>
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description" style={{color:"black",fontSize:12}}>
+       
+         <Stack sx={{ width: '100%', color: 'grey.500' }} spacing={2}>
+          <p style={{color:'black', fontSize:12}}>
+             <span>-Meter Owner:<b>{tokenTransaction.customerAccountNumber}</b></span><br/>
+            <span>-Provider Name:<b>{tokenTransaction.customerAccountName}</b></span><br/>
+            <span>-Token:<b>{tokenTransaction?.spVendInfo?.voucher}</b></span><br/>
+            <span>-Requested Token Amount:<b>Rwf {tokenTransaction.amount}</b></span>
+          
+            
+          </p>
+          <p>
+
+          {/* <span style={{color:'red', fontSize:12}}> Please confirm <b>Electricity Pre-payment:</b></span> */}
+          </p>
+    
+    </Stack>
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+      {/* <Button style={{color:"red",fontSize:12}} onClick={props.closeClick}>Cancel</Button> */}
+          <Button style={{color:"green",fontSize:12}}  autoFocus  onClick={handleCloseToken}>
+        Close
+        </Button>
+      </DialogActions>
+    </Dialog>
+
         <div class="container">
           <br />
           <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
@@ -962,6 +1050,10 @@ export default function ElectricityServicePage() {
                                 >
                                   Receipt
                                 </Link>
+                              
+                                <button onClick={()=>handleToken(transaction.description)}>
+                                  Check Token
+                                </button>
                               </div>
                             </div>
                           </div>
