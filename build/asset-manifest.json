@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/static/css/main.16d8cd24.css",
-    "main.js": "/static/js/main.bf36c0b5.js",
+    "main.js": "/static/js/main.be7d3c45.js",
     "static/js/206.ccbb6bbd.chunk.js": "/static/js/206.ccbb6bbd.chunk.js",
     "static/media/notificationsound.wav": "/static/media/notificationsound.a3dd13b67e8debac2288.wav",
     "index.html": "/index.html"
   },
   "entrypoints": [
     "static/css/main.16d8cd24.css",
-    "static/js/main.bf36c0b5.js"
+    "static/js/main.be7d3c45.js"
   ]
 }

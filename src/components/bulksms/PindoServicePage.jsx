@@ -1021,6 +1021,7 @@ export default function PindoServicePage() {
                             <option value="UBUTUMIRE">UBUTUMIRE</option>
                             <option value="UBUKWE">UBUKWE</option>
                             <option value="UMURENGE">UMURENGE</option>
+                            <option value="ePoBox">e-PoBox</option>
                             <option value="DDIN">DDIN</option>
 
                           </select>

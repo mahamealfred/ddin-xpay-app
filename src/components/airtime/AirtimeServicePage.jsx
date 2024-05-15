@@ -931,8 +931,8 @@ export default function AirtimeServicePage() {
                                   <b>
                                     Amount Rwf:
                                     {(
-                                      parseFloat(transaction.amount) / 16.24 +
-                                      parseFloat(transaction.amount)
+                                      parseFloat(-1 *transaction.amount) / 16.24 +
+                                      parseFloat(-1 *transaction.amount)
                                     ).toFixed()}
                                     |
                                   </b>
@@ -999,8 +999,8 @@ export default function AirtimeServicePage() {
                                   <b>
                                     Amount Rwf:
                                     {(
-                                      parseFloat(transaction.amount) / 16.24 +
-                                      parseFloat(transaction.amount)
+                                      parseFloat(-1 *transaction.amount) / 16.24 +
+                                      parseFloat(-1 *transaction.amount)
                                     ).toFixed()}
                                     |
                                   </b>

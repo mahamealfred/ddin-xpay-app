@@ -1034,8 +1034,8 @@ if (uuidMatch) {
                                   <b>
                                     Amount Rwf:
                                     {(
-                                      parseFloat(transaction.amount) * 0.02 +
-                                      parseFloat(transaction.amount)
+                                      parseFloat(-1 *transaction.amount) * 0.02 +
+                                      parseFloat(-1 *transaction.amount)
                                     ).toFixed()}
                                     |
                                   </b>
@@ -1109,8 +1109,8 @@ if (uuidMatch) {
                                   <b>
                                     Amount Rwf:
                                     {(
-                                      parseFloat(transaction.amount) * 0.02 +
-                                      parseFloat(transaction.amount)
+                                      parseFloat(-1 *transaction.amount) * 0.02 +
+                                      parseFloat(-1 *transaction.amount)
                                     ).toFixed()}
                                     |
                                   </b>
