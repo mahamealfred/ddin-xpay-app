@@ -443,24 +443,31 @@ export default function PindoServicePage() {
         };
         //console.log("liveagent:",pindoPaymentBody)
         //const response={responseCode:200}
-        const response = await payFdi(pindoPaymentBody, context.userKey);
+        // const response = await payFdi(pindoPaymentBody, context.userKey);
+        const response = await payPindoBulkSMS(pindoPaymentBody, context.userKey);
        
-        if (response.responseCode === "200") {
+        if (response.responseCode === 200) {
         
           playAudio();
-         
+        
+          // setValidFileLevel(false);
+          // toast.dismiss();
+          // setReceiptId(response.responseStatus);
+          // setReceiptNote(response.responseDescription);
+          // setServiceFeeAmt("");
+          // setTotalPayment(totalSmsCost);
+          // setShowReceiptDialog(true);
+
+          toast.update(id, {
+            render: "The SMS has been sent; view the transaction and print your receipt",
+            type: "info",
+            isLoading: false,
+            closeButton: null,
+          });
           setValidFileLevel(false);
-          toast.dismiss();
-          setReceiptId(response.responseStatus);
-          setReceiptNote(response.responseDescription);
-          setServiceFeeAmt("");
-          setTotalPayment(totalSmsCost);
-          setShowReceiptDialog(true);
-          //Clearing some data for new request
+          
         } else {
-          console.log(
-            "Logging DIN System request:" + response.responseDescription
-          );
+          
           toast.update(id, {
             render: response.responseDescription,
             type: "info",
@@ -1021,7 +1028,12 @@ export default function PindoServicePage() {
                             <option value="UBUTUMIRE">UBUTUMIRE</option>
                             <option value="UBUKWE">UBUKWE</option>
                             <option value="UMURENGE">UMURENGE</option>
-                            <option value="ePoBox">e-PoBox</option>
+                            {
+                              context?.agentCategory==="Corporate"?
+                              <option value="ePoBox">e-PoBox</option>
+                              :null
+                            }
+                            
                             <option value="DDIN">DDIN</option>
 
                           </select>
@@ -1300,7 +1312,7 @@ export default function PindoServicePage() {
               <h6>Agents Transactions</h6>
 
               <Link class="btn p-0 text-white" onClick={viewFloatAccountInfo}>
-                View All<i class="ms-1 fa-solid fa-arrow-right-long"></i>
+                View All Transactions<i class="ms-1 fa-solid fa-arrow-right-long"></i>
               </Link>
             </div>
             <div class="row g-2">
@@ -1422,8 +1434,8 @@ export default function PindoServicePage() {
                                   <b>
                                     Amount Rwf:
                                     {(
-                                      parseFloat(transaction.amount) +
-                                      parseFloat(transaction.amount) * 3.57
+                                      parseFloat(-1*transaction.amount) +
+                                      parseFloat(-1*transaction.amount) * 3.57
                                     ).toFixed()}
                                     |
                                   </b>
@@ -1443,7 +1455,7 @@ export default function PindoServicePage() {
                                     clientTin: clientTin,
                                   }}
                                 >
-                                  Preview Receipt
+                                  Preview Receipt 
                                 </Link>
                               </div>
                             </div>
@@ -1516,7 +1528,7 @@ export default function PindoServicePage() {
                                     clientTin: clientTin,
                                   }}
                                 >
-                                  Preview Receipt
+                                  Preview Receipt 
                                 </Link>
                               </div>
                             </div>
@@ -1551,11 +1563,11 @@ export default function PindoServicePage() {
                                   alt=""
                                 />
                               </a>
-                              <a class="product-title d-block" href="#">
+                              <a class="product-title d-block"  style={{ color: "white" }} href="#">
                                 {transaction.description}
                               </a>
 
-                              <p class="sale-price">
+                              <p class="sale-price"  style={{ color: "white" }}>
                                 <i class="fa-solid"></i>
                                 {transaction.processDate.substring(0, 20)}
                                 <span></span>
@@ -1564,18 +1576,19 @@ export default function PindoServicePage() {
                               <div class="product-rating">
                                 <i class="fa-solid fa-star"></i>TX:
                                 {transaction.id}
-                                <span class="ms-1" style={{ color: "red" }}>
+                                <span class="ms-1" style={{ color: "white" }}>
                                   <b>
                                     Amount Rwf:
                                     {(
-                                      parseFloat(transaction.amount) +
-                                      parseFloat(transaction.amount) * 3.57
+                                      parseFloat(-1*transaction.amount) +
+                                      parseFloat(-1*transaction.amount) * 3.57
                                     ).toFixed()}
                                     |
                                   </b>
                                 </span>
                                 <Link
                                   to="/ddin-bulksms-receipt"
+                                  style={{ color: "#f8882b" }}
                                   state={{
                                     transactionData: transaction,
                                     agentUsername: context.agentUsername,
@@ -1588,7 +1601,7 @@ export default function PindoServicePage() {
                                     clientTin: clientTin,
                                   }}
                                 >
-                                  Preview Receipt
+                                  Preview Receipt 
                                 </Link>
                               </div>
                             </div>
