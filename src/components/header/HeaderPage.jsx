@@ -20,7 +20,7 @@ import {
   changePassword,
 } from "../../apis/UserController";
 import ChangePasswordDialog from "./ChangePasswordDialog";
-
+import { viewAgentFloatAccountStatusById } from "../../apis/ServiceController";
 export default function HeaderPage() {
   const context = useContext(Context);
   const [formattedBalance, setFormattedBalance] = useState("Rwf 0.00");
@@ -50,12 +50,13 @@ export default function HeaderPage() {
       //Agent Commission A/C Id Test=25
       //Agent Commission A/C Id Prod=8
 
-      const response = await viewAgentFloatAccountStatus(
+      //const response = await viewAgentFloatAccountStatus(
+        const response = await viewAgentFloatAccountStatusById(
         context.userKey,
         context.agentInstantCommissionAccountId
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setFormattedBalanceComAccount(response.formattedBalance);
       } else {
         //toast.info(response.responseDescription);
@@ -78,12 +79,13 @@ export default function HeaderPage() {
       //context.agentInstantCommissionAccountId
       //context.agentDelayedCommissionAccountId
 
-      const response = await viewAgentFloatAccountStatus(
+      // const response = await viewAgentFloatAccountStatus(
+        const response = await viewAgentFloatAccountStatusById(
         context.userKey,
         context.agentFloatAccountId
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setFormattedBalance(response.formattedBalance);
       } else {
         //console.log("Agenty Account Status:"+response.responseDescription);
@@ -210,32 +212,15 @@ export default function HeaderPage() {
 
                   </li>
             </li>
-{/* 
+
             <li>
-              <a href="#">
-                <i class="fa-solid fa-bell lni-tada-effect"></i>Notifications
-                <span class="ms-1 badge badge-warning"></span>
-              </a>
-            </li> */}
+            <Link to="/agent-commission-account">
+    <i class="fa-solid fa-dollar-sign lni-tada-effect"></i>Quick-Commissions
+    <span class="ms-1 badge badge-warning"></span>
+      </Link>   
+             
+            </li>
            
-            {/* <li>
-              <a href="#">
-                <i class="fa-solid fa-file-code"></i>Terms & Conditions
-              </a>
-            </li> */}
-            {/* <li class="ddin-dropdown-menu">
-              <a href="#">
-                <i class="fa-solid fa-list"></i>Agent Accounts
-              </a>
-              <ul>
-                <li>
-                  <Link to="/agent-float-account">Float A/C</Link>
-                </li>
-                <li>
-                  <Link to="/agent-commission-account">Commission A/C</Link>
-                </li>
-              </ul>
-            </li> */}
             <li class="ddin-dropdown-menu">
               <a href="#">
                 <i class="fa-solid fa-sliders"></i>Settings

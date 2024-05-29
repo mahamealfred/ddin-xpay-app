@@ -18,7 +18,9 @@ import {
   registerYellowCardUserSecondStep,
   registerYellowCardUserFirstStep,
 } from "../../apis/UserController";
-
+import { viewAgentFloatAccountStatusById } from "../../apis/ServiceController";
+import HeaderPage from "../header/HeaderPage";
+import LoginPage from "../user/LoginPage";
 export default function AgentCommissionAccountPage() {
   const context = useContext(Context);
   const [agentAccountTransactions, setAgentAccountTransactions] = useState([]);
@@ -72,12 +74,13 @@ export default function AgentCommissionAccountPage() {
       //Agent Commission A/C Id Test=25
       //Agent Commission A/C Id Prod=8
 
-      const response = await viewAgentFloatAccountStatus(
+      // const response = await viewAgentFloatAccountStatus(
+        const response = await viewAgentFloatAccountStatusById(
         context.userKey,
         context.agentInstantCommissionAccountId
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setFormattedBalance(response.formattedBalance);
       } else {
         //toast.info(response.responseDescription);
@@ -95,12 +98,13 @@ export default function AgentCommissionAccountPage() {
       //Agent Commission A/C Id Test=25
       //Agent Commission A/C Id Prod=8
 
-      const response = await viewAgentFloatAccountStatus(
+      // const response = await viewAgentFloatAccountStatus(
+        const response = await viewAgentFloatAccountStatusById(
         context.userKey,
         context.agentInstantCommissionAccountId
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
         setFormattedBalanceComAccount(response.formattedBalance);
       } else {
         //toast.info(response.responseDescription);
@@ -335,129 +339,17 @@ export default function AgentCommissionAccountPage() {
     });
   });
 
-  return (
+  return context.loggedInStatus ? (
     <div>
-      <div class="header-area" id="headerArea">
-        <div class="container h-100 d-flex align-items-center justify-content-between d-flex rtl-flex-d-row-r">
-          <div class="logo-wrapper">
-            <a href="#">
-              <img src="assets/img/icons/fav-icon-ddn.png" alt="" />
-            </a>
-          </div>
-          <div class="navbar-logo-container d-flex align-items-center">
-            <div class="user-profile-icon ms-2">
-              <a href="#">
-                <img src="assets/img/core-img/icon-ddn-72-w.png" alt="" />
-              </a>
-            </div>
-
-            <div
-              class="ddin-navbar-toggler ms-2"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#ddinOffcanvas"
-              aria-controls="ddinOffcanvas"
-            >
-              <div>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="offcanvas offcanvas-start ddin-offcanvas-wrap"
-        tabindex="-1"
-        id="ddinOffcanvas"
-        aria-labelledby="ddinOffcanvasLabel"
-      >
-        <button
-          class="btn-close btn-close-white"
-          type="button"
-          data-bs-dismiss="offcanvas"
-          aria-label="Close"
-        ></button>
-
-        <div class="offcanvas-body">
-          <div class="sidenav-profile">
-            <div class="user-profile">
-              <img src="assets/img/core-img/icon-ddn-72-w.png" alt="" />
-            </div>
-            <div class="user-info">
-              <h5 class="user-name mb-1 text-white" style={{ fontSize: 14 }}>
-                {context?.agentFullName}
-              </h5>
-              <p class="available-balance text-white">
-                Available Balance:{" "}
-                <span class="counter">
-                  <b>{formattedBalance}</b>
-                </span>
-              </p>
-            </div>
-          </div>
-
-          <ul class="sidenav-nav ps-0">
-            <li>
-              <a href="#">
-                <i class="fa-solid fa-user"></i>My Profile
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa-solid fa-bell lni-tada-effect"></i>Notifications
-                <span class="ms-1 badge badge-warning"></span>
-              </a>
-            </li>
-            <li class="ddin-dropdown-menu">
-              <a href="#">
-                <i class="fa-solid fa-store"></i>DDIN Services
-              </a>
-              <ul>
-                <li>
-                  <a href="#">Bulk Sms</a>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa-solid fa-file-code"></i>Terms & Conditions
-              </a>
-            </li>
-            <li class="ddin-dropdown-menu">
-              <a href="#">
-                <i class="fa-solid fa-list"></i>Agent Accounts
-              </a>
-              <ul>
-                <li>
-                  <Link to="/agent-float-account">Float A/C</Link>
-                </li>
-                <li>
-                  <Link to="/agent-commission-account">Commission A/C</Link>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa-solid fa-sliders"></i>Settings
-              </a>
-            </li>
-            <li>
-              <Link to="/sign-in">
-                <i class="fa-solid fa-toggle-off"></i>Sign Out
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <HeaderPage/>
 
       <div class="page-content-wrapper">
         <div class="container">
           <br />
           <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
             <h6>
-              <Link class="btn p-0" to="/">
-                <i class="ms-1 fa-solid fa-arrow-left-long"></i> Back
+              <Link class="btn p-0 text-white" to="/">
+                <i class="ms-1 fa-solid fa-arrow-left-long text-white"></i> Back
               </Link>
             </h6>
             {/*<a class="btn p-0" href="#">More<i class="ms-1 fa-solid fa-arrow-right-long"></i></a>*/}
@@ -483,14 +375,84 @@ export default function AgentCommissionAccountPage() {
             </div>
           </div>
         </div>
+                       {/* Form */}
+                       <div class="container">
+            <br />
+            <div
+              style={{
+                backgroundColor: "#ffffff",
+                borderRadius: 5,
+                borderWidth: 1,
+                borderStyle: "solid",
+              }}
+            >
+              <div class="row justify-content-center">
+                <div class="col-10 col-lg-8">
+                  <div class="register-form mt-2">
+                    <div class="form-group text-start mb-4">
+                      <span
+                        class="mb-2"
+                        style={{ fontSize: 24, color: "black" }}
+                      >
+                        <b>Self-Serve Commissions</b>
+                      </span>
+                      <span
+                        class="mb-2"
+                        style={{ fontSize: 16, color: "black" }}
+                      >
+                        Dear Valued Agent,
+We are thrilled to announce that our new self-serve commission service, will soon be available!
+                        <b></b>
+                      </span>
+                    </div>
 
+                    <form >
+                      <div class="form-group text-start mb-4">
+                        <span style={{ color: "black", fontSize: 16 }}>
+                          <b>Enter Amount:</b>
+                          <b style={{ color: "red" }}>*</b>
+                        </span>
+
+                        <input
+                        disabled
+                          class="form-control"
+                          style={{
+                            backgroundColor: "white",
+                            color: "black",
+                            borderColor: "black",
+                            borderRadius: 10,
+                            borderWidth: 1,
+                            borderStyle: "solid",
+                            fontSize: 14,
+                          }}
+                          type="text"
+                          // onChange={(e) => setMeterNumber(e.target.value)}
+                          // value={meterNumber}
+                          required
+                        />
+                      </div>
+
+                      <button disabled class="btn btn-warning btn-lg w-100">
+                        Self-serve
+                      </button>
+
+                    </form>
+                  </div>
+
+                  <div class="login-meta-data">
+                    <p class="mt-3 mb-0"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         <div class="weekly-best-seller-area py-3">
           <div class="container">
             <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
               <h6>Agents Transactions</h6>
 
-              <a class="btn p-0" onClick={viewFloatAccountInfo}>
-                View All<i class="ms-1 fa-solid fa-arrow-right-long"></i>
+              <a class="btn p-0 text-white" onClick={viewFloatAccountInfo}>
+                View All Transactions<i class="ms-1 fa-solid fa-arrow-right-long"></i>
               </a>
             </div>
             <div class="row g-2">
@@ -515,19 +477,19 @@ export default function AgentCommissionAccountPage() {
                           <a class="wishlist-btn" href="#">
                             <img src="assets/img/core-img/ticker.png" alt="" />
                           </a>
-                          <a class="product-title d-block" href="#">
+                          <a class="product-title d-block" style={{ color: "white" }} href="#">
                             {transaction.description}
                           </a>
 
-                          <p class="sale-price">
-                            <i class="fa-solid"></i>
+                          <p class="sale-price" style={{ color: "white" }}>
+                            <i class="fa-solid" ></i>
                             {transaction.processDate.substring(0, 20)}
                             <span></span>
                           </p>
 
                           <div class="product-rating">
                             <i class="fa-solid fa-star"></i>TX:{transaction.id}
-                            <span class="ms-1" style={{ color: "red" }}>
+                            <span class="ms-1 " style={{ color: "white" }}>
                               <b>{transaction.formattedAmount}</b>
                             </span>
                           </div>
@@ -543,7 +505,6 @@ export default function AgentCommissionAccountPage() {
       </div>
 
       <div class="internet-connection-status" id="internetStatus"></div>
-
       <div class="footer-nav-area" id="footerNav">
         <div class="ddin-footer-nav">
           <ul class="h-100 d-flex align-items-center justify-content-between ps-0 d-flex rtl-flex-d-row-r">
@@ -576,5 +537,7 @@ export default function AgentCommissionAccountPage() {
         </div>
       </div>
     </div>
+  ) : (
+    <LoginPage />
   );
 }

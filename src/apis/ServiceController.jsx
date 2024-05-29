@@ -5,7 +5,8 @@ import { Buffer } from "buffer";
 
 //LOGIN URL
 const base_remote_login_prod = "https://app.ddin.rw/api/v1/authentication/login";
-
+//Account
+const base_remote_account_status_prod="https://app.ddin.rw/api/v1/accounts/balance/account?"
 
 //BULK SMS URL
 const base_remote_pindo_pay_prod = "https://app.ddin.rw/api/v1/payment-service/pindo-bulksms/payment";
@@ -126,7 +127,76 @@ const agentLoginAuth = async (requestPayload) => {
 
   return serverResponse;
 };
+//agent account status by ID
+const viewAgentFloatAccountStatusById = async (userKey, accountId) => {
+  //base_remote_account_status_test
+  //base_remote_account_status_prod
+  const URL_WITH_PARAMS =
+  base_remote_account_status_prod + "accountId=" + accountId;
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    communicationStatus: "",
+    responseDate: "",
+    balance: "",
+    formattedBalance: "",
+    availableBalance: "",
+    formattedAvailableBalance: "",
+    reservedAmount: "",
+    formattedReservedAmount: "",
+    creditLimit: "",
+    formattedCreditLimit: "",
+  };
+  //
+  await axios
+    .get(URL_WITH_PARAMS, {
+      headers: {
+        Authorization: `Basic ${userKey}`,
+      },
+      withCredentials: true,
+    })
 
+    .then((response) => {
+      if (response.data.responseCode === 200) {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.responseDate = response.data.responseDate;
+        serverResponse.balance = response.data.data.balance;
+        serverResponse.formattedBalance = response.data.data.formattedBalance;
+        serverResponse.availableBalance = response.data.data.availableBalance;
+        serverResponse.formattedAvailableBalance =response.data.data.formattedAvailableBalance;
+        serverResponse.reservedAmount = response.data.data.reservedAmount;
+        serverResponse.formattedReservedAmount = response.data.data.formattedReservedAmount;
+        serverResponse.creditLimit = response.data.data.creditLimit;
+        serverResponse.formattedCreditLimit = response.data.data.formattedCreditLimit;
+      } else {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.responseDate = response.data.responseDate;
+      }
+    })
+    .catch((err) => {
+      if (err.response.status == 400) {
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else if(err.response.status == 401){
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else{
+        serverResponse.responseDescription = err.response.data.error;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      } 
+    });
+
+  return serverResponse;
+};
 
 
 //Pindo Bulk sms payament
@@ -842,5 +912,6 @@ const viewTransactionStatusById = async (
     viewAgentAccountTransactions,
     validateEfasheStartimeVending,
     executeEfasheStartimeVending,
-    viewTransactionStatusById
+    viewTransactionStatusById,
+    viewAgentFloatAccountStatusById
 }

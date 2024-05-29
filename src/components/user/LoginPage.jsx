@@ -428,9 +428,12 @@ export default function LoginPage() {
               <div class="login-meta-data">
                 <p class="mb-0">
                   Do you have an account?
-                  <a class="mx-1" href="/register">
+                  <Link to="/register" class="mx-1">
+                  Register Now 
+                  </Link>
+                  {/* <a class="mx-1" href="/register">
                     Register Now
-                  </a>
+                  </a> */}
                 </p>
               </div>
             </div>
