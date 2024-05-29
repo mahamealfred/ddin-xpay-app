@@ -518,10 +518,7 @@ export default function FdiReceiptManager() {
                               Total (Rwf):
                               <span>
                                 {(
-                                  (parseFloat(state?.transactionData?.amount) +
-                                    parseFloat(state?.transactionData?.amount) *
-                                      3.57) *
-                                  -1
+                                  parseFloat(-1* state?.transactionData?.amount)/(1- 0.7813)
                                 ).toFixed()}
                               </span>
                             </b>

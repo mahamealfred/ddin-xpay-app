@@ -218,11 +218,9 @@ const validateEfasheAirTimeVendingTx = async (requestPayLoad) => {
       })
       .catch((err) => {
         serverResponse.responseDescription =
-          "Dear customer we are unable to process your request now. Try again later." +
-          err;
+          "Dear customer we are unable to process your request now. Try again later.";
         serverResponse.responseStatus =
-          "Dear customer we are unable to process your request now. Try again later." +
-          err;
+          "Dear customer we are unable to process your request now. Try again later.";
         serverResponse.responseCode = "501";
   
         if (!err.response) {

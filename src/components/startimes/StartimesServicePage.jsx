@@ -288,8 +288,7 @@ export default function StartimesServicePage() {
     } catch (err) {
       toast.update(id, {
         render:
-          "Dear customer we are unable to process your request now. Try again later." +
-          err,
+          "Dear customer we are unable to process your request now. Try again later.",
         type: "info",
         isLoading: false,
         closeButton: null,
@@ -439,8 +438,7 @@ export default function StartimesServicePage() {
     } catch (err) {
       toast.update(id, {
         render:
-          "Dear customer we are unable to process your request now. Try again later." +
-          err,
+          "Dear customer we are unable to process your request now. Try again later.",
         type: "info",
         isLoading: false,
         closeButton: null,
@@ -921,8 +919,7 @@ export default function StartimesServicePage() {
                                     <b>
                                       Amount Rwf:
                                       {(
-                                        parseFloat(transaction.amount) / 29.3 +
-                                        parseFloat(transaction.amount)
+                                        parseFloat(-1*transaction.amount) / (1 - 0.03)
                                       ).toFixed()}
                                       |
                                     </b>
@@ -989,8 +986,7 @@ export default function StartimesServicePage() {
                                     <b>
                                       Amount Rwf:
                                       {(
-                                        parseFloat(transaction.amount) / 29.3 +
-                                        parseFloat(transaction.amount)
+                                           parseFloat(-1* transaction.amount) / (1 - 0.03)
                                       ).toFixed()}
                                       |
                                     </b>

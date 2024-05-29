@@ -476,8 +476,7 @@ export default function NpoServicePage() {
     } catch (err) {
       toast.update(id, {
         render:
-          "Dear customer we are unable to process your request now. Try again later." +
-          err,
+          "Dear customer we are unable to process your request now. Try again later.",
         type: "info",
         isLoading: false,
         closeButton: null,

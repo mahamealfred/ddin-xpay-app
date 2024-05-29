@@ -349,7 +349,7 @@ export default function ElectricityServicePage() {
       );
 
       if (response.responseCode === 200) {
-        setCustomerAccountNumber(response.data?.customerAccountNumber);
+        setCustomerAccountNumber(response.data?.customerAccountName);
         setLocalStockMgt(response.data?.localStockMgt);
         setPdtId(response.data?.pdtId);
         setPdtName(response.data?.pdtName);
@@ -386,8 +386,7 @@ export default function ElectricityServicePage() {
     } catch (err) {
       toast.update(id, {
         render:
-          "Dear customer we are unable to process your request now. Try again later." +
-          err,
+          "Dear customer we are unable to process your request now. Try again later.",
         type: "info",
         isLoading: false,
         closeButton: null,
@@ -509,8 +508,7 @@ export default function ElectricityServicePage() {
     } catch (err) {
       toast.update(id, {
         render:
-          "Dear customer we are unable to process your request now. Try again later." +
-          err,
+          "Dear customer we are unable to process your request now. Try again later.",
         type: "info",
         isLoading: false,
         closeButton: null,
@@ -775,7 +773,7 @@ export default function ElectricityServicePage() {
           <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
             <h6>
               <Link class="btn p-0 text-white" to="/">
-                <i class="ms-1 fa-solid fa-arrow-left-long"></i> Back
+                <i class="ms-1 fa-solid fa-arrow-left-long"></i> Back 
               </Link>
             </h6>
           </div>

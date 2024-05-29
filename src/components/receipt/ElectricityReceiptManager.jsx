@@ -478,9 +478,7 @@ export default function ElectricityReceiptManager() {
                               Total (Rwf):
                               <span>
                                 {(
-                                  parseFloat(state?.transactionData?.amount) *
-                                  1.02 *
-                                  -1
+                                  parseFloat(-1* state?.transactionData?.amount) /(1 - 0.02)
                                 ).toFixed()}
                               </span>
                             </b>

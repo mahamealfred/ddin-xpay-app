@@ -478,9 +478,7 @@ export default function AirtimeReceiptManager() {
                               Total (Rwf):
                               <span>
                                 {(
-                                  parseFloat(-1*state?.transactionData?.amount) +
-                                  parseFloat(-1*state?.transactionData?.amount) /
-                                    16.24
+                                  parseFloat(-1*state?.transactionData?.amount) /(1- 0.058)
                                 ).toFixed()}
                               </span>
                             </b>

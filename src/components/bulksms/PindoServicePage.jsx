@@ -389,8 +389,7 @@ export default function PindoServicePage() {
     } catch (err) {
       toast.update(id, {
         render:
-          "Dear customer we are unable to process your request now. Try again later." +
-          err,
+          "Dear customer we are unable to process your request now. Try again later.",
         type: "info",
         isLoading: false,
         closeButton: null,
@@ -490,8 +489,7 @@ export default function PindoServicePage() {
       console.log("Logging DIN System request Error:" + err);
       toast.update(id, {
         render:
-          "Dear customer we are unable to process your request now. Try again later." +
-          err,
+          "Dear customer we are unable to process your request now. Try again later.",
         type: "info",
         isLoading: false,
         closeButton: null,
@@ -1037,24 +1035,7 @@ export default function PindoServicePage() {
                             <option value="DDIN">DDIN</option>
 
                           </select>
-                            {/* <input
-                              class="form-control"
-                              style={{
-                                backgroundColor: "white",
-                                color: "black",
-                                borderColor: "black",
-                                borderRadius: 10,
-                                borderWidth: 1,
-                                borderStyle: "solid",
-                                fontSize: 14,
-                              }}
-                              
-                              type="text"
-                              autoFocus={true}
-                              onChange={(e) => setSenderId(e.target.value)}
-                              value={senderId}
-                              required
-                            />  */}
+                            
                           </div>
                           <div class="form-group text-start mb-4">
                             <span style={{ color: "black", fontSize: 16 }}>
@@ -1362,9 +1343,11 @@ export default function PindoServicePage() {
                                 <i class="fa-solid fa-star"></i>TX:
                                 {transaction.id}
                                 <span class="ms-1" style={{ color: "white" }}>
+                                  {/* FDI */}
+                                  {/* {  parseFloat(-1 * transaction.amount)/(1 - 0.7813)}  */}
                                   <b>
                                     Amount Rwf:
-                                    {parseFloat(transaction.amount) * 2.5}|
+                                    {  parseFloat(-1 * transaction.amount)/(1 - 0.6)} |
                                   </b>
                                 </span>
                                 <Link
@@ -1434,8 +1417,7 @@ export default function PindoServicePage() {
                                   <b>
                                     Amount Rwf:
                                     {(
-                                      parseFloat(-1*transaction.amount) +
-                                      parseFloat(-1*transaction.amount) * 3.57
+                                      parseFloat(-1 * transaction.amount)/(1 - 0.6)
                                     ).toFixed()}
                                     |
                                   </b>
@@ -1510,7 +1492,7 @@ export default function PindoServicePage() {
                                 <span class="ms-1" style={{ color: "white" }}>
                                   <b>
                                     Amount Rwf:
-                                    {parseFloat(transaction.amount) * 2.5}|
+                                    {parseFloat(-1*transaction.amount) /(1- 0.6)}|
                                   </b>
                                 </span>
                                 <Link
@@ -1580,8 +1562,7 @@ export default function PindoServicePage() {
                                   <b>
                                     Amount Rwf:
                                     {(
-                                      parseFloat(-1*transaction.amount) +
-                                      parseFloat(-1*transaction.amount) * 3.57
+                                     parseFloat(-1 * transaction.amount)/(1- 0.7813)
                                     ).toFixed()}
                                     |
                                   </b>

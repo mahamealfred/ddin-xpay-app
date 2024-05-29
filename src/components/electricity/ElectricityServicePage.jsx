@@ -298,8 +298,7 @@ export default function ElectricityServicePage() {
     } catch (err) {
       toast.update(id, {
         render:
-          "Dear customer we are unable to process your request now. Try again later." +
-          err,
+          "Dear customer we are unable to process your request now. Try again later.",
         type: "info",
         isLoading: false,
         closeButton: null,
@@ -477,8 +476,7 @@ export default function ElectricityServicePage() {
     } catch (err) {
       toast.update(id, {
         render:
-          "Dear customer we are unable to process your request now. Try again later." +
-          err,
+          "Dear customer we are unable to process your request now. Try again later.",
         type: "info",
         isLoading: false,
         closeButton: null,
@@ -757,8 +755,7 @@ if (uuidMatch) {
   } catch (err) {
     toast.update(uuid, {
       render:
-        "Dear customer we are unable to process your request now. Try again later." +
-        err,
+        "Dear customer we are unable to process your request now. Try again later.",
       type: "info",
       isLoading: false,
       closeButton: null,
@@ -1034,8 +1031,7 @@ if (uuidMatch) {
                                   <b>
                                     Amount Rwf:
                                     {(
-                                      parseFloat(-1 *transaction.amount) * 0.02 +
-                                      parseFloat(-1 *transaction.amount)
+                                      parseFloat(-1 *transaction.amount) / (1 - 0.02)
                                     ).toFixed()}
                                     |
                                   </b>
@@ -1109,8 +1105,7 @@ if (uuidMatch) {
                                   <b>
                                     Amount Rwf:
                                     {(
-                                      parseFloat(-1 *transaction.amount) * 0.02 +
-                                      parseFloat(-1 *transaction.amount)
+                                      parseFloat(-1 *transaction.amount) / (1 - 0.02)
                                     ).toFixed()}
                                     |
                                   </b>

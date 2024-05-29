@@ -298,8 +298,7 @@ export default function AirtimeServicePage() {
     } catch (err) {
       toast.update(id, {
         render:
-          "Dear customer we are unable to process your request now. Try again later." +
-          err,
+          "Dear customer we are unable to process your request now. Try again later.",
         type: "info",
         isLoading: false,
         closeButton: null,
@@ -416,8 +415,7 @@ export default function AirtimeServicePage() {
     } catch (err) {
       toast.update(id, {
         render:
-          "Dear customer we are unable to process your request now. Try again later." +
-          err,
+          "Dear customer we are unable to process your request now. Try again later.",
         type: "info",
         isLoading: false,
         closeButton: null,
@@ -931,8 +929,7 @@ export default function AirtimeServicePage() {
                                   <b>
                                     Amount Rwf:
                                     {(
-                                      parseFloat(-1 *transaction.amount) / 16.24 +
-                                      parseFloat(-1 *transaction.amount)
+                                      parseFloat(-1 *transaction.amount) / (1 - 0.058)
                                     ).toFixed()}
                                     |
                                   </b>
@@ -999,8 +996,7 @@ export default function AirtimeServicePage() {
                                   <b>
                                     Amount Rwf:
                                     {(
-                                      parseFloat(-1 *transaction.amount) / 16.24 +
-                                      parseFloat(-1 *transaction.amount)
+                                      parseFloat(-1 *transaction.amount) / (1- 0.058)
                                     ).toFixed()}
                                     |
                                   </b>

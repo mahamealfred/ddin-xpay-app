@@ -477,10 +477,7 @@ export default function StartimesReceiptManager() {
                               Total (Rwf):
                               <span>
                                 {(
-                                  (parseFloat(state?.transactionData?.amount) +
-                                    parseFloat(state?.transactionData?.amount) /
-                                      29.3) *
-                                  -1
+                                  parseFloat(-1* state?.transactionData?.amount) /(1 - 0.03)
                                 ).toFixed()}
                               </span>
                             </b>

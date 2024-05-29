@@ -520,9 +520,7 @@ export default function DdinReceiptmanagerPage() {
                               {" "}
                               Total (Rwf):
                               <span>
-                                {parseFloat(state?.transactionData?.amount) *
-                                  2.5 *
-                                  -1}
+                                {parseFloat(-1* state?.transactionData?.amount) /(1 - 0.6)}
                               </span>
                             </b>
 
