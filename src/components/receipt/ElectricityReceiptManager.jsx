@@ -289,7 +289,8 @@ export default function ElectricityReceiptManager() {
       //console.log("Agent Account Status Error:"+err);
     }
   };
-
+  let uuidPattern = /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/g;
+  
   return context.loggedInStatus ? (
     <div>
       <HeaderPage />
@@ -410,7 +411,7 @@ export default function ElectricityReceiptManager() {
                                 </td>{" "}
                                 <td>
                                   <span>
-                                    {state?.transactionData?.description}
+                                    {state?.transactionData?.description.replace(uuidPattern, "").replace("TX Id:", "").replace(/(Token1:)(\d+)/, "$1 $2")}
                                   </span>
                                 </td>
                               </tr>

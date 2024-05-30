@@ -1,8 +1,4 @@
-/**
- * *@gniyonge
- * App Home Page
 
- */
 
 import React, { useContext, useState, useMemo, useRef, useEffect } from "react";
 import {
