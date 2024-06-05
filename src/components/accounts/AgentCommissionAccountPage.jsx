@@ -18,15 +18,29 @@ import {
   registerYellowCardUserSecondStep,
   registerYellowCardUserFirstStep,
 } from "../../apis/UserController";
-import { viewAgentFloatAccountStatusById } from "../../apis/ServiceController";
+import { selftServeCommissions, viewAgentFloatAccountStatusById } from "../../apis/ServiceController";
 import HeaderPage from "../header/HeaderPage";
 import LoginPage from "../user/LoginPage";
+import { toast, ToastContainer } from "react-toastify";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Stack from '@mui/material/Stack';
 export default function AgentCommissionAccountPage() {
   const context = useContext(Context);
   const [agentAccountTransactions, setAgentAccountTransactions] = useState([]);
   const [formattedBalance, setFormattedBalance] = useState("Rwf 0.00");
-  const [formattedBalanceComAccount, setFormattedBalanceComAccount] =
-    useState("Rwf 0.00");
+  const [formattedBalanceComAccount, setFormattedBalanceComAccount] =useState("Rwf 0.00");
+  const [amount,setAmount]=useState("");
+  const [currentBalance,setCurrentBalance]=useState("");
+  const [openStatus,setOpenStatus]=useState(false)
+
+  const closeClick=()=>{
+    setOpenStatus(false)
+  }
 
   useEffect(() => {
     queryAccountStatus();
@@ -82,6 +96,7 @@ export default function AgentCommissionAccountPage() {
 
       if (response.responseCode === 200) {
         setFormattedBalance(response.formattedBalance);
+      
       } else {
         //toast.info(response.responseDescription);
       }
@@ -106,11 +121,70 @@ export default function AgentCommissionAccountPage() {
 
       if (response.responseCode === 200) {
         setFormattedBalanceComAccount(response.formattedBalance);
+        setCurrentBalance(response.balance)
       } else {
         //toast.info(response.responseDescription);
       }
     } catch (err) {
       //console.log("Agenty Account Status Error:"+err);
+    }
+  };
+  function isNumber(str) {
+    if (str.trim() === "") {
+      return false;
+    }
+
+    return !isNaN(str);
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  //  console.log("Result:",formattedBalanceComAccount.replace(" Rwf", "").replace(/,/g, ""))
+       if (isNumber(amount)) {
+       setOpenStatus(true)
+    }else{
+      toast.error("Amount Must Be a Valid  Set of Number(0-9)");
+    }
+   
+  };
+
+  const confirmClick= async()=>{
+    const id = toast.loading("Processing commissions withdrawal ...");
+    try {
+      //new methode
+      const response = await  selftServeCommissions(
+       amount,
+        context.userKey,
+        context.agentInstantCommissionAccountId
+      );
+      if (response.responseCode === 200) {
+        setOpenStatus(false)
+        setAmount("")
+        toast.update(id, {
+          render: response.responseDescription,
+          type: "info",
+          isLoading: false,
+          closeButton: null,
+        });
+ 
+     
+      } else {
+        toast.update(id, {
+          render: response.responseDescription,
+          type: "error",
+          isLoading: false,
+          closeButton: null,
+        });
+     setOpenStatus(false)
+      }
+    } catch (err) {
+      toast.update(id, {
+        render:
+          "Dear customer we are unable to process your request now. Try again later.",
+        type: "info",
+        isLoading: false,
+        closeButton: null,
+      });
+   
     }
   };
 
@@ -342,7 +416,35 @@ export default function AgentCommissionAccountPage() {
   return context.loggedInStatus ? (
     <div>
       <HeaderPage/>
-
+      <Dialog
+      open={openStatus}
+      onClose={closeClick}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title" style={{color:"#ff9900",fontSize:14}}>
+      <b>{"Commissions Withdrawal Service"}</b>
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description" style={{color:"black",fontSize:12}}>
+       
+         <Stack sx={{ width: '100%', color: 'grey.500' }} spacing={2}>
+          <p style={{color:'black', fontSize:12}}>
+             <span>Are you sure you  want to withdraw the commission of <b>{parseFloat(amount).toLocaleString()} Rwf</b> ?</span><br/>
+          </p>
+          <p>
+          <span style={{color:'red', fontSize:12}}> Please confirm the withdrawal <b></b></span>
+          </p>
+    </Stack>
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+      <Button style={{color:"red",fontSize:12}} onClick={closeClick}>Cancel</Button>
+          <Button style={{color:"green",fontSize:12}}  autoFocus  onClick={confirmClick}>
+          Confirm 
+        </Button>
+      </DialogActions>
+    </Dialog>
       <div class="page-content-wrapper">
         <div class="container">
           <br />
@@ -396,17 +498,17 @@ export default function AgentCommissionAccountPage() {
                       >
                         <b>Self-Serve Commissions</b>
                       </span>
-                      <span
+                      {/* <span
                         class="mb-2"
                         style={{ fontSize: 16, color: "black" }}
                       >
                         Dear Valued Agent,
 We are thrilled to announce that our new self-serve commission service, will soon be available!
                         <b></b>
-                      </span>
+                      </span> */}
                     </div>
 
-                    <form >
+                    <form onSubmit={handleSubmit}>
                       <div class="form-group text-start mb-4">
                         <span style={{ color: "black", fontSize: 16 }}>
                           <b>Enter Amount:</b>
@@ -414,7 +516,7 @@ We are thrilled to announce that our new self-serve commission service, will soo
                         </span>
 
                         <input
-                        disabled
+                        //disabled
                           class="form-control"
                           style={{
                             backgroundColor: "white",
@@ -426,19 +528,17 @@ We are thrilled to announce that our new self-serve commission service, will soo
                             fontSize: 14,
                           }}
                           type="text"
-                          // onChange={(e) => setMeterNumber(e.target.value)}
-                          // value={meterNumber}
+                          onChange={(e) => setAmount(e.target.value)}
+                           value={amount}
                           required
                         />
                       </div>
-
-                      <button disabled class="btn btn-warning btn-lg w-100">
-                        Self-serve
+                      <button  class="btn btn-warning btn-lg w-100">
+                         Withdraw
                       </button>
-
                     </form>
                   </div>
-
+                  <ToastContainer className="toast-position" />
                   <div class="login-meta-data">
                     <p class="mt-3 mb-0"></p>
                   </div>

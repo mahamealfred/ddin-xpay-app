@@ -6,8 +6,8 @@ import { Buffer } from "buffer";
 //LOGIN URL
 const base_remote_login_prod = "https://app.ddin.rw/api/v1/authentication/login";
 //Account
-const base_remote_account_status_prod="https://app.ddin.rw/api/v1/accounts/balance/account?"
-
+const base_remote_account_status_prod="https://app.ddin.rw/api/v1/accounts/balance/account?";
+const base_remote_selfServe_commissions_prod="https://app.ddin.rw/api/v1/accounts/commissions/self-serve";
 //BULK SMS URL
 const base_remote_pindo_pay_prod = "https://app.ddin.rw/api/v1/payment-service/pindo-bulksms/payment";
 
@@ -899,6 +899,66 @@ const viewTransactionStatusById = async (
   return serverResponse;
 };
 
+
+
+//==============selfServe commission======
+const selftServeCommissions= async (amount, userKey,accountId) => {
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    responseStatus: "",
+    data: "",
+  };
+  const data={
+    amount: amount,
+    accountId:accountId
+}
+
+  await axios
+    .post( base_remote_selfServe_commissions_prod, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${userKey}`,
+      },
+      withCredentials: false,
+    })
+
+    .then((response) => {
+
+      if (response.data.responseCode === 200) {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.data = response.data.data;
+        //serverResponse.pindoSmsId=response.data.data.pindoSmsId;
+      } else {
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.responseStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+      }
+    })
+    .catch((err) => {
+      if (err.response.status == 400) {
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else if(err.response.status == 401){
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else{
+        serverResponse.responseDescription = err.response.data.error;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      } 
+    });
+
+  return serverResponse;
+};
+
+
   export {
     payPindoBulkSMS,
     validateEfasheAirTimeVendingTx,
@@ -913,5 +973,6 @@ const viewTransactionStatusById = async (
     validateEfasheStartimeVending,
     executeEfasheStartimeVending,
     viewTransactionStatusById,
-    viewAgentFloatAccountStatusById
+    viewAgentFloatAccountStatusById,
+    selftServeCommissions
 }

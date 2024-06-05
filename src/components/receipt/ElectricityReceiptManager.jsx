@@ -415,6 +415,18 @@ export default function ElectricityReceiptManager() {
                                   </span>
                                 </td>
                               </tr>
+                              {/* <tr style={{ color: "black" }}>
+                                <td>
+                                  <b>
+                                    <span>Token:</span>
+                                  </b>
+                                </td>{" "}
+                                <td>
+                                  <span>
+                                    {state?.transactionData?.description.replace(uuidPattern, "").replace("TX Id:", "").replace(/(Token1:)(\d+)/, "$1 $2")}
+                                  </span>
+                                </td>
+                              </tr> */}
                               <tr style={{ color: "black" }}>
                                 <td>
                                   <b>

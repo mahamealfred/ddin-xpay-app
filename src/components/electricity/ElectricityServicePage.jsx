@@ -394,7 +394,8 @@ export default function ElectricityServicePage() {
       //returnTransferId();returnMemberId();
       const efasheTxValidatorRequestBody = {
         amount: tokenAmount,
-        description: "Electricity Payment processed with TX Id:" + trxId +" Meter Number: " + meterNumber + " Token1:",
+       // description:"Electricity Payment with Meter Number :" + meterNumber + "Processed Successful. TX Id:" + trxId + " Token1:" ,
+       description: "Electricity Payment processed with TX Id:" + trxId +" Meter Number: " + meterNumber + " Token1:",
         currencySymbol: "Rwf",
         transferTypeId: returnTransferId(),
         province: context.province,
