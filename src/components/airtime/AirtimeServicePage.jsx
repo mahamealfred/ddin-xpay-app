@@ -168,6 +168,7 @@ export default function AirtimeServicePage() {
   const [receiptNote, setReceiptNote] = useState("");
   const [serviceFeeAmt, setServiceFeeAmt] = useState("");
   const [totalPayment, setTotalPayment] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const clientTypesCode = [
     { status: false, name: "Organization" },
@@ -234,7 +235,8 @@ export default function AirtimeServicePage() {
   //EFSAHE TX VALIDATOR
   const validateEfasheVendingTxRequest = async () => {
     const id = toast.loading("Previewing Airtime Request...");
-
+    if (isLoading) return; // Prevent multiple clicks
+    setIsLoading(true);
     try {
       const efasheTxValidatorRequestBody = {
         amount: efasheServiceAmount,
@@ -304,6 +306,8 @@ export default function AirtimeServicePage() {
         closeButton: null,
       });
       setValidFileLevel(false);
+    }finally{
+      setIsLoading(false);
     }
   };
 
@@ -347,7 +351,8 @@ export default function AirtimeServicePage() {
   //EFSAHE TX EXECUTOR
   const executeEfasheVendingTxRequest = async () => {
     const id = toast.loading("Processing Airtime Request...");
-
+    if (isLoading) return; // Prevent multiple clicks
+    setIsLoading(true);
     try {
       //Test Agent: Transfer Id=54 , Member Id= 34
       //Test Corporate: Transfer Id=83 , Member Id=34
@@ -421,6 +426,8 @@ export default function AirtimeServicePage() {
         closeButton: null,
       });
       setValidFileLevel(false);
+    }finally{
+      setIsLoading(false)
     }
   };
 
@@ -815,10 +822,11 @@ export default function AirtimeServicePage() {
                         />
                       </div>
 
-                      <button class="btn btn-warning btn-lg w-100">Buy</button>
+                      <button disabled={isLoading} class="btn btn-warning btn-lg w-100">Buy</button>
 
                       <ToastContainer className="toast-position" />
                       <PreviewAirtimeServicePayment
+                        isLoading={isLoading}
                         availTrxBalance={availTrxBalance}
                         customerAccountNumber={customerAccountNumber}
                         localStockMgt={localStockMgt}

@@ -568,7 +568,9 @@ const executeEfasheRRAVending= async (requestPayLoad, userKey) => {
     province:requestPayLoad.province,
     sector:requestPayLoad.sector,
     currencySymbol: requestPayLoad.currencySymbol,
-    description: requestPayLoad.description
+    description: requestPayLoad.description,
+    tin:requestPayLoad.taxIdentificationNumber,
+    taxPayer: requestPayLoad.taxpayer
 }
 
   await axios

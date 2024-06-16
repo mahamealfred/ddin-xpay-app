@@ -65,7 +65,7 @@ export default function ConfirmAirtimeServicePayment(props){
       </DialogContent>
       <DialogActions>
       <Button style={{color:"red",fontSize:12}} onClick={props.closeClick}>Cancel</Button>
-          <Button style={{color:"green",fontSize:12}}  autoFocus  onClick={props.confirmClick}>
+          <Button disabled={props.isLoading} style={{color:"green",fontSize:12}}  autoFocus  onClick={props.confirmClick}>
           Confirm
         </Button>
       </DialogActions>
