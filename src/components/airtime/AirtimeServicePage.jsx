@@ -110,7 +110,7 @@ export default function AirtimeServicePage() {
   const [textAreaCount, setTextAreaCount] = useState(0);
   const [businessTin, setBusinessTin] = useState("");
   const [identityTypeSelected, setIdentityTypeSelected] = useState("1");
-  const [value, setValue] = useState("");
+ 
   const [npoAddressData, setNpoAddressData] = useState(null);
   const [
     agentAccountTransactionsByIdData,
@@ -153,11 +153,13 @@ export default function AirtimeServicePage() {
   const [stock, setStock] = useState("");
   const [stockedPdts, setStockedPdts] = useState("");
   const [svcProviderName, setSvcProviderName] = useState("");
-  const [trxId, setTrxId] = useState("");
+
   const [trxResult, setTrxResult] = useState("");
   const [vendMax, setVendMax] = useState("");
   const [vendMin, setVendMin] = useState("");
   const [vendUnitId, setVendUnitId] = useState("");
+  const [trxId, setTrxId] = useState("");
+  const [value, setValue] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [refreshToken, setRefreshToken] = useState("");
 

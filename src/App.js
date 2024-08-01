@@ -16,7 +16,7 @@ import AgentFloatAccountPage from "./components/accounts/AgentFloatAccountPage";
 import AgentCommissionAccountPage from "./components/accounts/AgentCommissionAccountPage";
 import AirtimeServicePage from "./components/airtime/AirtimeServicePage";
 import StartimesServicePage from "./components/startimes/StartimesServicePage";
-
+import BulkAirtimePage from "./components/bulkairtime/BulkAirtimeServicePage";
 import ElectricityServicePage from "./components/electricity/ElectricityServicePage";
 
 import ChangePasswordPage from "./components/settings/ChangePasswordPage";
@@ -49,7 +49,7 @@ function App() {
             element={<AgentCommissionAccountPage />}
           ></Route>
           <Route path="/buy-airtime" element={<AirtimeServicePage />}></Route>
-
+          <Route path="/bulk-airtime" element={<BulkAirtimePage />}></Route>
           <Route path="/register" element={<RegisterServicePage />}></Route>
           
           <Route

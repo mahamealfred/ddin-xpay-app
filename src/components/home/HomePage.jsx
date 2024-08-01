@@ -493,7 +493,16 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
-
+                  <div class="col-3">
+                    <div class="card catagory-card">
+                      <div class="card-body px-2">
+                        <Link to="/bulk-airtime">
+                          <img src="assets/img/bg-img/airtimes.jpg" alt="" />
+                          <span>Bulk Airtime</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
                 </>
 
               ) : (
@@ -636,6 +645,7 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
+               
                 </>
               )}
             </div>
