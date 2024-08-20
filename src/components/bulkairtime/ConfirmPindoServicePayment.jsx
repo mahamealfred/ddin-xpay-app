@@ -42,15 +42,8 @@ export default function ConfirmPindoServicePayment(props){
          <Stack sx={{ width: '100%', color: 'grey.500' }} spacing={2}>
           <p style={{color:'black', fontSize:12}}>
             <span>- Total Recepients Number:<b> {props.totalReceipients}</b></span><br/>
-            <span>- Amount Per Phone Number:<b> {props.amount} Rwf </b></span><br/>
-            <span>- Total Amount:<b> {props.totalReceipients*props.amount} Rwf </b></span><br/>
-            
-           
+            <span>- Total Amount:<b> {props.amount} Rwf </b></span><br/>
           </p>
-          
-         
-     
-      
     </Stack>
         </DialogContentText>
       </DialogContent>

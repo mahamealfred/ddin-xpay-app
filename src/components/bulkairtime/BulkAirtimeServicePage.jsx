@@ -99,6 +99,7 @@ export default function PindoServicePage() {
   const [accessToken, setAccessToken] = useState("");
   const [refreshToken, setRefreshToken] = useState("");
   const [detailsArray, setDetailsArray] = useState([]);
+  let totalAmount=0
   const recalculate = (e) => {
     setTextAreaCount(e.target.value.length);
     setMessage(e.target.value);
@@ -193,17 +194,17 @@ export default function PindoServicePage() {
           let arr_obj = [];
           for (let i = 0; i < rows.length; i++) {
             let valueNumber = "" + rows[i]?.number;
-
-            if (rows[i]?.number) {
+            if (rows[i]?.amount && rows[i]?.number) {
               if (valueNumber.length === 12) {
                 if (isNumber(valueNumber)) {
+                  totalAmount+=rows[i]?.amount
                   let datas={
-                    // "name":`${(rows[i]?.name).toString()}`,
+                    "amount":`${(rows[i]?.amount).toString()}`,
                     "number":`${(rows[i]?.number).toString()}`
                   }
                   //arr_obj.push((rows[i]?.number).toString());
                   arr_obj.push(datas);
-
+                  setBusinessTin(totalAmount)
                   if (valueNumber.length > 10 && valueNumber.length < 14) {
                     if (validatePhoneNumberLevel(rows[i].number)) {
                       continue;
@@ -214,8 +215,9 @@ export default function PindoServicePage() {
                           rows[i].number +
                           " - For Recient Row:" +
                           (i + 1) +
-                       
-                          ". Please refer to header <<number>>. Example:  +250781234567"
+                          " with Amount:" +
+                          rows[i].amount +
+                          ". Please refer to header <<amount, number>>. Example: Andrea Fisher, 250781234567"
                       );
                       setShowConfirmBulkFileDialog(true);
 
@@ -228,7 +230,8 @@ export default function PindoServicePage() {
                         rows[i].number +
                         " - For Recient Row:" +
                         (i + 1) +
-                       
+                        " with Amount:" +
+                        rows[i].amount +
                         ". Please refer to header <<name, number>>. Example: Andrea Fisher, +250781234567"
                     );
                     setShowConfirmBulkFileDialog(true);
@@ -241,8 +244,9 @@ export default function PindoServicePage() {
                       rows[i].number +
                       " - For Recient Row:" +
                       (i + 1) +
-                    
-                      ". Please refer to header <<name, number>>. Example: Andrea Fisher, +250781234567"
+                      " with Name:" +
+                      rows[i].amount +
+                      ". Please refer to header <<amount, number>>. Example: Andrea Fisher, 250781234567"
                   );
                   setShowConfirmBulkFileDialog(true);
                   break;
@@ -254,8 +258,9 @@ export default function PindoServicePage() {
                     rows[i].number +
                     " - For Recient Row:" +
                     (i + 1) +
-                
-                    ". Please refer to header <<name, number>>. Example: Andrea Fisher, +250781234567"
+                    " with Name:" +
+                    rows[i].amount +
+                    ". Please refer to header <<amount, number>>. Example: Andrea Fisher, 250781234567"
                 );
                 setShowConfirmBulkFileDialog(true);
                 break;
@@ -263,7 +268,7 @@ export default function PindoServicePage() {
             } else {
               setValidFileLevel(false);
               setValidFileLevelMessage(
-                "Please The uploaded recipient file does not have valid column names <<name>> & <<phone numbers>>"
+                "Please The uploaded recipient file does not have valid column names <<amount>> & <<number>>"
               );
               setShowConfirmBulkFileDialog(true);
 
@@ -293,7 +298,7 @@ const generateUUIDs = async (users, amount) => {
     .then(response => {
       const detail = {
         phoneNumber: phone.number.toString(),
-        amount: amount,
+        amount: phone.amount,
         trxId: response.data.data.trxId,
         description: "Airtime payment processed successfully with TX Id: " + response.data.data.trxId + ", Phone Number: " + phone.number
       };
@@ -309,10 +314,9 @@ const generateUUIDs = async (users, amount) => {
   const results = await Promise.all(requests);
   const filteredResults = results.filter(result => result !== null);
   setDetailsArray(filteredResults);
-  
   // Perform action after all requests are finished
   console.log('All requests finished');
-  console.log('Details Array:', filteredResults, filteredResults.length * amount); 
+  console.log('Details Array::', filteredResults, filteredResults.length * amount); 
   setShowConfirmDialog(true);
   setIsLoading(false);
 };
@@ -331,10 +335,7 @@ const generateUUIDs = async (users, amount) => {
 
   const queryAgentAccountTransactions = async () => {
     try {
-      // const response = await viewAgentFloatAccountTransactions(
-      //   context.userKey,
-      //   context.agentFloatAccountId
-      // );
+    
 
       const response = await viewBulkAirTimeTransactionsByAgentName(context.agentUsername);
 
@@ -387,19 +388,16 @@ const generateUUIDs = async (users, amount) => {
         efasheTxValidatorRequestBody,
         context.userKey
       );
-
       if (response.responseCode === 200) {
         playAudio();
-console.log("receipt result::",response)
            //Alfred
         setValue("");
         setEfasheServiceAmount("");
-
+         setBusinessTin("")
         // setReceiptId(response.data.transactionId);
         setReceiptNote(response.responseDescription);
         setServiceFeeAmt("");
         setTotalPayment(efasheServiceAmount);
-
         toast.dismiss();
         setShowReceiptDialog(true);
       } else {
@@ -474,36 +472,36 @@ console.log("receipt result::",response)
    const returnMemberId = () => {
     if (context.agentCategory === null || context.agentCategory === "Agent") {
       //Test Env:
-      setMemberId("34");
-       return "34";
+      // setMemberId("34");
+      //  return "34";
       //Prod Env:
-      // setMemberId("18");
-      // return "18";
+      setMemberId("18");
+      return "18";
     } else {
       //Test Env
-      setMemberId("34");
-      return "34";
-      //Prod Env
       // setMemberId("34");
       // return "34";
+      //Prod Env
+      setMemberId("18");
+      return "18";
     }
   };
   //============Service Core Transfers Id===================
   const returnTransferId = () => {
     if (context.agentCategory === null || context.agentCategory === "Agent") {
       //Test Env:
-      setTransferId("54");
-      return "54";
+      // setTransferId("54");
+      // return "54";
       //Prod Env:
-      // setTransferId("66");
-      // return "66";
+      setTransferId("66");
+      return "66";
     } else {
       //Test Env
-      setTransferId("83");
-      return "83";
+      // setTransferId("83");
+      // return "83";
       //Prod Env
-      // setTransferId("67");
-      // return "67";
+      setTransferId("67");
+      return "67";
     }
   };
   const sendPaymentRequest = async () => {
@@ -516,12 +514,12 @@ console.log("receipt result::",response)
     } else {
       //makePindoPmtWithNoCommision();
       //makeFdiPmt();
+      makeBulkAirtimePayment();
     }
   };
 
   useEffect(() => {
     const ddinWindow = $(window);
-    console.log("user data::",agentAccountTransactions)
     // :: Preloader
     ddinWindow.on("load", function () {
       $("#preloader").fadeOut("1000", function () {
@@ -752,7 +750,7 @@ console.log("receipt result::",response)
     return !isNaN(str);
   }
   const sortedTransactions = agentAccountTransactions?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
+console.log("odata:",sortedTransactions)
   return context.loggedInStatus ? (
     <div>
       <HeaderPage />
@@ -922,14 +920,14 @@ console.log("receipt result::",response)
 
                           <div class="form-group text-start mb-4">
                             <span style={{ color: "black", fontSize: 16 }}>
-                              <b>Amount:</b>
+                              <b>Total Amount:</b>
                               <b style={{ color: "red" }}>*</b>
                             </span>
 
                             <input
                               class="form-control"
                               required
-                             
+                              readOnly
                               style={{
                                 backgroundColor: "white",
                                 color: "black",
@@ -1017,6 +1015,7 @@ console.log("receipt result::",response)
                                 <th scope="col">#</th>
                                 {/* <th scope="col">Names</th> */}
                                 <th scope="col">Phone numbers</th>
+                                <th scope="col">Amount</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -1025,8 +1024,9 @@ console.log("receipt result::",response)
                                   return (
                                     <tr key={index}>
                                       <th scope="row">{index + 1}</th>
-                                      {/* <td>{user?.name}</td> */}
+                                     
                                       <td>{user?.number}</td>
+                                       <td>{user?.amount}</td>
                                     </tr>
                                   );
                                 })
@@ -1093,11 +1093,25 @@ console.log("receipt result::",response)
                         <b>
                           Total Amount: {transaction.amount} Rwf
                         </b>
+                        <Link
+                                  to="/ddin-bulk-airtime-receipt"
+                                  style={{ color: "#f8882b" }}
+                                  state={{
+                                    transactionData: transaction,
+                                    agentUsername: context.agentUsername,
+                                  }}
+                                >
+                                   Preview Receipt
+                                </Link>
                       </span>
+                      
+                      
                     </div>
                     <div className="product-details" style={{ color: "white" }}>
                       <p>Success Count: {transaction.successCount} , Failure Count: {transaction.failureCount}</p>
+                      
                     </div>
+                   
                   </div>
                 </div>
               </div>

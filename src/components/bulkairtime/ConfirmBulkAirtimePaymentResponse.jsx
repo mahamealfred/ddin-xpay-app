@@ -43,18 +43,14 @@ export default function ConfirmNpoServicePayment(props) {
           >
             <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
               <p style={{ color: "black", fontSize: 12 }}>
-                <span>
-                  -Receipt Id:<b>{props.receiptId}</b>
-                </span>
+              
                 <br />
                 <span>
-                  -Receipt Description:<b>{props.receiptDescription}</b>
+                <b>{props.receiptDescription}</b>
                 </span>
                 <br />
 
-                <span>
-                  -Total Payment:<b>{props.totalPayment}</b>
-                </span>
+                
               </p>
             </Stack>
           </DialogContentText>
@@ -67,15 +63,15 @@ export default function ConfirmNpoServicePayment(props) {
             style={{ color: "red", fontSize: 14 }}
             onClick={props.closeClick}
           >
-            Cancel
+            Ok
           </Button>
-          <Button
+          {/* <Button
             style={{ color: "green", fontSize: 14 }}
             autoFocus
             onClick={() => props.confirmClick(props.receiptId)}
           >
             <b>Preview Receipt</b>
-          </Button>
+          </Button> */}
         </DialogActions>
       </Dialog>
     </div>

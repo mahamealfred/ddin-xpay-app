@@ -4,34 +4,36 @@ import { Buffer } from "buffer";
 //Local PROD APIs:
 
 //LOGIN URL
-const base_remote_login_prod = "http://localhost:8000/api/v1/authentication/login";
+const base_remote_login_prod = "https://app.ddin.rw/api/v1/authentication/login";
 //Account
-const base_remote_account_status_prod="http://localhost:8000/api/v1/accounts/balance/account?";
-const base_remote_selfServe_commissions_prod="http://localhost:8000/api/v1/accounts/commissions/self-serve";
+const base_remote_account_status_prod="https://app.ddin.rw/api/v1/accounts/balance/account?";
+const base_remote_selfServe_commissions_prod="https://app.ddin.rw/api/v1/accounts/commissions/self-serve";
 //BULK SMS URL
-const base_remote_pindo_pay_prod = "http://localhost:8000/api/v1/payment-service/pindo-bulksms/payment";
+const base_remote_pindo_pay_prod = "https://app.ddin.rw/api/v1/payment-service/pindo-bulksms/payment";
 
 //AIRTIME URL
-const base_remote_efashe_airtime_validation_prod="http://localhost:8000/api/v1/payment-service/airtime/validate-vend";
-const base_remote_efashe_executeAirTimeTx_prod="http://localhost:8000/api/v1/payment-service/airtime/payment";
-const base_remote_efashe_executeBulkAirTimeTx_prod="http://localhost:8000/api/v1/payment-service/bulk-airtime/payment";
+const base_remote_efashe_airtime_validation_prod="https://app.ddin.rw/api/v1/payment-service/airtime/validate-vend";
+const base_remote_efashe_executeAirTimeTx_prod="https://app.ddin.rw/api/v1/payment-service/airtime/payment";
+const base_remote_efashe_executeBulkAirTimeTx_prod="https://app.ddin.rw/api/v1/payment-service/bulk-airtime/payment";
 //ELECTRICITY URL
-const base_remote_efashe_electricity_validation_prod="http://localhost:8000/api/v1/payment-service/electricity/validate-vend"
-const base_remote_efashe_executeElectricityTx_prod="http://localhost:8000/api/v1/payment-service/electricity/payment";
+const base_remote_efashe_electricity_validation_prod="https://app.ddin.rw/api/v1/payment-service/electricity/validate-vend"
+const base_remote_efashe_executeElectricityTx_prod="https://app.ddin.rw/api/v1/payment-service/electricity/payment";
 
 //RRA
-const base_remote_efashe_rra_validation_prod="http://localhost:8000/api/v1/payment-service/rra/validate-vend";
-const base_remote_efashe_executeRRATx_prod="http://localhost:8000/api/v1/payment-service/rra/payment";
+const base_remote_efashe_rra_validation_prod="https://app.ddin.rw/api/v1/payment-service/rra/validate-vend";
+const base_remote_efashe_executeRRATx_prod="https://app.ddin.rw/api/v1/payment-service/rra/payment";
 
 //Startime
 
-const base_remote_efashe_startime_validation_prod="http://localhost:8000/api/v1/payment-service/startime/validate-vend";
-const base_remote_efashe_executeStartimeTx_prod="http://localhost:8000/api/v1/payment-service/startime/payment";
+const base_remote_efashe_startime_validation_prod="https://app.ddin.rw/api/v1/payment-service/startime/validate-vend";
+const base_remote_efashe_executeStartimeTx_prod="https://app.ddin.rw/api/v1/payment-service/startime/payment";
 //transactions
-const base_remote_account_transaction_byid_prod="http://localhost:8000/api/v1/transactions/tansaction-byId";
-const base_remote_account_transactions_prod="http://localhost:8000/api/v1/transactions/logs";
-const base_remote_account_transactions_status_prod="http://localhost:8000/api/v1/payment-service//check-efashe-transaction/status?trxId=";
-const base_remote_Bulk_airtime_transaction_byagentName_prod="http://localhost:8000/api/v1/transactions/bulkService-logs-byAgentName-transactions?agentName="
+const base_remote_account_transaction_byid_prod="https://app.ddin.rw/api/v1/transactions/tansaction-byId";
+const base_remote_account_transactions_prod="https://app.ddin.rw/api/v1/transactions/logs";
+const base_remote_account_transactions_status_prod="https://app.ddin.rw/api/v1/payment-service//check-efashe-transaction/status?trxId=";
+const base_remote_Bulk_airtime_transaction_byagentName_prod="https://app.ddin.rw/api/v1/transactions/bulkService-logs-byAgentName-transactions?agentName="
+
+const base_remote_Bulk_airtime_transaction_byagentNameAndTransId_prod="https://app.ddin.rw/api/v1/transactions/bulkService-logs-byAgentNameAndTransId-transactions?"
 //login Auth 
 
 const agentLoginAuth = async (requestPayload) => {
@@ -1047,7 +1049,55 @@ const viewBulkAirTimeTransactionsByAgentName = async (
 
     .then((response) => {
       if (response.data.responseCode === 200) {
-        console.log("ooo:",response,URL_WITH_PARAMS)
+        serverResponse.responseDescription = response.data.responseDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+        serverResponse.data = response.data.data;
+      } else {
+        serverResponse.responseDescription = response.data.codeDescription;
+        serverResponse.communicationStatus = response.data.communicationStatus;
+        serverResponse.responseCode = response.data.responseCode;
+      }
+    })
+    .catch((err) => {
+      if (err.response.status == 400) {
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else if(err.response.status == 401){
+        serverResponse.responseDescription = err.response.data.responseDescription;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      }
+      else{
+        serverResponse.responseDescription = err.response.data.error;
+        serverResponse.responseStatus = err.response.data.communicationStatus;
+        serverResponse.responseCode = err.response.data.responseCode;
+      } 
+    });
+
+  return serverResponse;
+};
+const viewBulkAirTimeTransactionsByAgentNameAndTransId = async (
+  agentName,
+  transId
+) => {
+
+  const URL_WITH_PARAMS =
+  base_remote_Bulk_airtime_transaction_byagentNameAndTransId_prod+"agentName="+agentName+"&"+"transId="+transId
+  const serverResponse = {
+    responseCode: "",
+    responseDescription: "",
+    communicationStatus: "",
+    data: [],
+  };
+
+  await axios
+    .get(URL_WITH_PARAMS)
+
+    .then((response) => {
+      if (response.data.responseCode === 200) {
         serverResponse.responseDescription = response.data.responseDescription;
         serverResponse.communicationStatus = response.data.communicationStatus;
         serverResponse.responseCode = response.data.responseCode;
@@ -1096,5 +1146,6 @@ const viewBulkAirTimeTransactionsByAgentName = async (
     viewAgentFloatAccountStatusById,
     selftServeCommissions,
     executeEfasheBulkAirTimeVendingTx,
-    viewBulkAirTimeTransactionsByAgentName
+    viewBulkAirTimeTransactionsByAgentName,
+    viewBulkAirTimeTransactionsByAgentNameAndTransId
 }

@@ -23,7 +23,7 @@ import ChangePasswordPage from "./components/settings/ChangePasswordPage";
 import RraServicePage from "./components/rra/RraServicePage";
 
 import AirtimeReceipt from "./components/receiptpage/AirtimeReceipt";
-
+import BulkAirtimeReceiptManager from "./components/receipt/BulkAirtimeReceiptManager";
 function App() {
   return (
     <Router>
@@ -77,7 +77,10 @@ function App() {
             path="/ddin-airtime-receipt"
             element={<AirtimeReceiptManager />}
           ></Route>
-
+ <Route
+            path="/ddin-bulk-airtime-receipt"
+            element={<BulkAirtimeReceiptManager />}
+          ></Route>
           <Route
             path="/startimes-subscription"
             element={<StartimesServicePage />}

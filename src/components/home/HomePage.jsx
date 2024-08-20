@@ -418,7 +418,16 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
- 
+                  <div class="col-3">
+                    <div class="card catagory-card">
+                      <div class="card-body px-2">
+                        <Link to="/bulk-airtime">
+                          <img src="assets/img/bg-img/airtimes.jpg" alt="" />
+                          <span>Bulk Airtime</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
                   <div class="text-content">
                 <h4 class="text-white mb-0 mt-3">Development  Services</h4>
                 <p class="text-white mb-0">
@@ -493,16 +502,7 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
-                  <div class="col-3">
-                    <div class="card catagory-card">
-                      <div class="card-body px-2">
-                        <Link to="/bulk-airtime">
-                          <img src="assets/img/bg-img/airtimes.jpg" alt="" />
-                          <span>Bulk Airtime</span>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
+                  
                 </>
 
               ) : (
@@ -566,6 +566,16 @@ export default function HomePage() {
                         <Link to="/bulksms-service">
                           <img src="assets/img/bg-img/bulksms2.png" alt="" />
                           <span>Bulk SMS</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="card catagory-card">
+                      <div class="card-body px-2">
+                        <Link to="/bulk-airtime">
+                          <img src="assets/img/bg-img/airtimes.jpg" alt="" />
+                          <span>Bulk Airtime</span>
                         </Link>
                       </div>
                     </div>

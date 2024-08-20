@@ -405,11 +405,11 @@ export default function ElectricityServicePage() {
       return "18";
     } else {
       //Test Env
-      setMemberId("34");
-      //Prod Env
       //setMemberId("34");
+      //Prod Env
+      setMemberId("18");
 
-      return "34";
+      return "18";
     }
   };
   //==================Core TX Transfers Id=============
