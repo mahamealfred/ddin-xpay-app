@@ -853,8 +853,8 @@ console.log("odata:",sortedTransactions)
                             marginTop: 5,
                           }}
                         >
-                          Upload “.csv" or excel file with column header “
-                          number". Example: 250781234567
+                          Upload “.xlsx" file with column header “
+                          number" and "amount". Example: 250781234567 , 300
                         </p>
                       </div>
                       <ConfirmBulkSsmFileServicePayment
