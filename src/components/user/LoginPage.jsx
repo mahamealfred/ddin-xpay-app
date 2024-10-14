@@ -292,6 +292,7 @@ export default function LoginPage() {
         context.updateAgentFullName(response.name);
         context.updateAgentUsername(response.username);
         context.updateUserKey(base64data);
+        context.updatePhone(response.phone)
         context.updateAgentFloatAccountId(response.floatAccountId);
         context.updateAgentInstantCommissionAccountId(
           response.instantCommissionAccountId

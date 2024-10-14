@@ -59,7 +59,7 @@ export default function PindoServicePage() {
   const [agentName, setAgentName] = useState("");
   const [message, setMessage] = useState("");
   const [clientName, setClientName] = useState("-");
-  const [clientPhone, setClientPhone] = useState("-");
+  const [clientPhone, setClientPhone] = useState("");
   const [clientEmail, setClientEmail] = useState("-");
   const [clientTin, setClientTin] = useState("-");
   const [messageCounter, setMessageCounter] = useState(0);
@@ -100,6 +100,7 @@ export default function PindoServicePage() {
   const [refreshToken, setRefreshToken] = useState("");
   const [detailsArray, setDetailsArray] = useState([]);
   let totalAmount=0
+
   const recalculate = (e) => {
     setTextAreaCount(e.target.value.length);
     setMessage(e.target.value);
@@ -113,6 +114,25 @@ export default function PindoServicePage() {
 
   const audioPlayer = useRef(null);
 
+  
+  const [isPhoneValid, setIsPhoneValid] = useState(true);
+  const validatePhoneNumber = (phone) => {
+    // Define allowed prefixes for Rwanda's phone numbers
+    const allowedPrefixes = ["078", "079", "072", "073"];
+  
+    // Check if phone number is 10 digits long and starts with an allowed prefix
+    return phone.length === 10 && allowedPrefixes.includes(phone.substring(0, 3));
+  };
+
+
+const handlePhoneChange = (e) => {
+  const value = e.target.value;
+  setClientPhone(value);
+
+  // Check if phone number is valid
+  const valid = validatePhoneNumber(value);
+  setIsPhoneValid(valid);
+};
   function playAudio() {
     audioPlayer.current.play();
   }
@@ -315,8 +335,8 @@ const generateUUIDs = async (users, amount) => {
   const filteredResults = results.filter(result => result !== null);
   setDetailsArray(filteredResults);
   // Perform action after all requests are finished
-  console.log('All requests finished');
-  console.log('Details Array::', filteredResults, filteredResults.length * amount); 
+  // console.log('All requests finished');
+  // console.log('Details Array::', filteredResults, filteredResults.length * amount); 
   setShowConfirmDialog(true);
   setIsLoading(false);
 };
@@ -325,7 +345,17 @@ const generateUUIDs = async (users, amount) => {
 
   const confirmPindoPayment = async (e) => {
     e.preventDefault();
-    viewConfirmDialog();
+    if(isPhoneValid===true && clientPhone!=context.phone){
+      viewConfirmDialog();
+    
+    }
+    else if(clientPhone===context.phone){
+      toast.error("The agent's phone number is not allowed; please use a different one.");
+    }
+    else {
+      toast.error("Invalid phone number. It must start with 078, 079, 072, or 073 and be 10 digits long.");
+    }
+  
   };
   const viewConfirmDialog = () => {
     generateUUIDs(users, businessTin);
@@ -376,6 +406,7 @@ const generateUUIDs = async (users, amount) => {
         accountId: context.agentFloatAccountId,
         vertialId: "airtime",
         phoneNumber: value,
+        clientPhone:clientPhone,
         transactionId: trxId,
         token: accessToken,
         refreshToken: refreshToken,
@@ -942,6 +973,33 @@ console.log("odata:",sortedTransactions)
                               value={businessTin}
                             />
                           </div>
+                          <div className="form-group text-start mb-4">
+    <span style={{ color: "black", fontSize: 16 }}>
+      <b>Client Telephone Number:</b>
+      <b style={{ color: "red" }}>*</b>
+    </span>
+
+    <input
+      className={`form-control ${!isPhoneValid ? "is-invalid" : ""}`}
+      style={{
+        backgroundColor: "white",
+        color: "black",
+        borderColor: "black",
+        borderRadius: 10,
+        borderWidth: 1,
+        borderStyle: "solid",
+        fontSize: 14,
+      }}
+      type="text"
+      onChange={handlePhoneChange}
+      value={clientPhone}
+      required
+    />
+    
+    {!isPhoneValid && (
+      <small className="text-danger">Invalid phone number. It must start with 078, 079, 072, or 073 and be 10 digits long.</small>
+    )}
+  </div>
 
                           <button disabled={isLoading} class="btn btn-warning btn-lg w-100">
                             {!isLoading?"Send  Airtime":"Processing ..."}
@@ -1079,8 +1137,15 @@ console.log("odata:",sortedTransactions)
                       <img src="assets/img/core-img/ticker.png" alt="" />
                     </a>
                     <a className="product-title d-block" style={{ color: "white" }} href="#">
-                      {transaction.description.map(desc => desc.status === "failed" ? `Error: ${desc.error}` : `Transaction Id: ${desc.data?.transactionId}`).join(", ")}
-                    </a>
+  {Array.isArray(transaction.description) 
+    ? transaction.description
+        .map(desc => desc.status === "failed" 
+          ? `Error: ${desc.error}` 
+          : `Transaction Id: ${desc.data?.transactionId}`
+        )
+        .join(", ") 
+    : "No transaction description available"}
+</a>
                     <p className="sale-price" style={{ color: "white" }}>
                       <i className="fa-solid"></i>
                       {new Date(transaction.createdAt).toLocaleString()}

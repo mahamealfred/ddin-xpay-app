@@ -93,7 +93,7 @@ export default function ElectricityServicePage() {
   const [agentName, setAgentName] = useState("");
   const [message, setMessage] = useState("");
   const [clientName, setClientName] = useState("-");
-  const [clientPhone, setClientPhone] = useState("-");
+  const [clientPhone, setClientPhone] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [clientTin, setClientTin] = useState("-");
   const [messageCounter, setMessageCounter] = useState(0);
@@ -158,7 +158,6 @@ export default function ElectricityServicePage() {
   const [vendMin, setVendMin] = useState("");
   const [vendUnitId, setVendUnitId] = useState("");
   const [verticalId, setVerticalId] = useState("");
-
   const [meterNumber, setMeterNumber] = useState("");
   const [tokenAmount, setTokenAmount] = useState("");
 
@@ -179,6 +178,26 @@ export default function ElectricityServicePage() {
   const [totalPayment, setTotalPayment] = useState("");
   const audioPlayer = useRef(null);
 
+  
+  const [isPhoneValid, setIsPhoneValid] = useState(true);
+  const validatePhoneNumber = (phone) => {
+    // Define allowed prefixes for Rwanda's phone numbers
+    const allowedPrefixes = ["078", "079", "072", "073"];
+  
+    // Check if phone number is 10 digits long and starts with an allowed prefix
+    return phone.length === 10 && allowedPrefixes.includes(phone.substring(0, 3));
+  };
+
+
+const handlePhoneChange = (e) => {
+  const value = e.target.value;
+  setClientPhone(value);
+
+  // Check if phone number is valid
+  const valid = validatePhoneNumber(value);
+  setIsPhoneValid(valid);
+};
+
   function playAudio() {
     audioPlayer.current.play();
   }
@@ -191,20 +210,29 @@ export default function ElectricityServicePage() {
   const confirmElectricityPayment = async (e) => {
     e.preventDefault();
 
-    if (isNumber(meterNumber)) {
+    if (isNumber(meterNumber) && isPhoneValid===true && clientPhone!=context.phone) {
       if (isNumber(tokenAmount)) {
         validateElectricityTx();
-      } else {
-        toast.error("Token Number Must Be A Valid a Set of Number(0-9)");
+      } 
+      
+      else {
+        toast.error("The Amount Must Be A Valid a Set of Number(0-9)");
       }
-    } else {
+    } 
+    else if(isPhoneValid===false){
+      toast.error("Invalid phone number. It must start with 078, 079, 072, or 073 and be 10 digits long.");
+    }
+    else if(clientPhone===context.phone){
+      toast.error("The agent's phone number is not allowed; please use a different one.");
+    }
+    else {
       toast.error("Meter Number Must Be A Valid a Set of Number(0-9)");
     }
   };
   const viewConfirmDialog = () => {
     setShowConfirmDialog(true);
   };
-
+ 
   const queryAgentAccountTransactions = async () => {
     try {
       const response = await viewAgentAccountTransactions(
@@ -213,6 +241,7 @@ export default function ElectricityServicePage() {
       );
 
       if (response.responseCode === 200) {
+       
         setAgentAccountTransactions(response.data);
       } else {
         //toast.info(response.responseDescription);
@@ -408,6 +437,7 @@ export default function ElectricityServicePage() {
         accountId: context.agentFloatAccountId,
         vertialId: "electricity",
         phoneNumber: meterNumber,
+        clientPhone:clientPhone,
         transactionId: trxId,
         token: accessToken,
         refreshToken: refreshToken,
@@ -734,7 +764,6 @@ export default function ElectricityServicePage() {
   const [openToken,setOpenToken]=useState(false)
   const [tokenTransaction,setTokenTransaction]=useState([])
 
-
   //token
   const handleToken=async(inputString)=>{
     const uuidPattern = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
@@ -901,7 +930,7 @@ if (uuidMatch) {
 
                       <div class="form-group text-start mb-4">
                         <span style={{ color: "black", fontSize: 16 }}>
-                          <b>Token Amount:</b>
+                          <b>Amount:</b>
                           <b style={{ color: "red" }}>*</b>
                         </span>
 
@@ -923,6 +952,33 @@ if (uuidMatch) {
                         />
                       </div>
 
+                      <div className="form-group text-start mb-4">
+    <span style={{ color: "black", fontSize: 16 }}>
+      <b>Client Telephone Number:</b>
+      <b style={{ color: "red" }}>*</b>
+    </span>
+
+    <input
+      className={`form-control ${!isPhoneValid ? "is-invalid" : ""}`}
+      style={{
+        backgroundColor: "white",
+        color: "black",
+        borderColor: "black",
+        borderRadius: 10,
+        borderWidth: 1,
+        borderStyle: "solid",
+        fontSize: 14,
+      }}
+      type="text"
+      onChange={handlePhoneChange}
+      value={clientPhone}
+      required
+    />
+    
+    {!isPhoneValid && (
+      <small className="text-danger">Invalid phone number. It must start with 078, 079, 072, or 073 and be 10 digits long.</small>
+    )}
+  </div>
                       <button class="btn btn-warning btn-lg w-100">Buy</button>
 
                       <ToastContainer className="toast-position" />

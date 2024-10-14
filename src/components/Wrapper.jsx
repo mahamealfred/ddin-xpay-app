@@ -17,6 +17,7 @@ const Wrapper = (props) => {
 
     const [district, setDistrict] = useState();
     const [province, setProvince] = useState();
+    const [phone, setPhone] = useState();
     const [sector, setSector] = useState();
     const [userKey, setUserKey] = useState();
     const [userId, setUserId] = useState();
@@ -38,6 +39,7 @@ const Wrapper = (props) => {
             province:province,
             sector:sector,
             userId:userId,
+            phone:phone,
             agentFloatAccountId:agentFloatAccountId,
             agentInstantCommissionAccountId:agentInstantCommissionAccountId,
             agentDelayedCommissionAccountId:agentDelayedCommissionAccountId,
@@ -88,6 +90,9 @@ const Wrapper = (props) => {
             },
             updateAgentUsername:(data)=>{
                 setAgentUsername(data);
+            },
+            updatePhone:(data)=>{
+                setPhone(data);
             }
             
         }}>

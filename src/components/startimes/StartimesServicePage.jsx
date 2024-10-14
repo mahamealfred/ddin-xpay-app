@@ -85,10 +85,10 @@ export default function StartimesServicePage() {
   const [smsAmount, setSmsAmount] = useState(1000);
   const [agentName, setAgentName] = useState("");
   const [message, setMessage] = useState("");
-  const [clientName, setClientName] = useState("-");
-  const [clientPhone, setClientPhone] = useState("-");
+  const [clientName, setClientName] = useState("");
+  const [clientPhone, setClientPhone] = useState("");
   const [clientEmail, setClientEmail] = useState("");
-  const [clientTin, setClientTin] = useState("-");
+  const [clientTin, setClientTin] = useState("");
   const [messageCounter, setMessageCounter] = useState(0);
   const [messageRemainderCounter, setMessageRemainderCounter] = useState(0);
   const [messageLength, setMessageLength] = useState(0);
@@ -171,6 +171,25 @@ export default function StartimesServicePage() {
 
   const audioPlayer = useRef(null);
 
+  const [isPhoneValid, setIsPhoneValid] = useState(true);
+  const validatePhoneNumber = (phone) => {
+    // Define allowed prefixes for Rwanda's phone numbers
+    const allowedPrefixes = ["078", "079", "072", "073"];
+  
+    // Check if phone number is 10 digits long and starts with an allowed prefix
+    return phone.length === 10 && allowedPrefixes.includes(phone.substring(0, 3));
+  };
+
+
+const handlePhoneChange = (e) => {
+  const value = e.target.value;
+  setClientPhone(value);
+
+  // Check if phone number is valid
+  const valid = validatePhoneNumber(value);
+  setIsPhoneValid(valid);
+};
+
   function playAudio() {
     audioPlayer.current.play();
   }
@@ -183,15 +202,22 @@ export default function StartimesServicePage() {
   const confirmStartimesPayment = async (e) => {
     e.preventDefault();
 
-    if (isNumber(subscriberNumber)) {
+    if (isNumber(subscriberNumber) && isPhoneValid===true && clientPhone!=context.phone) {
       if (isNumber(subscriptionAmount)) {
         validateStartimesTx();
-      } else {
+      } 
+      else {
         toast.error(
           "The Subscription Amount Should be a set of valid amount numbers[0-9]"
         );
       }
-    } else {
+    }else if(isPhoneValid===false){
+      toast.error("Invalid phone number. It must start with 078, 079, 072, or 073 and be 10 digits long.");
+    } 
+    else if(clientPhone===context.phone){
+      toast.error("The agent's phone number is not allowed; please use a different one.");
+    }
+    else {
       toast.error(
         "Your Startimes Subscription No Should be a set of valid numbers[0-9]"
       );
@@ -400,6 +426,7 @@ export default function StartimesServicePage() {
         refreshToken: refreshToken,
         userId: context.userId,
         agentCategory: context.agentCategory,
+        clientPhone:clientPhone
       };
  //previous
       // const response = await executeEfasheStartimesVendingTx(
@@ -793,7 +820,33 @@ export default function StartimesServicePage() {
                           required
                         />
                       </div>
+                      <div className="form-group text-start mb-4">
+    <span style={{ color: "black", fontSize: 16 }}>
+      <b>Client Telephone Number:</b>
+      <b style={{ color: "red" }}>*</b>
+    </span>
 
+    <input
+      className={`form-control ${!isPhoneValid ? "is-invalid" : ""}`}
+      style={{
+        backgroundColor: "white",
+        color: "black",
+        borderColor: "black",
+        borderRadius: 10,
+        borderWidth: 1,
+        borderStyle: "solid",
+        fontSize: 14,
+      }}
+      type="text"
+      onChange={handlePhoneChange}
+      value={clientPhone}
+      required
+    />
+    
+    {!isPhoneValid && (
+      <small className="text-danger">Invalid phone number. It must start with 078, 079, 072, or 073 and be 10 digits long.</small>
+    )}
+  </div>
                       <button class="btn btn-warning btn-lg w-100">Buy</button>
 
                       <ToastContainer className="toast-position" />

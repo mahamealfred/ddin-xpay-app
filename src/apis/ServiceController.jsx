@@ -132,6 +132,7 @@ const agentLoginAuth = async (requestPayload) => {
 };
 //agent account status by ID
 const viewAgentFloatAccountStatusById = async (userKey, accountId) => {
+  
   //base_remote_account_status_test
   //base_remote_account_status_prod
   const URL_WITH_PARAMS =
@@ -325,7 +326,8 @@ const validateEfasheAirTimeVendingTx = async (requestPayLoad) => {
         province:requestPayLoad.province,
         sector:requestPayLoad.sector,
         currencySymbol: requestPayLoad.currencySymbol,
-        description: requestPayLoad.description
+        description: requestPayLoad.description,
+        clientPhone:requestPayLoad.clientPhone
     }
    
     await axios
@@ -393,7 +395,8 @@ const validateEfasheAirTimeVendingTx = async (requestPayLoad) => {
         province:requestPayLoad.province,
         sector:requestPayLoad.sector,
         currencySymbol: requestPayLoad.currencySymbol,
-        details: requestPayLoad.description
+        details: requestPayLoad.description,
+        clientPhone:requestPayLoad.clientPhone
     }
     await axios
       .post( base_remote_efashe_executeBulkAirTimeTx_prod, data, {
@@ -515,7 +518,8 @@ const executeEfasheElectricityVending= async (requestPayLoad, userKey) => {
       province:requestPayLoad.province,
       sector:requestPayLoad.sector,
       currencySymbol: requestPayLoad.currencySymbol,
-      description: requestPayLoad.description
+      description: requestPayLoad.description,
+      clientPhone:requestPayLoad.clientPhone
   }
   
     await axios
@@ -641,7 +645,8 @@ const executeEfasheRRAVending= async (requestPayLoad, userKey) => {
     currencySymbol: requestPayLoad.currencySymbol,
     description: requestPayLoad.description,
     tin:requestPayLoad.taxIdentificationNumber,
-    taxPayer: requestPayLoad.taxpayer
+    taxPayer: requestPayLoad.taxpayer,
+    clientPhone:requestPayLoad.clientPhone
 }
 
   await axios
@@ -764,7 +769,8 @@ const executeEfasheStartimeVending= async (requestPayLoad, userKey) => {
     province:requestPayLoad.province,
     sector:requestPayLoad.sector,
     currencySymbol: requestPayLoad.currencySymbol,
-    description: requestPayLoad.description
+    description: requestPayLoad.description,
+    clientPhone:requestPayLoad.clientPhone
 }
 
   await axios
