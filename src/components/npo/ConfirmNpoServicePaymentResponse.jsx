@@ -39,7 +39,7 @@ export default function ConfirmNpoServicePayment(props){
         <DialogContentText id="alert-dialog-description" style={{color:"black",fontSize:12}}>
        
         
-        Please confirm <b>NPO Client Registration Request:</b>.
+        Please confirm <b>ePoBox Client Registration Request:</b>.
          <Stack sx={{ width: '100%', color: 'grey.500' }} spacing={2}>
           <p style={{color:'black', fontSize:12}}>
             <span>-Firstname:<b>{props.firstname}</b></span><br/>

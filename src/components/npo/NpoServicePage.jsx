@@ -7,6 +7,7 @@
 import React, { useContext, useState, useMemo, useRef, useEffect } from "react";
 import { Navigate, Link, useNavigate, useLocation } from "react-router-dom";
 import { CFormTextarea, CForm } from "@coreui/react";
+import axios from "axios";
 import {
   Paper,
   Box,
@@ -59,6 +60,7 @@ import "react-phone-number-input/style.css";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
+import { executeEpoBoxRegistration, viewAgentAccountTransactionsById } from "../../apis/ServiceController";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -68,11 +70,11 @@ function sleep(delay = 0) {
 
 export default function NpoServicePage() {
   const [openAddress, setOpenAddress] = useState(false);
-  const [openClientTypes, setOpenClientTypes] = useState(false);
-  const [selectedClientType, setSelectedClientType] = useState({
-    status: false,
-    name: "Organization",
-  });
+  // const [openClientTypes, setOpenClientTypes] = useState(false);
+  // const [selectedClientType, setSelectedClientType] = useState({
+  //   status: false,
+  //   name: "Business",
+  // });
 
   const [options, setOptions] = React.useState([]);
   //const loading = open && options.length === 0;
@@ -111,6 +113,7 @@ export default function NpoServicePage() {
     useState([]);
   const [
     agentAccountTransactionsByIdData,
+  
     setAgentAccountTransactionsByIdData,
   ] = useState([]);
   const [showReceiptDialog, setShowReceiptDialog] = useState(false);
@@ -152,11 +155,11 @@ export default function NpoServicePage() {
   const [receiptSector, setReceiptSector] = useState("");
   const [receiptTxDate, setReceiptTxDate] = useState("");
 
-  const [clientCategory, setClientCategory] = useState("Organization");
+ // const [clientCategory, setClientCategory] = useState("Organization");
   const [postalCodeId, setPostalCodeId] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [postalCodeName, setPostalCodeName] = useState("");
-  const [isPersonal, setIsPersonal] = useState(null);
+  // const [isPersonal, setIsPersonal] = useState(null);
 
   const [receiptId, setReceiptId] = useState("");
   const [receiptNote, setReceiptNote] = useState("");
@@ -164,11 +167,96 @@ export default function NpoServicePage() {
   const [totalPayment, setTotalPayment] = useState("");
 
   const clientTypesCode = [
-    { status: false, name: "Organization" },
+    { status: false, name: "Business" },
     { status: true, name: "Personal" },
   ];
 
-  const [amount, setAmount] = useState(15000);
+ 
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const [canProceed, setCanProceed] = useState(false);
+
+  const [openClientTypes, setOpenClientTypes] = useState(false);
+
+  // Default to "Person" (status === true or 1)
+  const [selectedClientType, setSelectedClientType] = useState(
+    clientTypesCode.find((option) => option.status === true) || null
+  );
+
+  const [isPersonal, setIsPersonal] = useState(selectedClientType?.status || false);
+  const [amount, setAmount] = useState(selectedClientType?.status ? 8000 : 15000);
+  const [clientCategory, setClientCategory] = useState(selectedClientType?.status ? "1" : "2");
+
+
+  const handlePhoneNumberChange = async (phone) => {
+    setValue(phone);
+    setErrorMessage(""); // Clear any previous error message
+    setCanProceed(false); // Reset proceed status on each phone change
+
+    // Only check the phone number if it's in a valid format
+    if (phone && phone.startsWith("+250")) {
+      try {
+        // Call the API endpoint to check if the phone number exists
+        const response = await axios.get(
+          `https://app.ddin.rw/api/v1/epobox-service/check-account/${phone}`
+        );
+
+        // Check if the response indicates that the account does not exist
+        if (response.data.data.status == true) {
+          setErrorMessage("This phone number already exists.");
+          setCanProceed(false); // Prevent proceeding
+        } else {
+          setErrorMessage(""); // Clear any error message
+          setCanProceed(true); // Allow proceeding
+        }
+      } catch (error) {
+
+        if (error.response?.data?.responseCode == 400) {
+          setErrorMessage(""); // Clear any error message
+          setCanProceed(true); // Allow proceeding 
+        }
+        setErrorMessage("");
+        setCanProceed(true); // Prevent proceeding
+      }
+    }
+  };
+
+
+  // Fetch postal code data from API
+  async function fetchPostalCodes() {
+    try {
+      const response = await axios.get("https://app.ddin.rw/api/v1/epobox-service/postal-code");
+  
+      if (response.data.responseCode === 200 && response.data.data && Array.isArray(response.data.data.data)) {
+        // Map data correctly based on the response structure
+       
+        let postalCodes = response.data?.data?.data.map((item) => ({
+          postal_code_id: item.postal_id, // Use the correct 'postal_code_id' field
+          name: item.name,                     // Use the 'name' field
+          postal_code: item.postalCode,       // Use the 'postal_code' field
+        }));
+  
+        setNpoAddressData(postalCodes);
+      } else {
+        console.error("Unexpected data format:", response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching postal codes:", error);
+    }
+  }
+  
+  
+  
+  // Call the function, assuming this is in a useEffect hook in React
+  useEffect(() => {
+    fetchPostalCodes();
+  }, []);
+  
+  console.log("data from postal code",npoAddressData)
+
+
+
+
   useEffect(() => {
     if (npoAddressData === null) {
       queryNpoAddresses();
@@ -177,10 +265,7 @@ export default function NpoServicePage() {
 
   //Data
 
-  const handleChange = (e) => {
-    setPostalCodeId(e.target.value);
-  };
-
+ 
   const handleClientTypeChange = (e) => {
     setIsPersonal(e.target.value);
   };
@@ -256,6 +341,8 @@ export default function NpoServicePage() {
       );
     }
   };
+
+
   const viewConfirmDialog = () => {
     setShowConfirmDialog(true);
   };
@@ -287,7 +374,7 @@ export default function NpoServicePage() {
       const response = await viewNpoAddresses(context.userKey);
 
       if (response.responseCode === "200") {
-        setNpoAddressData(response.data);
+        //setNpoAddressData(response.data);
       } else {
         //toast.info(response.responseDescription);
       }
@@ -300,13 +387,14 @@ export default function NpoServicePage() {
     const id = toast.loading("Previewing NPO Receipt...");
 
     try {
-      const response = await viewAgentFloatAccountTransactionsById(
+      const response = await viewAgentAccountTransactionsById(
         context.userKey,
-        context.agentFloatAccountId,
+        //context.agentFloatAccountId,
         transId
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 200) {
+      
         setAgentAccountTransactionsByIdData(response.data);
 
         const firstTransaction = response.data[0];
@@ -389,29 +477,29 @@ export default function NpoServicePage() {
         agentCategory: context.agentCategory,
       };
 
-      const response = await registerNpoClient(
+      const response = await executeEpoBoxRegistration(
         newNpoClientRequestBody,
         context.userKey
       );
 
-      if (response.responseCode === "200") {
+      if (response.responseCode === 201) {
         setShowConfirmResponseDialog(false);
         playAudio();
 
         setReceiptAmount("2000");
         setReceiptDescription(
           "NPO Client Registration Through DDIN Agent ID:" +
-            context.agentUsername +
-            ",Client Data:Firstname:" +
-            firstname +
-            ",Lastname:" +
-            lastname +
-            ",Client Mobile:" +
-            value +
-            ",Identity Type:" +
-            identityType +
-            ",Identity Number:" +
-            identityNumber
+          context.agentUsername +
+          ",Client Data:Firstname:" +
+          firstname +
+          ",Lastname:" +
+          lastname +
+          ",Client Mobile:" +
+          value +
+          ",Identity Type:" +
+          identityType +
+          ",Identity Number:" +
+          identityNumber
         );
         setReceiptFirstName(firstname);
         setReceiptLastName(lastname);
@@ -419,7 +507,7 @@ export default function NpoServicePage() {
         setReceiptNationalIdNumber(identityNumber);
         setReceiptPassportNumber(passportNumber);
         setReceiptReferralCode("DDIN250");
-        setReceiptNpoClientId(response.transactionId);
+        setReceiptNpoClientId(response.data.transactionId);
         setReceiptAgentId(context.agentUsername);
         setReceiptMpostSystemMetadata("");
         setReceiptProvince("");
@@ -449,23 +537,24 @@ export default function NpoServicePage() {
         setValue("");
 
         toast.dismiss();
-        setReceiptId(response.responseStatus);
+        setReceiptId(response.data.transactionId);
         setReceiptNote(
-          "NPO client registration processing completed successfully with transaction No:" +
-            response.transactionId +
-            "-SMS Status:" +
-            response.responseDescription
+          "EpoBox client registration processing completed successfully with transaction No:" +
+          response.data.transactionId 
+          //  +"-SMS Status:" +
+          // response.data.responseDescription
         );
         setServiceFeeAmt("");
         setTotalPayment(amount);
         setShowReceiptDialog(true);
       } else {
+       
         //Testing The Payment Initiation:
         // toast.dismiss();
         // setShowConfirmPaymentDialog(true);
         toast.update(id, {
           render:
-            response.responseDescription + "-SMS:" + response.responseStatus,
+            response.responseDescription,
           type: "info",
           isLoading: false,
           closeButton: null,
@@ -747,12 +836,13 @@ export default function NpoServicePage() {
                 {/*
                   NPO Testing Phase@
                    */}
-                <h4 class="text-white mb-1">NPO Client Registration</h4>
+                <h4 class="text-white mb-1">EpoBox Client Registration</h4>
                 <p class="text-white mb-0">
                   Please note registration is complete after payment of the
                   subscription fee of<span class="px-1 fw-bold"></span>{" "}
-                  <b>Rwf 8,000 </b>for personal A/C or <b>Rwf 15,000</b> for
-                  Organization.
+                  <b>Rwf 8,000 </b>
+                  {/* <b>Rwf 8,000 </b>for personal A/C or <b>Rwf 15,000</b> for
+                  Organization. */}
                 </p>
               </div>
             </div>
@@ -778,7 +868,7 @@ export default function NpoServicePage() {
                         class="mb-2"
                         style={{ fontSize: 24, color: "black" }}
                       >
-                        <b>Register A New NPO Client</b>
+                        <b>Register A New ePoBox Client</b>
                       </span>
                     </div>
 
@@ -878,7 +968,7 @@ export default function NpoServicePage() {
                         />
                       </div>
 
-                      <div class="form-group text-start mb-4">
+                      <div className="form-group text-start mb-4">
                         <span style={{ color: "black", fontSize: 16 }}>
                           <b>Phone Number:</b>
                           <b style={{ color: "red" }}>*</b>
@@ -890,9 +980,16 @@ export default function NpoServicePage() {
                             countryCallingCodeEditable={false}
                             defaultCountry="RW"
                             value={value}
-                            onChange={setValue}
+                            onChange={handlePhoneNumberChange}
                           />
                         </div>
+
+                        {/* Display the error message if the phone number already exists */}
+                        {errorMessage && (
+                          <div style={{ color: "red", marginTop: "5px" }}>{errorMessage}</div>
+                        )}
+
+
                       </div>
 
                       <div class="form-group text-start mb-4">
@@ -915,7 +1012,7 @@ export default function NpoServicePage() {
                           <FormHelperText
                             style={{ color: "blue", fontSize: 12 }}
                           >
-                            NPO Client Identity Types
+                            ePoBox Client Identity Types
                           </FormHelperText>
                         </FormControl>
                       </div>
@@ -943,45 +1040,37 @@ export default function NpoServicePage() {
                           required
                         />
                       </div>
-                      <div class="form-group text-start mb-4">
+                      <div className="form-group text-start mb-4">
                         <Autocomplete
                           id="disable-close-on-select"
                           sx={{ width: 300 }}
                           open={openAddress}
-                          onOpen={() => {
-                            setOpenAddress(true);
-                          }}
-                          onClose={() => {
-                            setOpenAddress(false);
-                          }}
+                          onOpen={() => setOpenAddress(true)}
+                          onClose={() => setOpenAddress(false)}
                           getOptionLabel={(option) => option.name}
                           options={npoAddressData}
                           value={
                             postalCodeId
                               ? npoAddressData.find(
-                                  (option) =>
-                                    option.postal_code_id === postalCodeId
-                                ) || null
+                                (option) => option.postal_code_id === postalCodeId
+                              ) || null
                               : null
                           }
                           onChange={(event, newValue) => {
-                            //console.log("Postal Code:" + newValue?.postal_code);
                             setPostalCodeId(newValue?.postal_code_id || null);
                             setPostalCode(newValue?.postal_code || null);
                             setPostalCodeName(newValue?.name || null);
-                            //postal_code_id
                           }}
                           renderInput={(params) => (
                             <TextField
+                              {...params}
                               style={{ color: "red", fontSize: 25 }}
                               variant="standard"
-                              {...params}
                               label="Choose Postal Office"
                               InputProps={{
                                 ...params.InputProps,
                                 endAdornment: (
                                   <React.Fragment>
-                                    {/* Add loading indicator if needed */}
                                     {params.InputProps.endAdornment}
                                   </React.Fragment>
                                 ),
@@ -991,61 +1080,63 @@ export default function NpoServicePage() {
                         />
                       </div>
 
-                      <div class="form-group text-start mb-4">
-                        <Autocomplete
-                          id="disable-close-on-select"
-                          sx={{ width: 300 }}
-                          open={openClientTypes}
-                          onOpen={() => {
-                            setOpenClientTypes(true);
-                          }}
-                          onClose={() => {
-                            setOpenClientTypes(false);
-                          }}
-                          getOptionLabel={(option) => option.name}
-                          options={clientTypesCode}
-                          value={
-                            clientTypesCode.find(
-                              (option) =>
-                                option.status === selectedClientType?.status
-                            ) || null
-                          }
-                          onChange={(event, newValue) => {
-                            setSelectedClientType(newValue);
+                      <div className="form-group text-start mb-4">
+      <Autocomplete
+        id="disable-close-on-select"
+        sx={{ width: 300 }}
+        open={openClientTypes}
+        onOpen={() => {
+          setOpenClientTypes(true);
+        }}
+        onClose={() => {
+          setOpenClientTypes(false);
+        }}
+        getOptionLabel={(option) => option.name}
+        options={clientTypesCode}
+        value={selectedClientType}
+        onChange={(event, newValue) => {
+          setSelectedClientType(newValue);
 
-                            setIsPersonal(newValue?.status || false);
-                            // Set amount based on the status
-                            if (newValue && newValue.status) {
-                              setAmount(8000); // Set amount to 8000 when status is true
-                              setClientCategory("Personal");
-                            } else {
-                              setAmount(15000); // Set amount to 15000 when status is false
-                              setClientCategory("Organization");
-                            }
-                          }}
-                          renderInput={(params) => (
-                            <TextField
-                              style={{ color: "red", fontSize: 25 }}
-                              variant="standard"
-                              {...params}
-                              label="Choose Client Type"
-                              InputProps={{
-                                ...params.InputProps,
-                                endAdornment: (
-                                  <React.Fragment>
-                                    {/*loading ? <CircularProgress color="inherit" size={20} /> : null*/}
-                                    {params.InputProps.endAdornment}
-                                  </React.Fragment>
-                                ),
-                              }}
-                            />
-                          )}
-                        />
-                      </div>
+          const isBusiness = newValue?.status === false; // Status false means Business
+          const isPerson = newValue?.status === true; // Status true means Person
 
-                      <button class="btn btn-warning btn-lg w-100">
-                        Register
-                      </button>
+          setIsPersonal(isPerson);
+
+          // Set values based on type
+          if (isPerson) {
+            setAmount(8000);
+            setClientCategory("1");
+          } else if (isBusiness) {
+            setAmount(8000);
+            setClientCategory("2");
+          }
+        }}
+        renderInput={(params) => (
+          <TextField
+            style={{ color: "red", fontSize: 25 }}
+            variant="standard"
+            {...params}
+            label="Choose Client Type"
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <React.Fragment>
+                  {params.InputProps.endAdornment}
+                </React.Fragment>
+              ),
+            }}
+          />
+        )}
+      />
+    </div>
+                      {
+                        canProceed && (
+                          <button class="btn btn-warning btn-lg w-100">
+                            Register
+                          </button>
+                        )
+                      }
+
 
                       <ToastContainer className="toast-position" />
                       <PreviewNpoServicePayment
@@ -1121,9 +1212,9 @@ export default function NpoServicePage() {
         <div class="weekly-best-seller-area py-3">
           <div class="container">
             <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
-              <h6>Registered NPO Clients</h6>
+              <h6>Registered ePoBox Clients</h6>
 
-              <Link class="btn p-0 text-white"   onClick={viewFloatAccountInfo}>
+              <Link class="btn p-0 text-white" onClick={viewFloatAccountInfo}>
                 View All Clients
                 <i class="ms-1 fa-solid fa-arrow-right-long"></i>
               </Link>
@@ -1154,11 +1245,11 @@ export default function NpoServicePage() {
                                 alt=""
                               />
                             </a>
-                            <a class="product-title d-block"  style={{ color: "white" }} href="#">
+                            <a class="product-title d-block" style={{ color: "white" }} href="#">
                               {agentAccountTransactions[index].description}
                             </a>
 
-                            <p class="sale-price"  style={{ color: "white" }}>
+                            <p class="sale-price" style={{ color: "white" }}>
                               <i class="fa-solid"></i>
                               {agentAccountTransactions[
                                 index

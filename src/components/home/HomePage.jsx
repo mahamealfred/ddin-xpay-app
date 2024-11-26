@@ -9,13 +9,34 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { Paper, Box, Typography, ButtonBase } from "@material-ui/core";
+import { Paper, Box, Typography, ButtonBase, Modal, Button } from "@material-ui/core";
+import { useIdleTimer } from 'react-idle-timer';
+import {Fade, styled} from "@mui/material";
+import { Backdrop } from "@mui/material";
 import { Context } from "../Wrapper";
 import $ from "jquery";
 import LoginPage from "../user/LoginPage";
 import FooterPage from "../footer/FooterPage";
 import HeaderPage from "../header/HeaderPage";
 import { viewAgentFloatAccountStatus } from "../../apis/UserController";
+
+const StyledRoot = styled('div')({
+  display: 'flex',
+  minHeight: '100%',
+  overflow: 'hidden',
+});
+
+const styles = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 'auto',
+  bgcolor: 'background.paper',
+  // border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -30,6 +51,8 @@ export default function HomePage() {
     queryAccountStatus();
     queryCommAccountStatus();
   });
+  const [openPageReflesh, setOpenPageReflesh] = useState(false)
+const handleClosePageReflesh = () => setOpenPageReflesh(false);
   const queryCommAccountStatus = async () => {
     try {
       //Agent floac Ac Id Prod=7
@@ -305,15 +328,154 @@ export default function HomePage() {
       $(this).parent().find("input").val(newVal);
     });
   });
+  //Security 
+  
+  //refresh token
+  var startTimer=null
+  // set idle timer
+  const [openModal,setOpenModal]=React.useState(false)
+  const handleClose=()=>{
+    setOpenModal(false)
+        }
+  const idleTimerRef=useRef(null)
+  const onIdle=()=>{
+  setOpenModal(true)
+
+  }
+  const handleStopTime=()=>{
+  clearInterval(startTimer)
+  }
+  useEffect(()=>{
+if(openModal===true){
+  handelClock(0,1,0)
+}
+
+  },)
+
+  const IdleTimer = useIdleTimer({
+    crossTab: true,
+    ref: idleTimerRef,
+     timeout:  1 * 60 * 1000,
+    // timeout:  5 * 1000,
+    onIdle: onIdle
+  })
+  const handelClock=(hr, mm, ss)=>{
+    function startInterval(){
+       startTimer=setInterval(function(){
+        if(hr==0 && mm==0 && ss==0){
+          handleStopTime();
+        }
+        else if(ss!=0){
+          ss--;
+        }
+        else if(mm !=0 && ss==0){
+          ss=59;
+          mm--;
+        }
+        else if(hr !=0 && mm ==0){
+          mm =60;
+          hr--;
+        }
+        if (hr.toString().length < 2) hr = "0" + hr;
+        if (mm.toString().length < 2) mm = "0" + mm;
+        if (ss.toString().length < 2) ss = "0" + ss;
+       // setRemainingTime(hr + " : " + mm + " : " + ss);
+       if(mm=="00" && ss=="00"){
+        // localStorage.removeItem('mobicashAuth');
+        // sessionStorage.removeItem('mobicash-auth')
+       return navigate('/sign-in')
+       }
+      }, 1000);
+    }
+    startInterval();
+  }
+const handleContinue=()=>{
+handleStopTime()
+setOpenModal(false)
+}
+const handleLogout=()=>{
+  //localStorage.removeItem('mobicashAuth');
+  // sessionStorage.removeItem('mobicash-auth')
+ return navigate('/sign-in')
+}
+const handleLogoutPage=()=>{
+  //localStorage.removeItem('mobicashAuth');
+  // sessionStorage.removeItem('mobicash-auth')
+ return navigate('/sign-in')
+}
 
   return context.loggedInStatus ? (
     <div>
       <HeaderPage />
+    
+      <Modal
+  aria-labelledby="transition-modal-title"
+  aria-describedby="transition-modal-description"
+  open={openModal}
+  closeAfterTransition
+  BackdropComponent={Backdrop}
+  BackdropProps={{
+    timeout: 500,
+  }}
+  sx={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <Fade in={openModal}>
+    <Box
+     
+    >
+      <Typography id="transition-modal-title" textAlign="center" variant="h6" component="h2">
+        You are about to logout
+      </Typography>
+      <Typography id="transition-modal-description" textAlign="center" sx={{ mt: 2 }}>
+        Your session is about to finish
+      </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '10px 0px 5px',
+          '& > *': {
+            m: 1,
+          },
+        }}
+      >
+        <Button
+          sx={{
+            width: '100%',
+            height: '40px',
+            borderRadius: 50,
+          }}
+          onClick={handleLogout}
+        >
+          Signout
+        </Button>
+        <Button
+          variant="text"
+          sx={{
+            width: '100%',
+            height: '40px',
+            borderRadius: 50,
+          }}
+          onClick={handleContinue}
+        >
+          Continue
+        </Button>
+      </Box>
+    </Box>
+  </Fade>
+</Modal>
+
+
+   
 
       <div class="page-content-wrapper">
                
         <div class="container">
-      
+        
           <br />
          
           <div class="discount-coupon-card-blue p-4 p-lg-4 dir-rtl">

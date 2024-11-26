@@ -326,7 +326,7 @@ export default function NpoReceiptManager() {
                               src="assets/img/core-img/icon-ddn-72-w.png"
                               alt="DDIN Company"
                             />{" "}
-                            NPO Client Receipt
+                            ePoBox Client Receipt
                           </span>
                           <span className="invoice-number">
                             <b>Order: #</b>
@@ -434,7 +434,7 @@ export default function NpoReceiptManager() {
                               {" "}
                               Total Paid(Rwf):
                               <span>
-                                {parseFloat(state?.transactionData?.amount) +
+                                {parseFloat(-1* state?.transactionData?.amount) +
                                   2000}
                               </span>
                             </b>

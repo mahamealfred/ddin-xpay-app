@@ -45,7 +45,7 @@ export default function ConfirmNpoServicePayment(props) {
             <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
               <p style={{ color: "black", fontSize: 12 }}>
                 <span>
-                  - Generated NPO Client ID:<b>{props.clientId}</b>
+                  - Generated ePoBox Client ID:<b>{props.clientId}</b>
                 </span>
                 <br />
                 <span>

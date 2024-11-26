@@ -34,7 +34,7 @@ export default function ConfirmNpoServicePayment(props) {
           id="alert-dialog-title"
           style={{ color: "#ff9900", fontSize: 14 }}
         >
-          <b>{"NPO Client Payment Notification:"}</b>
+          <b>{"ePoBox Client Payment Notification:"}</b>
         </DialogTitle>
         <DialogContent>
           <DialogContentText
