@@ -843,7 +843,7 @@ export default function ElectricityServicePage() {
           <br />
           <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
             <h6>
-              <Link class="btn p-0 text-white" to="/">
+              <Link class="btn p-0 text-white" to="/dashboard">
                 <i class="ms-1 fa-solid fa-arrow-left-long"></i> Back
               </Link>
             </h6>

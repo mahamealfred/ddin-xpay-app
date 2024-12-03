@@ -13,19 +13,28 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+import { Context } from "../Wrapper";
 
 export default function FooterPage() {
+  const context = useContext(Context);
+  const [isauthenticated,setIsAuthenticated]=useState("")
+  useEffect(() => {
+    // Check auth state on component mount (in case of browser back/refresh)
+    const authState = sessionStorage.getItem("isAuthenticated") === "true";
+    setIsAuthenticated(authState);
+  }, []);
   return (
     <div class="footer-nav-area" id="footerNav">
       <div class="ddin-footer-nav">
-        <ul class="h-100 d-flex align-items-center justify-content-between ps-0 d-flex rtl-flex-d-row-r">
+      
+          <ul class="h-100 d-flex align-items-center justify-content-between ps-0 d-flex rtl-flex-d-row-r">
           <li>
-            <Link to="/">
+            <Link to="/dashboard">
               <i class="fa-solid fa-house"></i>Home
             </Link>
           </li>
           <li>
-            <Link to="#">
+            <Link to="/dashboard">
               <i class="fa-solid fa-list"></i>Services
             </Link>
           </li>
@@ -45,6 +54,7 @@ export default function FooterPage() {
             </Link>
           </li>
         </ul>
+       
       </div>
     </div>
   );

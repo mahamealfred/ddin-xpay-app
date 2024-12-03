@@ -19,6 +19,7 @@ import LoginPage from "../user/LoginPage";
 import FooterPage from "../footer/FooterPage";
 import HeaderPage from "../header/HeaderPage";
 import { viewAgentFloatAccountStatus } from "../../apis/UserController";
+import LogoutDialog from "./LogoutDialog";
 
 const StyledRoot = styled('div')({
   display: 'flex',
@@ -41,6 +42,7 @@ const styles = {
 export default function HomePage() {
   const navigate = useNavigate();
   const context = useContext(Context);
+  const { resetAuth } = useContext(Context); 
   const [formattedBalance, setFormattedBalance] = useState("Rwf 0.00");
   const [agentNameId, setAgentNameId] = useState("Agent Float A/C");
   const [showChangePasswordDialog, setShowChangePasswordDialog] =
@@ -328,6 +330,8 @@ const handleClosePageReflesh = () => setOpenPageReflesh(false);
       $(this).parent().find("input").val(newVal);
     });
   });
+
+ 
   //Security 
   
   //refresh token
@@ -352,10 +356,11 @@ if(openModal===true){
 
   },)
 
+  
   const IdleTimer = useIdleTimer({
     crossTab: true,
     ref: idleTimerRef,
-     timeout:  1 * 60 * 1000,
+     timeout:  5 * 60 * 1000,
     // timeout:  5 * 1000,
     onIdle: onIdle
   })
@@ -383,7 +388,8 @@ if(openModal===true){
        if(mm=="00" && ss=="00"){
         // localStorage.removeItem('mobicashAuth');
         // sessionStorage.removeItem('mobicash-auth')
-       return navigate('/sign-in')
+         
+       return navigate('/')
        }
       }, 1000);
     }
@@ -393,81 +399,33 @@ const handleContinue=()=>{
 handleStopTime()
 setOpenModal(false)
 }
+
 const handleLogout=()=>{
   //localStorage.removeItem('mobicashAuth');
   // sessionStorage.removeItem('mobicash-auth')
- return navigate('/sign-in')
+  resetAuth()
+  context.logout()
+ return navigate('/')
 }
 const handleLogoutPage=()=>{
   //localStorage.removeItem('mobicashAuth');
   // sessionStorage.removeItem('mobicash-auth')
- return navigate('/sign-in')
+  resetAuth()
+  context.logout()
+ return navigate('/')
 }
 
   return context.loggedInStatus ? (
     <div>
       <HeaderPage />
     
-      <Modal
-  aria-labelledby="transition-modal-title"
-  aria-describedby="transition-modal-description"
-  open={openModal}
-  closeAfterTransition
-  BackdropComponent={Backdrop}
-  BackdropProps={{
-    timeout: 500,
-  }}
-  sx={{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }}
->
-  <Fade in={openModal}>
-    <Box
-     
-    >
-      <Typography id="transition-modal-title" textAlign="center" variant="h6" component="h2">
-        You are about to logout
-      </Typography>
-      <Typography id="transition-modal-description" textAlign="center" sx={{ mt: 2 }}>
-        Your session is about to finish
-      </Typography>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          padding: '10px 0px 5px',
-          '& > *': {
-            m: 1,
-          },
-        }}
-      >
-        <Button
-          sx={{
-            width: '100%',
-            height: '40px',
-            borderRadius: 50,
-          }}
-          onClick={handleLogout}
-        >
-          Signout
-        </Button>
-        <Button
-          variant="text"
-          sx={{
-            width: '100%',
-            height: '40px',
-            borderRadius: 50,
-          }}
-          onClick={handleContinue}
-        >
-          Continue
-        </Button>
-      </Box>
-    </Box>
-  </Fade>
-</Modal>
+      {/* <LogoutDialog
+      openDialog={openModal}
+       handleLogout={handleLogoutPage}
+        handleContinue={handleContinue} 
+        onClose={handleClose}
+      /> */}
+
 
 
    

@@ -395,7 +395,7 @@ const viewFloatAccountInfo=()=>{
       <br/>
       <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
    
-            <h6><Link class="btn p-0" to="/"><i class="ms-1 fa-solid fa-arrow-left-long"></i> Back</Link></h6>{/*<a class="btn p-0" href="#">More<i class="ms-1 fa-solid fa-arrow-right-long"></i></a>*/}
+            <h6><Link class="btn p-0" to="/dashboard"><i class="ms-1 fa-solid fa-arrow-left-long"></i> Back</Link></h6>{/*<a class="btn p-0" href="#">More<i class="ms-1 fa-solid fa-arrow-right-long"></i></a>*/}
           </div>
       <div class="discount-coupon-card-blue p-4 p-lg-5 dir-rtl">
           <div class="d-flex align-items-center">

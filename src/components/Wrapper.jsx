@@ -4,7 +4,7 @@
 
  */
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 export const Context = React.createContext();
 
 
@@ -14,7 +14,26 @@ const Wrapper = (props) => {
 
     const [userData, setUserData] = useState(null);
     const [loggedInStatus, setLoggedInStatus] = useState(false);
-
+    const [isAuthenticated, setIsAuthenticated] = useState(
+        () => sessionStorage.getItem("isAuthenticated") === "true" // Retrieve from sessionStorage
+      );
+    
+      const login = () => {
+        setIsAuthenticated(true);
+        sessionStorage.setItem("isAuthenticated", "true"); // Save to sessionStorage
+      };
+    
+      const logout = () => {
+        setIsAuthenticated(false);
+        sessionStorage.removeItem("isAuthenticated"); // Clear from sessionStorage
+      };
+    
+      useEffect(() => {
+        // Check auth state on component mount (in case of browser back/refresh)
+        const authState = sessionStorage.getItem("isAuthenticated") === "true";
+        setIsAuthenticated(authState);
+      }, []);
+    
     const [district, setDistrict] = useState();
     const [province, setProvince] = useState();
     const [phone, setPhone] = useState();
@@ -29,7 +48,42 @@ const Wrapper = (props) => {
 	const [agentFloatAccountId, setAgentFloatAccountId] = useState();
 	const [agentInstantCommissionAccountId, setAgentInstantCommissionAccountId] = useState();
     const [agentDelayedCommissionAccountId, setAgentDelayedCommissionAccountId] = useState();
-
+    const [auhtState,setAuthState]=useState({
+            loggedInStatus:null,
+            district:null,
+            province:null,
+            sector:null,
+            userId:null,
+            phone:null,
+            agentFloatAccountId:null,
+            agentInstantCommissionAccountId:null,
+            agentDelayedCommissionAccountId:null,
+            agentCategory:null,
+            userKey:null,
+            agentFullName:null,
+            agentUsername:null,
+            userData:null,
+            transactionData:null, 
+    })
+    const resetAuth = () => {
+        setAuthState({
+            loggedInStatus:null,
+            district:null,
+            province:null,
+            sector:null,
+            userId:null,
+            phone:null,
+            agentFloatAccountId:null,
+            agentInstantCommissionAccountId:null,
+            agentDelayedCommissionAccountId:null,
+            agentCategory:null,
+            userKey:null,
+            agentFullName:null,
+            agentUsername:null,
+            userData:null,
+            transactionData:null,
+        });
+      };
 
 
     return (
@@ -49,6 +103,10 @@ const Wrapper = (props) => {
             agentUsername:agentUsername,
             userData:{userData},
             transactionData:{transactionList},
+            isAuthenticated,
+            login,
+            logout,
+            resetAuth,
             updateAgentFloatAccountId:(accountId)=>{
                 setAgentFloatAccountId(accountId);
             }, 

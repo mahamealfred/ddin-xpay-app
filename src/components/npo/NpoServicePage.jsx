@@ -113,7 +113,7 @@ export default function NpoServicePage() {
     useState([]);
   const [
     agentAccountTransactionsByIdData,
-  
+
     setAgentAccountTransactionsByIdData,
   ] = useState([]);
   const [showReceiptDialog, setShowReceiptDialog] = useState(false);
@@ -155,7 +155,7 @@ export default function NpoServicePage() {
   const [receiptSector, setReceiptSector] = useState("");
   const [receiptTxDate, setReceiptTxDate] = useState("");
 
- // const [clientCategory, setClientCategory] = useState("Organization");
+  // const [clientCategory, setClientCategory] = useState("Organization");
   const [postalCodeId, setPostalCodeId] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [postalCodeName, setPostalCodeName] = useState("");
@@ -171,7 +171,7 @@ export default function NpoServicePage() {
     { status: true, name: "Personal" },
   ];
 
- 
+
 
   const [errorMessage, setErrorMessage] = useState("");
   const [canProceed, setCanProceed] = useState(false);
@@ -226,16 +226,16 @@ export default function NpoServicePage() {
   async function fetchPostalCodes() {
     try {
       const response = await axios.get("https://app.ddin.rw/api/v1/epobox-service/postal-code");
-  
+
       if (response.data.responseCode === 200 && response.data.data && Array.isArray(response.data.data.data)) {
         // Map data correctly based on the response structure
-       
+
         let postalCodes = response.data?.data?.data.map((item) => ({
           postal_code_id: item.postal_id, // Use the correct 'postal_code_id' field
           name: item.name,                     // Use the 'name' field
           postal_code: item.postalCode,       // Use the 'postal_code' field
         }));
-  
+
         setNpoAddressData(postalCodes);
       } else {
         console.error("Unexpected data format:", response.data);
@@ -244,15 +244,15 @@ export default function NpoServicePage() {
       console.error("Error fetching postal codes:", error);
     }
   }
-  
-  
-  
+
+
+
   // Call the function, assuming this is in a useEffect hook in React
   useEffect(() => {
     fetchPostalCodes();
   }, []);
-  
-  console.log("data from postal code",npoAddressData)
+
+  console.log("data from postal code", npoAddressData)
 
 
 
@@ -265,7 +265,7 @@ export default function NpoServicePage() {
 
   //Data
 
- 
+
   const handleClientTypeChange = (e) => {
     setIsPersonal(e.target.value);
   };
@@ -394,7 +394,7 @@ export default function NpoServicePage() {
       );
 
       if (response.responseCode === 200) {
-      
+
         setAgentAccountTransactionsByIdData(response.data);
 
         const firstTransaction = response.data[0];
@@ -540,7 +540,7 @@ export default function NpoServicePage() {
         setReceiptId(response.data.transactionId);
         setReceiptNote(
           "EpoBox client registration processing completed successfully with transaction No:" +
-          response.data.transactionId 
+          response.data.transactionId
           //  +"-SMS Status:" +
           // response.data.responseDescription
         );
@@ -548,7 +548,7 @@ export default function NpoServicePage() {
         setTotalPayment(amount);
         setShowReceiptDialog(true);
       } else {
-       
+
         //Testing The Payment Initiation:
         // toast.dismiss();
         // setShowConfirmPaymentDialog(true);
@@ -822,7 +822,7 @@ export default function NpoServicePage() {
           <br />
           <div class="section-heading d-flex align-items-center justify-content-between dir-rtl">
             <h6>
-              <Link class="btn p-0 text-white" to="/">
+              <Link class="btn p-0 text-white" to="/dashboard">
                 <i class="ms-1 fa-solid fa-arrow-left-long"></i> Back
               </Link>
             </h6>
@@ -991,8 +991,59 @@ export default function NpoServicePage() {
 
 
                       </div>
+                      <div className="form-group text-start mb-4">
+                        <Autocomplete
+                          id="disable-close-on-select"
+                          sx={{ width: 300 }}
+                          open={openClientTypes}
+                          onOpen={() => {
+                            setOpenClientTypes(true);
+                          }}
+                          onClose={() => {
+                            setOpenClientTypes(false);
+                          }}
+                          getOptionLabel={(option) => option.name}
+                          options={clientTypesCode}
+                          value={selectedClientType}
+                          onChange={(event, newValue) => {
+                            setSelectedClientType(newValue);
 
-                      <div class="form-group text-start mb-4">
+                            const isBusiness = newValue?.status === false; // Status false means Business
+                            const isPerson = newValue?.status === true; // Status true means Person
+
+                            setIsPersonal(isPerson);
+
+                            // Set values based on type
+                            if (isPerson) {
+                              setAmount(8000);
+                              setClientCategory("1");
+                            } else if (isBusiness) {
+                              setAmount(8000);
+                              setClientCategory("2");
+                            }
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              style={{ color: "red", fontSize: 25 }}
+                              variant="standard"
+                              {...params}
+                              label="Choose Client Type"
+                              InputProps={{
+                                ...params.InputProps,
+                                endAdornment: (
+                                  <React.Fragment>
+                                    {params.InputProps.endAdornment}
+                                  </React.Fragment>
+                                ),
+                              }}
+                            />
+                          )}
+                        />
+                      </div>
+              { 
+                clientCategory ==="1" ?
+                <>
+                <div class="form-group text-start mb-4">
                         <FormControl required variant="outlined">
                           <InputLabel
                             shrink
@@ -1040,6 +1091,36 @@ export default function NpoServicePage() {
                           required
                         />
                       </div>
+                </>:
+                   <>
+                   
+   
+                         <div class="form-group text-start mb-4">
+                           <span style={{ color: "black", fontSize: 16 }}>
+                             <b>TIN Number:</b>
+                             <b style={{ color: "red" }}>*</b>
+                           </span>
+   
+                           <input
+                             class="form-control"
+                             style={{
+                               backgroundColor: "white",
+                               color: "black",
+                               borderColor: "black",
+                               borderRadius: 10,
+                               borderWidth: 1,
+                               borderStyle: "solid",
+                               fontSize: 14,
+                             }}
+                             type="text"
+                             onChange={(e) => setIdentityNumber(e.target.value)}
+                             value={identityNumber}
+                             required
+                           />
+                         </div>
+                   </>
+              }
+                      
                       <div className="form-group text-start mb-4">
                         <Autocomplete
                           id="disable-close-on-select"
@@ -1080,55 +1161,7 @@ export default function NpoServicePage() {
                         />
                       </div>
 
-                      <div className="form-group text-start mb-4">
-      <Autocomplete
-        id="disable-close-on-select"
-        sx={{ width: 300 }}
-        open={openClientTypes}
-        onOpen={() => {
-          setOpenClientTypes(true);
-        }}
-        onClose={() => {
-          setOpenClientTypes(false);
-        }}
-        getOptionLabel={(option) => option.name}
-        options={clientTypesCode}
-        value={selectedClientType}
-        onChange={(event, newValue) => {
-          setSelectedClientType(newValue);
-
-          const isBusiness = newValue?.status === false; // Status false means Business
-          const isPerson = newValue?.status === true; // Status true means Person
-
-          setIsPersonal(isPerson);
-
-          // Set values based on type
-          if (isPerson) {
-            setAmount(8000);
-            setClientCategory("1");
-          } else if (isBusiness) {
-            setAmount(8000);
-            setClientCategory("2");
-          }
-        }}
-        renderInput={(params) => (
-          <TextField
-            style={{ color: "red", fontSize: 25 }}
-            variant="standard"
-            {...params}
-            label="Choose Client Type"
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: (
-                <React.Fragment>
-                  {params.InputProps.endAdornment}
-                </React.Fragment>
-              ),
-            }}
-          />
-        )}
-      />
-    </div>
+                     
                       {
                         canProceed && (
                           <button class="btn btn-warning btn-lg w-100">

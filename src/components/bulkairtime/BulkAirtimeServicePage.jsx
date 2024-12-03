@@ -549,6 +549,18 @@ const generateUUIDs = async (users, amount) => {
     }
   };
 
+  //download csv tamplate
+const handleDownloadTemplate = () => {
+  const csvContent = "data:text/csv;charset=utf-8,number,amount\n";
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "recipients_template.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
   useEffect(() => {
     const ddinWindow = $(window);
     // :: Preloader
@@ -791,7 +803,7 @@ console.log("odata:",sortedTransactions)
           <br />
           <div class="section-heading d-flex align-items-center justify-content-between dir-rtl" >
             <h6 >
-              <Link class="btn p-0 text-white" to="/">
+              <Link class="btn p-0 text-white" to="/dashboard">
                 <i class="ms-1 fa-solid fa-arrow-left-long text-white"></i> Back 
               </Link>
             </h6>
@@ -887,6 +899,22 @@ console.log("odata:",sortedTransactions)
                           Upload “.xlsx" file with column header “
                           number" and "amount". Example: 250781234567 , 300
                         </p>
+                        <Button
+  color="#ff9900"
+  variant="outlined"
+  onClick={handleDownloadTemplate}
+  style={{
+    backgroundColor: "#ff9900", // Primary blue color
+    color: "white",
+    borderRadius: "5px",
+    padding: "8px 16px",
+    fontSize: "14px",
+    border: "none",
+    cursor: "pointer",
+  }}
+>
+  Download CSV Template
+</Button>
                       </div>
                       <ConfirmBulkSsmFileServicePayment
                         openstatus={showConfirmBulkFileDialog}

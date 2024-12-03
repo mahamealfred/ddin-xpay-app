@@ -34,7 +34,7 @@ export default function LoginPage() {
 
   const goToHome = () => {
     setShowConfirmDialog(false);
-    navigate("/", { state: "" });
+    navigate("/dashboard", { state: "" });
   };
 
   useEffect(() => {
@@ -300,6 +300,7 @@ export default function LoginPage() {
         context.updateAgentDelayedCommissionAccountId(
           response.delayedCommissionAccountId
         );
+        context.login()
 
         //context.agentFloatAccountId
         //context.agentInstantCommissionAccountId

@@ -21,8 +21,11 @@ import {
 } from "../../apis/UserController";
 import ChangePasswordDialog from "./ChangePasswordDialog";
 import { viewAgentFloatAccountStatusById } from "../../apis/ServiceController";
+import { useIdleTimer } from "react-idle-timer";
+import LogoutDialog from "../home/LogoutDialog";
 export default function HeaderPage() {
   const context = useContext(Context);
+  const { resetAuth } = useContext(Context); 
   const [formattedBalance, setFormattedBalance] = useState("Rwf 0.00");
   const [agentNameId, setAgentNameId] = useState("Agent Float A/C");
   const [showChangePasswordDialog, setShowChangePasswordDialog] =
@@ -36,6 +39,13 @@ export default function HeaderPage() {
       setIsOpen(!isOpen);
     };
 
+    const navigate = useNavigate();
+  
+    const handleLogout = () => {
+      context.logout(); // Call logout function from context
+      resetAuth()
+      navigate("/"); // Redirect to home page
+    };
 
   useEffect(() => {
     queryAccountStatus();
@@ -97,10 +107,92 @@ export default function HeaderPage() {
     }
   };
 
+  
+  //refresh token
+  var startTimer=null
+  // set idle timer
+  const [openModal,setOpenModal]=React.useState(false)
+  const handleClose=()=>{
+    setOpenModal(false)
+        }
+  const idleTimerRef=useRef(null)
+  const onIdle=()=>{
+  setOpenModal(true)
+
+  }
+  const handleStopTime=()=>{
+  clearInterval(startTimer)
+  }
+  useEffect(()=>{
+if(openModal===true){
+  handelClock(0,1,0)
+}
+
+  },)
+
+  
+  const IdleTimer = useIdleTimer({
+    crossTab: true,
+    ref: idleTimerRef,
+     timeout:  5 * 60 * 1000,
+    // timeout:  5 * 1000,
+    onIdle: onIdle
+  })
+  const handelClock=(hr, mm, ss)=>{
+    function startInterval(){
+       startTimer=setInterval(function(){
+        if(hr==0 && mm==0 && ss==0){
+          handleStopTime();
+        }
+        else if(ss!=0){
+          ss--;
+        }
+        else if(mm !=0 && ss==0){
+          ss=59;
+          mm--;
+        }
+        else if(hr !=0 && mm ==0){
+          mm =60;
+          hr--;
+        }
+        if (hr.toString().length < 2) hr = "0" + hr;
+        if (mm.toString().length < 2) mm = "0" + mm;
+        if (ss.toString().length < 2) ss = "0" + ss;
+       // setRemainingTime(hr + " : " + mm + " : " + ss);
+       if(mm=="00" && ss=="00"){
+        // localStorage.removeItem('mobicashAuth');
+        // sessionStorage.removeItem('mobicash-auth')
+         
+       return navigate('/')
+       }
+      }, 1000);
+    }
+    startInterval();
+  }
+const handleContinue=()=>{
+handleStopTime()
+setOpenModal(false)
+}
+
+
+const handleLogoutPage=()=>{
+  //localStorage.removeItem('mobicashAuth');
+  // sessionStorage.removeItem('mobicash-auth')
+  resetAuth()
+  context.logout()
+ return navigate('/')
+}
+
 
 
   return (
     <div>
+      <LogoutDialog
+      openDialog={openModal}
+       handleLogout={handleLogoutPage}
+        handleContinue={handleContinue} 
+        onClose={handleClose}
+      />
       <div class="header-area" id="headerArea">
         <div class="container h-100 d-flex align-items-center justify-content-between d-flex rtl-flex-d-row-r">
           <div class="logo-wrapper">
@@ -232,7 +324,7 @@ export default function HeaderPage() {
               </ul>
             </li>
             <li>
-              <Link to="/sign-in">
+              <Link to="#" onClick={handleLogout}>
                 <i class="fa-solid fa-toggle-off"></i>Sign Out
               </Link>
             </li>
