@@ -332,88 +332,88 @@ const handleClosePageReflesh = () => setOpenPageReflesh(false);
   });
 
  
-  //Security 
+//   //Security 
   
-  //refresh token
-  var startTimer=null
-  // set idle timer
-  const [openModal,setOpenModal]=React.useState(false)
-  const handleClose=()=>{
-    setOpenModal(false)
-        }
-  const idleTimerRef=useRef(null)
-  const onIdle=()=>{
-  setOpenModal(true)
+//   //refresh token
+//   var startTimer=null
+//   // set idle timer
+//   const [openModal,setOpenModal]=React.useState(false)
+//   const handleClose=()=>{
+//     setOpenModal(false)
+//         }
+//   const idleTimerRef=useRef(null)
+//   const onIdle=()=>{
+//   setOpenModal(true)
 
-  }
-  const handleStopTime=()=>{
-  clearInterval(startTimer)
-  }
-  useEffect(()=>{
-if(openModal===true){
-  handelClock(0,1,0)
-}
+//   }
+//   const handleStopTime=()=>{
+//   clearInterval(startTimer)
+//   }
+//   useEffect(()=>{
+// if(openModal===true){
+//   handelClock(0,1,0)
+// }
 
-  },)
+//   },)
 
   
-  const IdleTimer = useIdleTimer({
-    crossTab: true,
-    ref: idleTimerRef,
-     timeout:  5 * 60 * 1000,
-    // timeout:  5 * 1000,
-    onIdle: onIdle
-  })
-  const handelClock=(hr, mm, ss)=>{
-    function startInterval(){
-       startTimer=setInterval(function(){
-        if(hr==0 && mm==0 && ss==0){
-          handleStopTime();
-        }
-        else if(ss!=0){
-          ss--;
-        }
-        else if(mm !=0 && ss==0){
-          ss=59;
-          mm--;
-        }
-        else if(hr !=0 && mm ==0){
-          mm =60;
-          hr--;
-        }
-        if (hr.toString().length < 2) hr = "0" + hr;
-        if (mm.toString().length < 2) mm = "0" + mm;
-        if (ss.toString().length < 2) ss = "0" + ss;
-       // setRemainingTime(hr + " : " + mm + " : " + ss);
-       if(mm=="00" && ss=="00"){
-        // localStorage.removeItem('mobicashAuth');
-        // sessionStorage.removeItem('mobicash-auth')
+//   const IdleTimer = useIdleTimer({
+//     crossTab: true,
+//     ref: idleTimerRef,
+//      timeout:  5 * 60 * 1000,
+//     // timeout:  5 * 1000,
+//     onIdle: onIdle
+//   })
+//   const handelClock=(hr, mm, ss)=>{
+//     function startInterval(){
+//        startTimer=setInterval(function(){
+//         if(hr==0 && mm==0 && ss==0){
+//           handleStopTime();
+//         }
+//         else if(ss!=0){
+//           ss--;
+//         }
+//         else if(mm !=0 && ss==0){
+//           ss=59;
+//           mm--;
+//         }
+//         else if(hr !=0 && mm ==0){
+//           mm =60;
+//           hr--;
+//         }
+//         if (hr.toString().length < 2) hr = "0" + hr;
+//         if (mm.toString().length < 2) mm = "0" + mm;
+//         if (ss.toString().length < 2) ss = "0" + ss;
+//        // setRemainingTime(hr + " : " + mm + " : " + ss);
+//        if(mm=="00" && ss=="00"){
+//         // localStorage.removeItem('mobicashAuth');
+//         // sessionStorage.removeItem('mobicash-auth')
          
-       return navigate('/')
-       }
-      }, 1000);
-    }
-    startInterval();
-  }
-const handleContinue=()=>{
-handleStopTime()
-setOpenModal(false)
-}
+//        return navigate('/')
+//        }
+//       }, 1000);
+//     }
+//     startInterval();
+//   }
+// const handleContinue=()=>{
+// handleStopTime()
+// setOpenModal(false)
+// }
 
-const handleLogout=()=>{
-  //localStorage.removeItem('mobicashAuth');
-  // sessionStorage.removeItem('mobicash-auth')
-  resetAuth()
-  context.logout()
- return navigate('/')
-}
-const handleLogoutPage=()=>{
-  //localStorage.removeItem('mobicashAuth');
-  // sessionStorage.removeItem('mobicash-auth')
-  resetAuth()
-  context.logout()
- return navigate('/')
-}
+// const handleLogout=()=>{
+//   //localStorage.removeItem('mobicashAuth');
+//   // sessionStorage.removeItem('mobicash-auth')
+//   resetAuth()
+//   context.logout()
+//  return navigate('/')
+// }
+// const handleLogoutPage=()=>{
+//   //localStorage.removeItem('mobicashAuth');
+//   // sessionStorage.removeItem('mobicash-auth')
+//   resetAuth()
+//   context.logout()
+//  return navigate('/')
+// }
 
   return context.loggedInStatus ? (
     <div>
