@@ -1044,6 +1044,9 @@ const handleDownloadTemplate = () => {
                            value={senderId}
                            required
                           > 
+                          {
+                              context?.agentCategory==="Agent"?
+                            <>
                             <option value="">Select Sender ID</option>
                             <option value="INVITATION">INVITATION</option>
                             <option value="KWIBUTSA">KWIBUTSA</option>
@@ -1056,13 +1059,25 @@ const handleDownloadTemplate = () => {
                             <option value="UBUTUMIRE">UBUTUMIRE</option>
                             <option value="UBUKWE">UBUKWE</option>
                             <option value="UMURENGE">UMURENGE</option>
-                            {
-                              context?.agentCategory==="Corporate"?
-                              <option value="ePoBox">e-PoBox</option>
+                            </>
                               :null
                             }
+                          
+                              {
+                              context?.agentCategory==="Agent" && context?.agentUsername=="liveagent"?
+                              <option value="DDIN">DDIN</option>
+                              :null
+                            }
+                             {
+                              context?.agentCategory==="Corporate" && context?.agentUsername=="ICT1"?
+                              <>
+                              <option value="DBI">DBI</option>
+                              <option value="KORALINK">KORALINK</option>
+                              </>
                             
-                            <option value="DDIN">DDIN</option>
+                              :null
+                            }
+                           
 
                           </select>
                             
