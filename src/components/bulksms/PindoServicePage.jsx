@@ -1044,10 +1044,11 @@ const handleDownloadTemplate = () => {
                            value={senderId}
                            required
                           > 
-                          {
-                              context?.agentCategory==="Agent"?
-                            <>
                             <option value="">Select Sender ID</option>
+                          {
+                              context?.agentCategory==="Agent" || context?.agentCategory==="Corporate"?
+                            <>
+                          
                             <option value="INVITATION">INVITATION</option>
                             <option value="KWIBUTSA">KWIBUTSA</option>
                             <option value="KUMENYESHA">KUMENYESHA</option>
@@ -1065,6 +1066,11 @@ const handleDownloadTemplate = () => {
                           
                               {
                               context?.agentCategory==="Agent" && context?.agentUsername=="liveagent"?
+                              <option value="DDIN">DDIN</option>
+                              :null
+                            }
+                            {
+                              context?.agentUsername=="djotipha"?
                               <option value="DDIN">DDIN</option>
                               :null
                             }
